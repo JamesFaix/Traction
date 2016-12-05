@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperimentApp", "ExperimentApp\ExperimentApp.csproj", "{8CAE99A0-3E60-4C93-A5B7-2FED1B219581}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Traction", "Traction\Traction.csproj", "{2C61D50D-4411-4643-977A-E0F72D87840B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlApp", "ControlApp\ControlApp.csproj", "{DA6149BF-80C6-49A3-A6EB-D5A763C4F7EE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8CAE99A0-3E60-4C93-A5B7-2FED1B219581}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CAE99A0-3E60-4C93-A5B7-2FED1B219581}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CAE99A0-3E60-4C93-A5B7-2FED1B219581}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CAE99A0-3E60-4C93-A5B7-2FED1B219581}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C61D50D-4411-4643-977A-E0F72D87840B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C61D50D-4411-4643-977A-E0F72D87840B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C61D50D-4411-4643-977A-E0F72D87840B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C61D50D-4411-4643-977A-E0F72D87840B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA6149BF-80C6-49A3-A6EB-D5A763C4F7EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA6149BF-80C6-49A3-A6EB-D5A763C4F7EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA6149BF-80C6-49A3-A6EB-D5A763C4F7EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA6149BF-80C6-49A3-A6EB-D5A763C4F7EE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
