@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis;
 using static System.AttributeTargets;
 
-namespace Precompiler {
+namespace Traction {
 
     [AttributeUsage(Parameter | ReturnValue | Property, AllowMultiple = false, Inherited = true)]
     public abstract class ContractAttribute : Attribute {

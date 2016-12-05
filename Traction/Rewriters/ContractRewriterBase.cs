@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Precompiler {
+namespace Traction {
 
     abstract class ContractRewriterBase<TAttribute> : CSharpSyntaxRewriter
         where TAttribute : Attribute {

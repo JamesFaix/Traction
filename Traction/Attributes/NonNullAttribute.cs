@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Precompiler {
+namespace Traction {
 
     [SuppressMessage("Microsoft.Design", "CA1018:MarkAttributesWithAttributeUsage")]
     public sealed class NonNullAttribute : ContractAttribute {

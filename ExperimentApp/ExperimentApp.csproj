@@ -7,8 +7,8 @@
     <ProjectGuid>{8CAE99A0-3E60-4C93-A5B7-2FED1B219581}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestApp</RootNamespace>
-    <AssemblyName>TestApp</AssemblyName>
+    <RootNamespace>Traction.ExperimentApp</RootNamespace>
+    <AssemblyName>Traction.ExperimentApp</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

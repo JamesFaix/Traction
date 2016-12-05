@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using StackExchange.Precompilation;
 
-namespace Precompiler {
+namespace Traction {
 
     public delegate CSharpSyntaxRewriter RewriterGenerator(SemanticModel model);
 

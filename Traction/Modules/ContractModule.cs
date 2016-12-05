@@ -1,6 +1,6 @@
 ﻿using StackExchange.Precompilation;
 
-namespace Precompiler {
+namespace Traction {
 
     public class ContractModule : CompileModuleBase, ICompileModule {
 

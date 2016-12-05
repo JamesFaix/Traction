@@ -1,6 +1,3 @@
-C:\Users\James\Documents\GitHub\Traction\Traction\bin\Debug\Precompiler.dll.config
-C:\Users\James\Documents\GitHub\Traction\Traction\bin\Debug\Precompiler.dll
-C:\Users\James\Documents\GitHub\Traction\Traction\bin\Debug\Precompiler.pdb
 C:\Users\James\Documents\GitHub\Traction\Traction\bin\Debug\Microsoft.CodeAnalysis.CSharp.dll
 C:\Users\James\Documents\GitHub\Traction\Traction\bin\Debug\Microsoft.CodeAnalysis.dll
 C:\Users\James\Documents\GitHub\Traction\Traction\bin\Debug\StackExchange.Precompilation.Metaprogramming.dll
@@ -9,6 +6,8 @@ C:\Users\James\Documents\GitHub\Traction\Traction\bin\Debug\Microsoft.CodeAnalys
 C:\Users\James\Documents\GitHub\Traction\Traction\bin\Debug\Microsoft.CodeAnalysis.CSharp.xml
 C:\Users\James\Documents\GitHub\Traction\Traction\bin\Debug\StackExchange.Precompilation.Metaprogramming.pdb
 C:\Users\James\Documents\GitHub\Traction\Traction\bin\Debug\System.Collections.Immutable.xml
-C:\Users\James\Documents\GitHub\Traction\Traction\obj\Debug\Traction.csprojResolveAssemblyReference.cache
-C:\Users\James\Documents\GitHub\Traction\Traction\obj\Debug\Precompiler.dll
-C:\Users\James\Documents\GitHub\Traction\Traction\obj\Debug\Precompiler.pdb
+C:\Users\James\Documents\GitHub\Traction\Traction\bin\Debug\Traction.dll.config
+C:\Users\James\Documents\GitHub\Traction\Traction\bin\Debug\Traction.dll
+C:\Users\James\Documents\GitHub\Traction\Traction\bin\Debug\Traction.pdb
+C:\Users\James\Documents\GitHub\Traction\Traction\obj\Debug\Traction.dll
+C:\Users\James\Documents\GitHub\Traction\Traction\obj\Debug\Traction.pdb

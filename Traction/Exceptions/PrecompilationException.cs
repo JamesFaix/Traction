@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Precompiler {
+namespace Traction {
 
     [Obsolete("StackExchange.Precompilation doesn't seem to like reporting custom exception types."),
      Serializable]

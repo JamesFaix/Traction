@@ -1,12 +1,11 @@
-﻿using System;
-using System.Text;
-using Precompiler;
+﻿using System.Text;
 
-namespace TestApp {
+namespace Traction.ExperimentApp {
+
     class Program {
 
         public static void Main() {
-            new StringBuilder().Append($"foo {1}");
+
         }
         
         public static int DoStuff([NonNull] string text, int number) {

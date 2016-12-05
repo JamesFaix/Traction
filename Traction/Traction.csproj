@@ -7,8 +7,8 @@
     <ProjectGuid>{2C61D50D-4411-4643-977A-E0F72D87840B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Precompiler</RootNamespace>
-    <AssemblyName>Precompiler</AssemblyName>
+    <RootNamespace>Traction</RootNamespace>
+    <AssemblyName>Traction</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
