@@ -80,7 +80,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Traction\Traction.csproj">
       <Project>{2c61d50d-4411-4643-977a-e0f72d87840b}</Project>
-      <Name>Precompiler</Name>
+      <Name>Traction</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

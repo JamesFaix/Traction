@@ -8,11 +8,7 @@ namespace Traction {
 
     abstract class ContractRewriterBase<TAttribute> : CSharpSyntaxRewriter
         where TAttribute : Attribute {
-
-        //TODO: Support expression bodied members & auto properties
-        //TODO: Exclude return statements in nested functions from postconditions
-        //TODO: Log build errors to the error window instead of throwing exceptions
-
+        
         protected ContractRewriterBase(SemanticModel model) {
             if (model == null) throw new ArgumentNullException(nameof(model));
 
