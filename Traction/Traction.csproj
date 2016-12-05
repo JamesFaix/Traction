@@ -61,12 +61,17 @@
     <Compile Include="ExtensionMethods\AttributeSyntaxExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeSymbolExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Modules\AfterCompileContextWrapper.cs" />
+    <Compile Include="Modules\BeforeCompileContextWrapper.cs" />
     <Compile Include="Modules\CompileModuleBase.cs" />
     <Compile Include="Modules\ContractModule.cs" />
+    <Compile Include="Modules\ICompileContext.cs" />
+    <Compile Include="Modules\IRewriterProvider.cs" />
     <Compile Include="Rewriters\ContractRewriterBase.cs" />
     <Compile Include="Rewriters\NonNullAttributeRewriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ExtensionMethods\PropertySyntaxExtensions.cs" />
+    <Compile Include="Rewriters\NonNullAttributeRewriterProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

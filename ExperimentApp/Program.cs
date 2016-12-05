@@ -12,8 +12,13 @@ namespace Traction.ExperimentApp {
 
         }
         
-        public static int DoStuff([NonNull] string text, int number) {
-            return 1;
+        [return: NonNull]
+        public static string DoStuff([NonNull] string text, int number) {
+            var result = "hello";
+
+            result += " world";
+
+            return result;
         }
 
         private string name;
@@ -33,5 +38,6 @@ namespace Traction.ExperimentApp {
                 return;
             }
         }
+
     }
 }
