@@ -1,5 +1,1 @@
-C:\Users\James\Documents\GitHub\Traction\ExperimentApp\bin\Debug\TestApp.exe.config
 C:\Users\James\Documents\GitHub\Traction\ExperimentApp\obj\Debug\ExperimentApp.csprojResolveAssemblyReference.cache
-C:\Users\James\Documents\GitHub\Traction\ExperimentApp\bin\Debug\Traction.ExperimentApp.exe.config
-C:\Users\James\Documents\GitHub\Traction\ExperimentApp\obj\Debug\Traction.ExperimentApp.exe
-C:\Users\James\Documents\GitHub\Traction\ExperimentApp\obj\Debug\Traction.ExperimentApp.pdb

@@ -7,8 +7,8 @@
     <ProjectGuid>{DA6149BF-80C6-49A3-A6EB-D5A763C4F7EE}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ControlApp2</RootNamespace>
-    <AssemblyName>ControlApp2</AssemblyName>
+    <RootNamespace>Traction.ControlApp</RootNamespace>
+    <AssemblyName>Traction.ControlApp</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
