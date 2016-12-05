@@ -4,10 +4,11 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Diagnostics;
 
 namespace Traction {
 
-    static class RoslynExtensions {
+    static class AttributeSyntaxExtensions {
 
         #region All Attributes
 
@@ -35,6 +36,7 @@ namespace Traction {
 
         public static IEnumerable<AttributeSyntax> ReturnValueAttributes(this MethodDeclarationSyntax node) {
             if (node == null) throw new ArgumentNullException(nameof(node));
+            //   Debugger.Launch();
             return node.AttributeLists
                 .Where(IsAttributeListTargetingReturnValue)
                 .SelectMany(list => list.Attributes);
@@ -45,10 +47,7 @@ namespace Traction {
                 .OfType<AttributeTargetSpecifierSyntax>()
                 .FirstOrDefault();
 
-            if (specifier == null) return false;
-
-            var target = specifier.ChildTokens().First();
-            return target.Text == "return";
+            return specifier?.Identifier.Text == "return";
         }
 
         #region Has Attribute
@@ -86,53 +85,9 @@ namespace Traction {
         }
 
         private static bool HasAttributeImpl<TAttribute>(IEnumerable<AttributeSyntax> attributes, SemanticModel model) where TAttribute : Attribute {
-
+            //Debugger.Launch();
             var symbol = typeof(TAttribute).GetTypeSymbol(model);
             return attributes.Any(a => symbol.Equals(model.GetTypeInfo(a).Type));
         }
-        
-        public static INamedTypeSymbol GetTypeSymbol(this Type type, SemanticModel model) {
-            if (type == null) throw new ArgumentNullException(nameof(type));
-            if (model == null) throw new ArgumentNullException(nameof(model));
-
-            if (!type.IsConstructedGenericType) {
-                return model.Compilation.GetTypeByMetadataName(type.FullName);
-            }
-            else  {
-                var typeParams = type.GenericTypeArguments
-                    .Select(t => GetTypeSymbol(t, model))
-                    .ToArray();
-
-                var openType = type.GetGenericTypeDefinition();
-                var symbol = model.Compilation.GetTypeByMetadataName(openType.FullName);
-                return symbol.Construct(typeParams);
-            }
-        }
-
-        public static bool MatchesTypeSymbol(this Type type, ITypeSymbol symbol, SemanticModel model) {
-            if (type == null) throw new ArgumentNullException(nameof(type));
-            if (symbol == null) throw new ArgumentNullException(nameof(symbol));
-            if (model == null) throw new ArgumentNullException(nameof(model));
-
-            return type.GetTypeSymbol(model).Equals(symbol);
-        }
-
-        #region Property Accessors
-
-        public static AccessorDeclarationSyntax Getter(this PropertyDeclarationSyntax node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            
-            return node.AccessorList.Accessors
-                .SingleOrDefault(accessor => accessor.Kind().ToString().StartsWith("Get"));
-        }
-
-        public static AccessorDeclarationSyntax Setter(this PropertyDeclarationSyntax node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-          //  System.Diagnostics.Debugger.Launch();
-            return node.AccessorList.Accessors
-                .SingleOrDefault(accessor => accessor.Kind().ToString().StartsWith("Set"));
-        }
-
-        #endregion
     }
 }

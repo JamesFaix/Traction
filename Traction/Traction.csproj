@@ -58,13 +58,15 @@
     <Compile Include="Attributes\NonNullAttribute.cs" />
     <Compile Include="Exceptions\PrecompilationException.cs" />
     <Compile Include="Exceptions\ReturnValueException.cs" />
+    <Compile Include="ExtensionMethods\AttributeSyntaxExtensions.cs" />
+    <Compile Include="ExtensionMethods\TypeSymbolExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Modules\CompileModuleBase.cs" />
     <Compile Include="Modules\ContractModule.cs" />
     <Compile Include="Rewriters\ContractRewriterBase.cs" />
     <Compile Include="Rewriters\NonNullAttributeRewriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ExtensionMethods\RoslynExtensions.cs" />
+    <Compile Include="ExtensionMethods\PropertySyntaxExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
