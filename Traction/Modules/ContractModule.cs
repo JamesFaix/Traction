@@ -6,7 +6,7 @@ namespace Traction {
 
         public ContractModule() : base() {
             
-            AddPrecompileGenerator((model) => new NonNullAttributeReWriter(model));
+            AddBeforeRewriterProvider(new NonNullAttributeRewriterProvider());
         }
     }
 }

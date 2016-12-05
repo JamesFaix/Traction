@@ -5,57 +5,42 @@ using Microsoft.CodeAnalysis.CSharp;
 using StackExchange.Precompilation;
 
 namespace Traction {
-
-    public delegate CSharpSyntaxRewriter RewriterGenerator(SemanticModel model);
-
+    
     public abstract class CompileModuleBase : ICompileModule {
 
         protected CompileModuleBase() {
-            beforeGenerators = new List<RewriterGenerator>();
-            afterGenerators = new List<RewriterGenerator>();
+            beforeRewriterProviders = new List<IRewriterProvider>();
+            afterRewriterProviders = new List<IRewriterProvider>();
         }
 
-        private readonly List<RewriterGenerator> beforeGenerators;
-        private readonly List<RewriterGenerator> afterGenerators;
+        private readonly List<IRewriterProvider> beforeRewriterProviders;
+        private readonly List<IRewriterProvider> afterRewriterProviders;
 
-        protected void AddPrecompileGenerator(RewriterGenerator generator) {
-            if (generator == null) throw new ArgumentNullException(nameof(generator));
-            beforeGenerators.Add(generator);
+        protected void AddBeforeRewriterProvider(IRewriterProvider provider) {
+            if (provider == null) throw new ArgumentNullException(nameof(provider));
+            beforeRewriterProviders.Add(provider);
         }
 
-        protected void AddPostcompileGenerator(RewriterGenerator generator) {
-            if (generator == null) throw new ArgumentNullException(nameof(generator));
-            afterGenerators.Add(generator);
+        protected void AddAfterRewriterProvider(IRewriterProvider provider) {
+            if (provider == null) throw new ArgumentNullException(nameof(provider));
+            afterRewriterProviders.Add(provider);
         }
 
         public void BeforeCompile(BeforeCompileContext context) {
             if (context == null) throw new ArgumentNullException(nameof(context));
-
-            foreach (var generator in beforeGenerators) {
-                foreach (var syntaxTree in context.Compilation.SyntaxTrees) {
-                    var model = context.Compilation.GetSemanticModel(syntaxTree);
-                    var rewriter = generator(model);
-                    if (rewriter == null) throw new InvalidOperationException("Rewriter generator cannot return null.");
-
-                    var rootNode = syntaxTree.GetRoot();
-                    var rewritten = rewriter.Visit(rootNode);
-
-                    if (rootNode != rewritten) {
-                        context.Compilation = context.Compilation.ReplaceSyntaxTree(
-                          syntaxTree,
-                          syntaxTree.WithRootAndOptions(rewritten, syntaxTree.Options));
-                    }
-                }
-            }
+            Process(new BeforeCompileContextWrapper(context), beforeRewriterProviders);
         }
 
         public void AfterCompile(AfterCompileContext context) {
             if (context == null) throw new ArgumentNullException(nameof(context));
+            Process(new AfterCompileContextWrapper(context), afterRewriterProviders);
+        }
 
-            foreach (var generator in afterGenerators) {
+        private void Process(ICompileContext context, IEnumerable<IRewriterProvider> rewriterProviders) {
+            foreach (var provider in rewriterProviders) {
                 foreach (var syntaxTree in context.Compilation.SyntaxTrees) {
                     var model = context.Compilation.GetSemanticModel(syntaxTree);
-                    var rewriter = generator(model);
+                    var rewriter = provider.CreateRewriter(model, context);
                     if (rewriter == null) throw new InvalidOperationException("Rewriter generator cannot return null.");
 
                     var rootNode = syntaxTree.GetRoot();

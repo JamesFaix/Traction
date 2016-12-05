@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -9,16 +10,19 @@ namespace Traction {
     abstract class ContractRewriterBase<TAttribute> : CSharpSyntaxRewriter
         where TAttribute : Attribute {
         
-        protected ContractRewriterBase(SemanticModel model) {
+        protected ContractRewriterBase(SemanticModel model, ICompileContext context) {
             if (model == null) throw new ArgumentNullException(nameof(model));
+            if (context == null) throw new ArgumentNullException(nameof(context));
 
             this.model = model;
+            this.context = context;
         }
 
+        protected readonly ICompileContext context;
         protected readonly SemanticModel model;
 
         public sealed override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node) {
-           // System.Diagnostics.Debugger.Launch();
+           //Debugger.Launch();
             return base.VisitMethodDeclaration(
                 InsertMethodPostconditions(
                    InsertMethodPreconditions(node)));
@@ -47,7 +51,9 @@ namespace Traction {
 
         private MethodDeclarationSyntax InsertMethodPostconditions(MethodDeclarationSyntax node) {
 
-            if (node.ReturnValueAttributes().ContainsAttribute<TAttribute>(model)) {
+            Debugger.Launch();
+
+            if (node.HasReturnValueAttribute<TAttribute>(model)) {
                 var returnStatements = node.Body.Statements.OfType<ReturnStatementSyntax>();
 
                 var result = node;
@@ -66,7 +72,7 @@ namespace Traction {
         }
 
         public sealed override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node) {
-          //  System.Diagnostics.Debugger.Launch();
+            //Debugger.Launch();
 
             var result = node;
 
