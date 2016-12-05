@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using StackExchange.Precompilation;
 
 namespace Traction {
-    
+
     public abstract class CompileModuleBase : ICompileModule {
 
         protected CompileModuleBase() {
