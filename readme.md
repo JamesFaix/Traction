@@ -4,6 +4,15 @@ Traction is a plugin for [StackExchange.Precompilation](https://github.com/Stack
 
 Traction is exposed to consuming code as custom attributes which can target parameters, method return values, or properties.  During compilation, Traction will perform a transformation on the in-memory syntax trees to insert runtime assertions wherever these attributes are used.  
 
+## Compatibility & Limitations
+
+Traction can only be used with C#6 and newer; it does not support VB or other languages.  This limitation is due to several factors:
+ 1. Traction's implementation consists of C# syntax transformations, not IL manipulation like other aspect-oriented .NET tools (PostSharp, Fody, Microsoft Code Contracts).
+ 2. StackExchange.Precompilation uses `csc.exe` internally, and so cannot be used with VB or other languages.
+ 3. The Roslyn SDK only supports C#6/.NET4.6 and newer.
+
+Traction does not directly support any static analysis tools, like Microsoft Code Contracts does; it just injects runtime assertions.  This is what "light-weight design-by-contract" refers to in the description.  It would not be impossible to use the Roslyn SDK to create analyzers that could perform a role similar to the Code Contracts static analyzer, but that it not a primary goal of Traction.  (At least not yet. If anyone wants take on the task, please do.)
+
 ## Example
 
 `NonNullAttribute` can be applied to a members to signify that they cannot accept `null` values.  A method declaration like this:
@@ -46,9 +55,3 @@ An extra `{}` block is created here to ensure no naming conflict with the local 
 
 The transformations for properties are similar, with the precondition being inserted into the `set` accessor and postcondition in the `get` accessor.
 
-## Compatibility
-
-Traction can only be used with C#6 and newer; it does not support VB or other languages.  This limitation is due to several factors:
- 1. Traction's implementation consists of C# syntax transformations, not IL manipulation like other aspect-oriented .NET tools (PostSharp, Fody, Code Contracts).
- 2. StackExchange.Precompilation uses `csc.exe` internally, and so cannot be used with VB or other languages.
- 3. The Roslyn SDK only supports C#6/.NET4.6 and newer.
