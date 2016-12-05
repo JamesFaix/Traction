@@ -34,8 +34,10 @@ namespace Traction {
                .ToArray();
 
             if (preconditionParameters.Any()) {
+                var location = node.GetLocation();
+
                 var preconditions = preconditionParameters
-                    .SelectMany(p => CreatePrecondition(model.GetTypeInfo(p.Type), p.Identifier.ValueText));
+                    .SelectMany(p => CreatePrecondition(model.GetTypeInfo(p.Type), p.Identifier.ValueText, location));
 
                 var statements = new SyntaxList<StatementSyntax>()
                     .AddRange(preconditions)
@@ -58,9 +60,10 @@ namespace Traction {
 
                 var result = node;
                 var returnType = model.GetTypeInfo(node.ReturnType);
+                var location = node.GetLocation();
 
                 foreach (var ret in returnStatements) {
-                    var postcondition = CreatePostcondition(returnType, ret);
+                    var postcondition = CreatePostcondition(returnType, ret, location);
                     result = result.ReplaceNode(ret, postcondition);
                 }
 
@@ -79,8 +82,9 @@ namespace Traction {
             if (node.HasAttribute<TAttribute>(model)) {
                 var propertyType = model.GetTypeInfo(node.Type);
 
-                var setter = InsertPropertyPrecondition(propertyType, node.Setter());
-                var getter = InsertPropertyPostcondition(propertyType, node.Getter());
+                var location = node.GetLocation();
+                var setter = InsertPropertyPrecondition(propertyType, node.Setter(), location);
+                var getter = InsertPropertyPostcondition(propertyType, node.Getter(), location);
 
                 var accessors = SyntaxFactory.AccessorList(
                     SyntaxFactory.List(
@@ -93,18 +97,18 @@ namespace Traction {
             return base.VisitPropertyDeclaration(result);
         }
 
-        private AccessorDeclarationSyntax InsertPropertyPrecondition(TypeInfo type, AccessorDeclarationSyntax node) {
+        private AccessorDeclarationSyntax InsertPropertyPrecondition(TypeInfo type, AccessorDeclarationSyntax node, Location location) {
             if (node == null) return null;
 
             var statements = new SyntaxList<StatementSyntax>()
-                .AddRange(CreatePrecondition(type, "value"))
+                .AddRange(CreatePrecondition(type, "value", location))
                 .AddRange(node.Body.Statements);
 
             return node.WithBody(node.Body
                 .WithStatements(statements));
         }
 
-        private AccessorDeclarationSyntax InsertPropertyPostcondition(TypeInfo type, AccessorDeclarationSyntax node) {
+        private AccessorDeclarationSyntax InsertPropertyPostcondition(TypeInfo type, AccessorDeclarationSyntax node, Location location) {
             if (node == null) return null;
 
             var returnStatements = node.DescendantNodes()
@@ -113,15 +117,15 @@ namespace Traction {
             BlockSyntax body = node.Body;
 
             foreach (var ret in returnStatements) {
-                body = body.ReplaceNode(ret, CreatePostcondition(type, ret));
+                body = body.ReplaceNode(ret, CreatePostcondition(type, ret, location));
             }
 
             return node.WithBody(body);
         }
 
-        protected abstract SyntaxList<StatementSyntax> CreatePrecondition(TypeInfo parameterType, string identifier);
+        protected abstract SyntaxList<StatementSyntax> CreatePrecondition(TypeInfo parameterType, string identifier, Location location);
 
-        protected abstract SyntaxList<StatementSyntax> CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node);
+        protected abstract SyntaxList<StatementSyntax> CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location);
 
     }
 }

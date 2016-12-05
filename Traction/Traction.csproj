@@ -66,7 +66,8 @@
     <Compile Include="Modules\CompileModuleBase.cs" />
     <Compile Include="Modules\ContractModule.cs" />
     <Compile Include="Modules\ICompileContext.cs" />
-    <Compile Include="Modules\IRewriterProvider.cs" />
+    <Compile Include="Rewriters\DiagnosticProvider.cs" />
+    <Compile Include="Rewriters\IRewriterProvider.cs" />
     <Compile Include="Rewriters\ContractRewriterBase.cs" />
     <Compile Include="Rewriters\NonNullAttributeRewriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

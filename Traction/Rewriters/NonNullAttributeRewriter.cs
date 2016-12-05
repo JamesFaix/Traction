@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Diagnostics;
 
 namespace Traction {
 
@@ -24,12 +24,15 @@ namespace Traction {
                   return {0};
               }}";
 
-        protected override SyntaxList<StatementSyntax> CreatePrecondition(TypeInfo type, string parameterName) {
+        protected override SyntaxList<StatementSyntax> CreatePrecondition(TypeInfo type, string parameterName, Location location) {
             if (parameterName == null) throw new ArgumentNullException(nameof(parameterName));
+            if (location == null) throw new ArgumentNullException(nameof(location));
 
-           //Debugger.Launch();
-            if (!type.Type.IsReferenceType) throw new NotSupportedException(
-                $"{nameof(NonNullAttribute)} can only be applied to reference types.");
+            //Debugger.Launch();
+            if (!type.Type.IsReferenceType) {
+                context.Diagnostics.Add(DiagnosticProvider.NonNullAttributeCanOnlyBeAppliedToReferenceTypes(location));
+                return new SyntaxList<StatementSyntax>();
+            }
 
             var text = string.Format(preconditionTemplate, parameterName);
             var statement = SyntaxFactory.ParseStatement(text);
@@ -37,36 +40,29 @@ namespace Traction {
             return new SyntaxList<StatementSyntax>().Add(statement);
         }
 
-        protected override SyntaxList<StatementSyntax> CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node) {
+        protected override SyntaxList<StatementSyntax> CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location) {
             if (node == null) throw new ArgumentNullException(nameof(node));
+            if (location == null) throw new ArgumentNullException(nameof(location));
 
             //Debugger.Launch();
 
-            if (!returnType.Type.IsReferenceType) throw new NotSupportedException(
-                $"{nameof(NonNullAttribute)} can only be applied to reference types.");
+            if (!returnType.Type.IsReferenceType) {
+                context.Diagnostics.Add(DiagnosticProvider.NonNullAttributeCanOnlyBeAppliedToReferenceTypes(location));
+                return new SyntaxList<StatementSyntax>();
+            }
 
             var returnedExpression = node.ChildNodes().FirstOrDefault();
 
-            if (returnedExpression == null) throw new NotSupportedException(
-                $"{nameof(NonNullAttribute)} cannot be applied to the return value of methods with no return type.");
+            if (returnedExpression == null) {
+                context.Diagnostics.Add(DiagnosticProvider.NonNullAttributeCannotBeAppliedToMethodWithNoReturnType(location));
+                return new SyntaxList<StatementSyntax>();
+            }
 
-            ////Find all symbol names accessible from the defining type (excessive but thorough)
-            //var typeDeclaration = node.FirstAncestorOrSelf<TypeDeclarationSyntax>();
-            //var typeInfo = model.GetTypeInfo(typeDeclaration);
-            //var typeSymbol = typeInfo.Type;
-            //var illegalNames = model.LookupSymbols(0, typeSymbol).Select(symbol => symbol.Name);
-
-            //Call the temporary var "result", but prepend underscores until there is no name conflict
             var tempVariableName = "result";
-            //while (illegalNames.Contains(tempVariableName)) {
-            //    tempVariableName = "_" + tempVariableName;
-            //}
-
             var text = string.Format(postconditionTemplate, tempVariableName, returnedExpression);
             var statement = SyntaxFactory.ParseStatement(text);
 
             return new SyntaxList<StatementSyntax>().Add(statement);
         }
-        
     }
 }
