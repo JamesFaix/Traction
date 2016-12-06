@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using System.Collections.Generic;
 
 namespace Traction {
 
@@ -30,6 +31,17 @@ namespace Traction {
             if (model == null) throw new ArgumentNullException(nameof(model));
 
             return type.GetTypeSymbol(model).Equals(symbol);
+        }
+
+        public static IEnumerable<INamedTypeSymbol> Ancestors(this ITypeSymbol symbol) {
+            if (symbol == null) throw new ArgumentNullException(nameof(symbol));
+
+            var ancestor = symbol as INamedTypeSymbol;
+
+            while (ancestor != null) {
+                ancestor = ancestor.BaseType;
+                yield return ancestor;
+            }
         }
     }
 }
