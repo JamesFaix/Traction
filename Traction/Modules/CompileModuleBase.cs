@@ -7,19 +7,19 @@ namespace Traction {
     public abstract class CompileModuleBase : ICompileModule {
 
         protected CompileModuleBase() {
-            beforeRewriterProviders = new List<IRewriterProvider>();
-            afterRewriterProviders = new List<IRewriterProvider>();
+            beforeRewriterProviders = new List<RewriterFactoryMethod>();
+            afterRewriterProviders = new List<RewriterFactoryMethod>();
         }
 
-        private readonly List<IRewriterProvider> beforeRewriterProviders;
-        private readonly List<IRewriterProvider> afterRewriterProviders;
+        private readonly List<RewriterFactoryMethod> beforeRewriterProviders;
+        private readonly List<RewriterFactoryMethod> afterRewriterProviders;
 
-        protected void AddBeforeRewriterProvider(IRewriterProvider provider) {
+        protected void AddBeforeRewriterProvider(RewriterFactoryMethod provider) {
             if (provider == null) throw new ArgumentNullException(nameof(provider));
             beforeRewriterProviders.Add(provider);
         }
 
-        protected void AddAfterRewriterProvider(IRewriterProvider provider) {
+        protected void AddAfterRewriterProvider(RewriterFactoryMethod provider) {
             if (provider == null) throw new ArgumentNullException(nameof(provider));
             afterRewriterProviders.Add(provider);
         }
@@ -34,11 +34,11 @@ namespace Traction {
             Process(new AfterCompileContextWrapper(context), afterRewriterProviders);
         }
 
-        private void Process(ICompileContext context, IEnumerable<IRewriterProvider> rewriterProviders) {
+        private void Process(ICompileContext context, IEnumerable<RewriterFactoryMethod> rewriterProviders) {
             foreach (var provider in rewriterProviders) {
                 foreach (var syntaxTree in context.Compilation.SyntaxTrees) {
                     var model = context.Compilation.GetSemanticModel(syntaxTree);
-                    var rewriter = provider.CreateRewriter(model, context);
+                    var rewriter = provider(model, context);
                     if (rewriter == null) throw new InvalidOperationException("Rewriter generator cannot return null.");
 
                     var rootNode = syntaxTree.GetRoot();
