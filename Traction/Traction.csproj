@@ -61,18 +61,20 @@
     <Compile Include="ExtensionMethods\CSharpSyntaxNodeExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeSymbolExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Modules\AfterCompileContextWrapper.cs" />
-    <Compile Include="Modules\BeforeCompileContextWrapper.cs" />
+    <Compile Include="CompileContext\AfterCompileContextWrapper.cs" />
+    <Compile Include="CompileContext\BeforeCompileContextWrapper.cs" />
     <Compile Include="Modules\CompileModuleBase.cs" />
     <Compile Include="Modules\ContractModule.cs" />
-    <Compile Include="Modules\ICompileContext.cs" />
-    <Compile Include="Rewriters\DiagnosticProvider.cs" />
-    <Compile Include="Rewriters\IRewriterProvider.cs" />
+    <Compile Include="CompileContext\ICompileContext.cs" />
+    <Compile Include="Exceptions\DiagnosticProvider.cs" />
+    <Compile Include="Rewriters\Delegates.cs" />
     <Compile Include="Rewriters\ContractRewriterBase.cs" />
     <Compile Include="Rewriters\NonNullAttributeRewriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ExtensionMethods\PropertySyntaxExtensions.cs" />
-    <Compile Include="Rewriters\NonNullAttributeRewriterProvider.cs" />
+    <Compile Include="Rewriters\RewriterBase.cs" />
+    <Compile Include="Rewriters\RewriterFactory.cs" />
+    <Compile Include="Rewriters\SyntaxExpander.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -5,8 +5,8 @@ namespace Traction {
     public class ContractModule : CompileModuleBase, ICompileModule {
 
         public ContractModule() : base() {
-            
-            AddBeforeRewriterProvider(new NonNullAttributeRewriterProvider());
+            AddBeforeRewriterProvider(RewriterFactory.SyntaxExpander);
+            AddBeforeRewriterProvider(RewriterFactory.NonNullAttribute);
         }
     }
 }

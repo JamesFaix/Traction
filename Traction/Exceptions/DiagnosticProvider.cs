@@ -39,6 +39,6 @@ namespace Traction {
                     defaultSeverity: DiagnosticSeverity.Error,
                     isEnabledByDefault: true),
                 location: location);
-        }
+        }        
     }
 }

@@ -8,8 +8,8 @@ namespace Traction {
 
     class NonNullAttributeReWriter : ContractRewriterBase<NonNullAttribute> {
 
-        public NonNullAttributeReWriter(SemanticModel model, ICompileContext context) : base(model, context) {
-        }
+        public NonNullAttributeReWriter(SemanticModel model, ICompileContext context) 
+            : base(model, context) { }
 
         private const string preconditionTemplate =
             @"if (global::System.Object.Equals({0}, null)) 

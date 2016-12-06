@@ -49,3 +49,11 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+*.exe
+ControlApp/obj/Debug/Traction.ControlApp.exe
+*.pdb
+*.exe
+ControlApp/bin/Debug/Traction.ControlApp.pdb
+ExperimentApp/obj/Debug/Traction.ExperimentApp.pdb
+ExperimentApp/bin/Debug/Traction.pdb
+*.pdb

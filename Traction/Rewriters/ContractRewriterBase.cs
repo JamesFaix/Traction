@@ -1,26 +1,17 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Generic;
 
 namespace Traction {
 
-    abstract class ContractRewriterBase<TAttribute> : CSharpSyntaxRewriter
+    abstract class ContractRewriterBase<TAttribute> : RewriterBase
         where TAttribute : Attribute {
 
-        protected ContractRewriterBase(SemanticModel model, ICompileContext context) {
-            if (model == null) throw new ArgumentNullException(nameof(model));
-            if (context == null) throw new ArgumentNullException(nameof(context));
-            Debugger.Launch();
-            this.model = model;
-            this.context = context;
-        }
-
-        protected readonly ICompileContext context;
-        protected readonly SemanticModel model;
+        protected ContractRewriterBase(SemanticModel model, ICompileContext context) 
+            : base (model, context) { }
 
         public sealed override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node) {
             try {
