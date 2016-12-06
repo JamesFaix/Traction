@@ -11,32 +11,5 @@ namespace Traction.ExperimentApp {
         public static void Main() {
 
         }
-        
-        [return: NonNull]
-        public static string DoStuff([NonNull] string text, int number) {
-            //return "abc";
-            var result = "x";
-
-            return result;
-        }
-
-        private string name;
-
-        [NonNull]
-        public string Name {
-            get { return name; }
-            set { name = value; }
-        }
-
-        private int number;
-        
-        public int Number {
-            get { return number; }
-            set {
-                number = value;
-                return;
-            }
-        }
-
     }
 }
