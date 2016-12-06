@@ -1,64 +1,86 @@
-﻿namespace Traction.ExperimentApp {
+﻿using System.Collections;
+using System;
+
+namespace Traction.ExperimentApp {
 
     class NonNullAttributeTest {
 
         #region Properties 
 
-        private string _unmarkedProperty = null;
-        private string _readonlyProperty = null;
-        private string _writeonlyProperty = null;
+        private string _normalProperty = null;
+        private string _readonlyPropertyWithContract = null;
+        private string _writeonlyPropertyWithContract = null;
+        private string _readWritePropertyWithContract = null;
 
-        public string UnmarkedProperty {
-            get { return _unmarkedProperty; }
-            set { _unmarkedProperty = value; }
+        public string NormalProperty {
+            get { return _normalProperty; }
+            set { _normalProperty = value; }
         }
 
         [NonNull]
-        public string ReadonlyProperty {
-            get { return _readonlyProperty; }
+        public string ReadonlyPropertyWithContract {
+            get { return _readonlyPropertyWithContract; }
         }
 
         [NonNull]
-        public string WriteonlyProeprty {
-            set { _writeonlyProperty = value; }
+        public string WriteonlyPropertyWithContract {
+            set { _writeonlyPropertyWithContract = value; }
         }
 
-        public string UnmarkedAutoproperty { get; set; }
+        [NonNull]
+        public string ReadWritePropertyWithContract {
+            get { return _readWritePropertyWithContract; }
+            set { _readWritePropertyWithContract = value; }
+        }
 
-       // [NonNull]
-        public string ReadWriteAutoProperty { get; set; }
-
-      //  [NonNull]
-        public string ReadonlyAutoProperty { get; }
+        [NonNull]
+        public string ReadonlyPropertyWithContractAndMultipleReturns {
+            get {
+                if (DateTime.Now.Second > 30) {
+                    return _readonlyPropertyWithContract;
+                }
+                else {
+                    return "";
+                }
+            }
+        }
         
+        //public string NormalAutoProperty { get; set; }
+
+        //// [NonNull]
+        //public string ReadWriteAutoProperty { get; set; }
+
+        ////  [NonNull]
+        //public string ReadonlyAutoProperty { get; }
+
         #endregion
 
         #region Methods
 
-        public void UnmarkedMethod() {
+        public void NormalMethod() {
 
         }
 
-        public void MethodWithMarkedParameter([NonNull] string text) {
+        public void MethodWithPrecondition([NonNull] string text) {
 
         }
 
         [return: NonNull]
-        public string MethodWithMarkedReturnType() {
+        public string MethodWithPostcondition() {
             return "x";
         }
 
         [return: NonNull]
-        public string MethodWithMarkedParameterAndReturnType([NonNull] string text) {
+        public string MethodWithPreAndPostcondition([NonNull] string text) {
             return text;
         }
 
-        public string MethodWithMultipleMarkedParameters([NonNull] string text, [NonNull] object obj) {
+        public string MethodWithMultiplePreconditions([NonNull] string text, [NonNull] object obj) {
             return text + obj.ToString();
         }
 
         [return: NonNull]
-        public string MethodWithMarkedReturnTypeAndMultipleReturnStatements(int n) {
+        public string MethodWithPostconditionAndMultipleReturns(int n) {
 
             if (n > 0) {
                 return "abc";
@@ -72,40 +94,63 @@
 
         #region Operators
 
-        //Unmarked operator
-        public static int operator + (NonNullAttributeTest a, NonNullAttribute b) {
+        //Normal operator
+        public static int operator +(NonNullAttributeTest a, NonNullAttribute b) {
             return 1;
         }
 
-        //Marked parameter
-        public static int operator - ([NonNull] NonNullAttributeTest a, NonNullAttributeTest b) {
+        //Precondition
+        public static int operator -([NonNull] NonNullAttributeTest a, NonNullAttributeTest b) {
             return 1;
         }
 
-        //Marked return value
+        //Postcondition
         [return: NonNull]
-        public static string operator * (NonNullAttributeTest a, NonNullAttributeTest b) {
+        public static string operator *(NonNullAttributeTest a, NonNullAttributeTest b) {
             return "test";
+        }
+
+        //Pre & Postcondition
+        [return: NonNull]
+        public static string operator /([NonNull] NonNullAttributeTest a, NonNullAttributeTest b) {
+            return "test";
+        }
+
+        //Postcondition and multiple returns
+        [return: NonNull]
+        public static string operator %(NonNullAttributeTest a, NonNullAttributeTest b) {
+            if (Equals(a, b)) {
+                return "ABC";
+            }
+            else {
+                return "123";
+            }
         }
 
         #endregion
 
         #region Conversions
 
-        //Unmarked conversion
+        //Normal conversion
         public static explicit operator int(NonNullAttributeTest a) {
             return 1;
         }
 
-        //Marked parameter
+        //Precondition
         public static explicit operator long([NonNull] NonNullAttributeTest a) {
             return 1;
         }
 
-        //Marked return value
+        //Postcondition
         [return: NonNull]
         public static explicit operator string(NonNullAttributeTest a) {
             return "test";
+        }
+
+        //Pre & Postcondition
+        [return: NonNull]
+        public static explicit operator ArrayList([NonNull] NonNullAttributeTest a) {
+            return new ArrayList();
         }
 
         #endregion
