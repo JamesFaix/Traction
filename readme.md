@@ -55,7 +55,7 @@ The transformations for properties are similar, with the precondition being inse
 
 ## Tools
 
-Visual Studio 2015
-Roslyn SDK
-StackExchange.Precompilation
-ILSpy (Any .NET disassembler will do, but ILSpy is free and has a handy VS plugin.)
+ - Visual Studio 2015
+ - Roslyn SDK
+ - StackExchange.Precompilation
+ - ILSpy (Any .NET disassembler will do, but ILSpy is free and has a handy VS plugin.)
