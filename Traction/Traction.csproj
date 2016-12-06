@@ -43,6 +43,7 @@
       <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.1.3.2\lib\net45\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="StackExchange.Precompilation.Metaprogramming, Version=2016.8.17.232, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StackExchange.Precompilation.Metaprogramming.3.3.0\lib\net45\StackExchange.Precompilation.Metaprogramming.dll</HintPath>
       <Private>True</Private>
@@ -58,6 +59,7 @@
     <Compile Include="Attributes\NonNullAttribute.cs" />
     <Compile Include="Exceptions\ReturnValueException.cs" />
     <Compile Include="ExtensionMethods\AttributeSyntaxExtensions.cs" />
+    <Compile Include="ExtensionMethods\BaseMethodDeclarationSyntaxExtensions.cs" />
     <Compile Include="ExtensionMethods\CSharpSyntaxNodeExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeSymbolExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />

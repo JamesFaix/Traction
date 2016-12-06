@@ -4,9 +4,9 @@
 
         #region Properties 
 
-        private string _unmarkedProperty;
-        private string _readonlyProperty;
-        private string _writeonlyProperty;
+        private string _unmarkedProperty = null;
+        private string _readonlyProperty = null;
+        private string _writeonlyProperty = null;
 
         public string UnmarkedProperty {
             get { return _unmarkedProperty; }

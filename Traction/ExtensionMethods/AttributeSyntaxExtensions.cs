@@ -78,6 +78,18 @@ namespace Traction {
 
         #endregion
 
+        public static bool HasAnyAttribute<TAttribute>(this BaseMethodDeclarationSyntax node, SemanticModel model)
+           where TAttribute : Attribute {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            var paramAttributes = node.ParameterList.Parameters
+                .SelectMany(p => p.AllAttributes());
+            var allAttributes = paramAttributes.Concat(node.AllAttributes());
+            
+            return HasAttributeImpl<TAttribute>(allAttributes, model);
+        }
+
         public static bool HasAnyAttributeExtending<TAttribute>(this BaseMethodDeclarationSyntax node, SemanticModel model)
            where TAttribute : Attribute {
             if (node == null) throw new ArgumentNullException(nameof(node));

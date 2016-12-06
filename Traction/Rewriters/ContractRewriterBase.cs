@@ -10,22 +10,42 @@ namespace Traction {
     abstract class ContractRewriterBase<TAttribute> : RewriterBase
         where TAttribute : Attribute {
 
-        protected ContractRewriterBase(SemanticModel model, ICompileContext context) 
-            : base (model, context) { }
+        protected ContractRewriterBase(SemanticModel model, ICompileContext context)
+            : base(model, context) { }
+
+        public sealed override SyntaxNode VisitOperatorDeclaration(OperatorDeclarationSyntax node) {
+            return base.VisitOperatorDeclaration(VisitMethodImpl(node));
+        }
+
+        public sealed override SyntaxNode VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node) {
+            return base.VisitConversionOperatorDeclaration(VisitMethodImpl(node));
+        }
 
         public sealed override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node) {
+            return base.VisitMethodDeclaration(VisitMethodImpl(node));
+        }
+
+        public sealed override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node) {
+            return base.VisitPropertyDeclaration(VisitPropertyImpl(node));
+        }
+
+        private TNode VisitMethodImpl<TNode>(TNode node)
+            where TNode : BaseMethodDeclarationSyntax {
+
+            if (!node.HasAnyAttribute<TAttribute>(model)) {
+                return node;
+            }
+
             try {
                 var preconditionStatements = GetMethodPreconditions(node);
 
                 var result = InsertMethodPostconditions(node);
 
-                result = result
+                return result
                     .WithBody(result.Body
                         .WithStatements(new SyntaxList<StatementSyntax>()
                             .AddRange(preconditionStatements)
                             .AddRange(result.Body.Statements)));
-
-                return base.VisitMethodDeclaration(result);
             }
             catch (Exception e) {
                 context.Diagnostics.Add(DiagnosticProvider.ContractInjectionFailed(node.GetLocation(), e));
@@ -33,7 +53,34 @@ namespace Traction {
             }
         }
 
-        private IEnumerable<StatementSyntax> GetMethodPreconditions(MethodDeclarationSyntax node) {
+        private PropertyDeclarationSyntax VisitPropertyImpl(PropertyDeclarationSyntax node) {
+
+            if (!node.HasAttribute<TAttribute>(model)) {
+                return node;
+            }
+
+            try {
+                var propertyType = model.GetTypeInfo(node.Type);
+
+                var location = node.GetLocation();
+                var setter = InsertPropertyPrecondition(propertyType, node.Setter(), location);
+                var getter = InsertPropertyPostcondition(propertyType, node.Getter(), location);
+
+                var accessors = SyntaxFactory.AccessorList(
+                    SyntaxFactory.List(
+                        new[] { getter, setter }
+                        .Where(a => a != null)));
+
+                return node.WithAccessorList(accessors);
+            }
+            catch (Exception e) {
+                context.Diagnostics.Add(DiagnosticProvider.ContractInjectionFailed(node.GetLocation(), e));
+                return node;
+            }
+        }
+
+        private IEnumerable<StatementSyntax> GetMethodPreconditions<TNode>(TNode node)
+            where TNode : BaseMethodDeclarationSyntax {
             var preconditionParameters = node.ParameterList.Parameters
                .Where(p => p.HasAttribute<TAttribute>(model))
                .ToArray();
@@ -49,13 +96,13 @@ namespace Traction {
             }
         }
 
-        private MethodDeclarationSyntax InsertMethodPostconditions(MethodDeclarationSyntax node) {
-
+        private TNode InsertMethodPostconditions<TNode>(TNode node)
+            where TNode : BaseMethodDeclarationSyntax {
             if (node.HasAttribute<TAttribute>(model)) {
                 var returnStatements = node.Body.Statements.OfType<ReturnStatementSyntax>();
 
                 var result = node;
-                var returnType = model.GetTypeInfo(node.ReturnType);
+                var returnType = model.GetTypeInfo(node.ReturnType());
                 var location = node.GetLocation();
 
                 foreach (var ret in returnStatements) {
@@ -66,33 +113,6 @@ namespace Traction {
                 return result;
             }
             else {
-                return node;
-            }
-        }
-
-        public sealed override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node) {
-            try {
-                var result = node;
-
-                if (node.HasAttribute<TAttribute>(model)) {
-                    var propertyType = model.GetTypeInfo(node.Type);
-
-                    var location = node.GetLocation();
-                    var setter = InsertPropertyPrecondition(propertyType, node.Setter(), location);
-                    var getter = InsertPropertyPostcondition(propertyType, node.Getter(), location);
-
-                    var accessors = SyntaxFactory.AccessorList(
-                        SyntaxFactory.List(
-                            new[] { getter, setter }
-                            .Where(a => a != null)));
-
-                    result = node.WithAccessorList(accessors);
-                }
-
-                return base.VisitPropertyDeclaration(result);
-            }
-            catch (Exception e) {
-                context.Diagnostics.Add(DiagnosticProvider.ContractInjectionFailed(node.GetLocation(), e));
                 return node;
             }
         }
@@ -130,9 +150,9 @@ namespace Traction {
 
         protected string GenerateValidLocalVariableName(ReturnStatementSyntax node) {
 
-            CSharpSyntaxNode declaration = node.FirstAncestorOrSelf<MethodDeclarationSyntax>();
+            CSharpSyntaxNode declaration = node.FirstAncestorOrSelf<BaseMethodDeclarationSyntax>();
             declaration = declaration ?? node.FirstAncestorOrSelf<AccessorDeclarationSyntax>();
-            
+
             return declaration.GenerateUniqueMemberName(model);
         }
     }
