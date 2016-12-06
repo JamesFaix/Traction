@@ -56,7 +56,6 @@
   <ItemGroup>
     <Compile Include="Attributes\ContractAttribute.cs" />
     <Compile Include="Attributes\NonNullAttribute.cs" />
-    <Compile Include="Exceptions\PrecompilationException.cs" />
     <Compile Include="Exceptions\ReturnValueException.cs" />
     <Compile Include="ExtensionMethods\AttributeSyntaxExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeSymbolExtensions.cs" />
