@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
 
 namespace Traction {
 
@@ -22,13 +23,22 @@ namespace Traction {
         protected readonly SemanticModel model;
 
         public sealed override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node) {
-           //Debugger.Launch();
-            return base.VisitMethodDeclaration(
-                InsertMethodPostconditions(
-                   InsertMethodPreconditions(node)));
+            //Debugger.Launch();
+            
+            var preconditionStatements = GetMethodPreconditions(node);
+
+            node = InsertMethodPostconditions(node);
+
+            node = node
+                .WithBody(node.Body
+                    .WithStatements(new SyntaxList<StatementSyntax>()
+                        .AddRange(preconditionStatements)
+                        .AddRange(node.Body.Statements)));
+
+            return base.VisitMethodDeclaration(node);
         }
 
-        private MethodDeclarationSyntax InsertMethodPreconditions(MethodDeclarationSyntax node) {
+        private IEnumerable<StatementSyntax> GetMethodPreconditions(MethodDeclarationSyntax node) {
             var preconditionParameters = node.ParameterList.Parameters
                .Where(p => p.HasAttribute<TAttribute>(model))
                .ToArray();
@@ -36,18 +46,11 @@ namespace Traction {
             if (preconditionParameters.Any()) {
                 var location = node.GetLocation();
 
-                var preconditions = preconditionParameters
+                return preconditionParameters
                     .SelectMany(p => CreatePrecondition(model.GetTypeInfo(p.Type), p.Identifier.ValueText, location));
-
-                var statements = new SyntaxList<StatementSyntax>()
-                    .AddRange(preconditions)
-                    .AddRange(node.Body.Statements);
-
-                return node.WithBody(node.Body
-                    .WithStatements(statements));
             }
             else {
-                return node;
+                return new StatementSyntax[0];
             }
         }
 
@@ -55,7 +58,7 @@ namespace Traction {
 
             Debugger.Launch();
 
-            if (node.HasReturnValueAttribute<TAttribute>(model)) {
+            if (node.HasAttribute<TAttribute>(model)) {
                 var returnStatements = node.Body.Statements.OfType<ReturnStatementSyntax>();
 
                 var result = node;
