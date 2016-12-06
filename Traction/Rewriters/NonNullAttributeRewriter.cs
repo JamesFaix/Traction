@@ -44,7 +44,7 @@ namespace Traction {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (location == null) throw new ArgumentNullException(nameof(location));
 
-            //Debugger.Launch();
+            Debugger.Launch();
 
             if (!returnType.Type.IsReferenceType) {
                 context.Diagnostics.Add(DiagnosticProvider.NonNullAttributeCanOnlyBeAppliedToReferenceTypes(location));
@@ -58,7 +58,7 @@ namespace Traction {
                 return new SyntaxList<StatementSyntax>();
             }
 
-            var tempVariableName = "result";
+            var tempVariableName = GenerateValidLocalVariableName(node);
             var text = string.Format(postconditionTemplate, tempVariableName, returnedExpression);
             var statement = SyntaxFactory.ParseStatement(text);
 

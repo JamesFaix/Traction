@@ -22,9 +22,10 @@ namespace Traction {
 
             var locals = node.DescendantNodes()
                 .OfType<VariableDeclarationSyntax>()
+                .SelectMany(declaration => declaration.Variables)
                 .Select(v => model.GetDeclaredSymbol(v).Name);
 
-            return memberAndTypeNames.Concat(locals);
+            return memberAndTypeNames.Concat(locals).ToArray();
         }
     }
 }
