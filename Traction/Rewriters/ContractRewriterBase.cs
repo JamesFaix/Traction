@@ -14,7 +14,7 @@ namespace Traction {
         protected ContractRewriterBase(SemanticModel model, ICompileContext context) {
             if (model == null) throw new ArgumentNullException(nameof(model));
             if (context == null) throw new ArgumentNullException(nameof(context));
-
+            Debugger.Launch();
             this.model = model;
             this.context = context;
         }
@@ -23,7 +23,6 @@ namespace Traction {
         protected readonly SemanticModel model;
 
         public sealed override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node) {
-            //Debugger.Launch();
             try {
                 var preconditionStatements = GetMethodPreconditions(node);
 
@@ -61,8 +60,6 @@ namespace Traction {
 
         private MethodDeclarationSyntax InsertMethodPostconditions(MethodDeclarationSyntax node) {
 
-            //  Debugger.Launch();
-
             if (node.HasAttribute<TAttribute>(model)) {
                 var returnStatements = node.Body.Statements.OfType<ReturnStatementSyntax>();
 
@@ -83,7 +80,6 @@ namespace Traction {
         }
 
         public sealed override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node) {
-            //Debugger.Launch();
             try {
                 var result = node;
 
@@ -130,7 +126,8 @@ namespace Traction {
             BlockSyntax body = node.Body;
 
             foreach (var ret in returnStatements) {
-                body = body.ReplaceNode(ret, CreatePostcondition(type, ret, location));
+                var postcondition = CreatePostcondition(type, ret, location);
+                body = body.ReplaceNode(ret, postcondition);
             }
 
             return node.WithBody(body);
@@ -141,20 +138,11 @@ namespace Traction {
         protected abstract SyntaxList<StatementSyntax> CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location);
 
         protected string GenerateValidLocalVariableName(ReturnStatementSyntax node) {
-            Debugger.Launch();
-            //Find all symbol names accessible from the defining type (excessive but thorough)
 
-            var illegalNames = node
-                .FirstAncestorOrSelf<MethodDeclarationSyntax>()
-                .IllegalVariableNames(model)
-                .ToArray();
-
-            //Call the temporary var "result", but prepend underscores until there is no name conflict
-            var tempVariableName = "result";
-            while (illegalNames.Contains(tempVariableName)) {
-                tempVariableName = "_" + tempVariableName;
-            }
-            return tempVariableName;
+            CSharpSyntaxNode declaration = node.FirstAncestorOrSelf<MethodDeclarationSyntax>();
+            declaration = declaration ?? node.FirstAncestorOrSelf<AccessorDeclarationSyntax>();
+            
+            return declaration.GenerateUniqueMemberName(model);
         }
     }
 }

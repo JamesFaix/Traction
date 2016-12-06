@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -28,7 +27,6 @@ namespace Traction {
             if (parameterName == null) throw new ArgumentNullException(nameof(parameterName));
             if (location == null) throw new ArgumentNullException(nameof(location));
 
-            //Debugger.Launch();
             if (!type.Type.IsReferenceType) {
                 context.Diagnostics.Add(DiagnosticProvider.NonNullAttributeCanOnlyBeAppliedToReferenceTypes(location));
                 return new SyntaxList<StatementSyntax>();
@@ -43,9 +41,7 @@ namespace Traction {
         protected override SyntaxList<StatementSyntax> CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location) {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (location == null) throw new ArgumentNullException(nameof(location));
-
-            Debugger.Launch();
-
+            
             if (!returnType.Type.IsReferenceType) {
                 context.Diagnostics.Add(DiagnosticProvider.NonNullAttributeCanOnlyBeAppliedToReferenceTypes(location));
                 return new SyntaxList<StatementSyntax>();

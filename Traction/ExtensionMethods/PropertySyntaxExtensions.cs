@@ -15,7 +15,7 @@ namespace Traction {
 
         public static AccessorDeclarationSyntax Setter(this PropertyDeclarationSyntax node) {
             if (node == null) throw new ArgumentNullException(nameof(node));
-            //Debugger.Launch();
+            
             return node.AccessorList.Accessors
                 .SingleOrDefault(accessor => accessor.Kind().ToString().StartsWith("Set"));
         }

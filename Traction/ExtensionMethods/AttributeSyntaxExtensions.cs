@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Diagnostics;
 
 namespace Traction {
 
@@ -56,7 +55,7 @@ namespace Traction {
         
         private static bool HasAttributeImpl<TAttribute>(IEnumerable<AttributeSyntax> attributes, SemanticModel model)
             where TAttribute : Attribute {
-            // Debugger.Launch();
+
             var symbol = typeof(TAttribute).GetTypeSymbol(model);
 
             IEnumerable<ITypeSymbol> attributeTypes = new ITypeSymbol[0];

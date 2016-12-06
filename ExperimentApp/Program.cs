@@ -14,7 +14,10 @@ namespace Traction.ExperimentApp {
         
         [return: NonNull]
         public static string DoStuff([NonNull] string text, int number) {
-            return "abc";
+            //return "abc";
+            var result = "x";
+
+            return result;
         }
 
         private string name;

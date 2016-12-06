@@ -8,8 +8,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Traction {
 
     static class MethodSyntaxExtensionMethods {
-
-        public static IEnumerable<string> IllegalVariableNames(this MethodDeclarationSyntax node, SemanticModel model) {
+        
+        public static IEnumerable<string> IllegalMemberNames(this CSharpSyntaxNode node, SemanticModel model) {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
@@ -26,6 +26,22 @@ namespace Traction {
                 .Select(v => model.GetDeclaredSymbol(v).Name);
 
             return memberAndTypeNames.Concat(locals).ToArray();
+        }
+
+        public static string GenerateUniqueMemberName(this CSharpSyntaxNode node, SemanticModel model) {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            var illegalNames = node
+                .IllegalMemberNames(model)
+                .ToArray();
+
+            //Call the temporary var "x", but prepend underscores until there is no name conflict
+            var tempVariableName = "x";
+            while (illegalNames.Contains(tempVariableName)) {
+                tempVariableName = "_" + tempVariableName;
+            }
+            return tempVariableName;
         }
     }
 }

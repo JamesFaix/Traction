@@ -58,7 +58,7 @@
     <Compile Include="Attributes\NonNullAttribute.cs" />
     <Compile Include="Exceptions\ReturnValueException.cs" />
     <Compile Include="ExtensionMethods\AttributeSyntaxExtensions.cs" />
-    <Compile Include="ExtensionMethods\MethodSyntaxExtensionMethods.cs" />
+    <Compile Include="ExtensionMethods\CSharpSyntaxNodeExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeSymbolExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Modules\AfterCompileContextWrapper.cs" />
