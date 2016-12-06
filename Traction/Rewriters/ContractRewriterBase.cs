@@ -10,7 +10,7 @@ namespace Traction {
 
     abstract class ContractRewriterBase<TAttribute> : CSharpSyntaxRewriter
         where TAttribute : Attribute {
-        
+
         protected ContractRewriterBase(SemanticModel model, ICompileContext context) {
             if (model == null) throw new ArgumentNullException(nameof(model));
             if (context == null) throw new ArgumentNullException(nameof(context));
@@ -24,18 +24,23 @@ namespace Traction {
 
         public sealed override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node) {
             //Debugger.Launch();
-            
-            var preconditionStatements = GetMethodPreconditions(node);
+            try {
+                var preconditionStatements = GetMethodPreconditions(node);
 
-            node = InsertMethodPostconditions(node);
+                var result = InsertMethodPostconditions(node);
 
-            node = node
-                .WithBody(node.Body
-                    .WithStatements(new SyntaxList<StatementSyntax>()
-                        .AddRange(preconditionStatements)
-                        .AddRange(node.Body.Statements)));
+                result = result
+                    .WithBody(result.Body
+                        .WithStatements(new SyntaxList<StatementSyntax>()
+                            .AddRange(preconditionStatements)
+                            .AddRange(result.Body.Statements)));
 
-            return base.VisitMethodDeclaration(node);
+                return base.VisitMethodDeclaration(result);
+            }
+            catch (Exception e) {
+                context.Diagnostics.Add(DiagnosticProvider.ContractInjectionFailed(node.GetLocation(), e));
+                return node;
+            }
         }
 
         private IEnumerable<StatementSyntax> GetMethodPreconditions(MethodDeclarationSyntax node) {
@@ -56,7 +61,7 @@ namespace Traction {
 
         private MethodDeclarationSyntax InsertMethodPostconditions(MethodDeclarationSyntax node) {
 
-            Debugger.Launch();
+            //  Debugger.Launch();
 
             if (node.HasAttribute<TAttribute>(model)) {
                 var returnStatements = node.Body.Statements.OfType<ReturnStatementSyntax>();
@@ -79,25 +84,30 @@ namespace Traction {
 
         public sealed override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node) {
             //Debugger.Launch();
+            try {
+                var result = node;
 
-            var result = node;
+                if (node.HasAttribute<TAttribute>(model)) {
+                    var propertyType = model.GetTypeInfo(node.Type);
 
-            if (node.HasAttribute<TAttribute>(model)) {
-                var propertyType = model.GetTypeInfo(node.Type);
+                    var location = node.GetLocation();
+                    var setter = InsertPropertyPrecondition(propertyType, node.Setter(), location);
+                    var getter = InsertPropertyPostcondition(propertyType, node.Getter(), location);
 
-                var location = node.GetLocation();
-                var setter = InsertPropertyPrecondition(propertyType, node.Setter(), location);
-                var getter = InsertPropertyPostcondition(propertyType, node.Getter(), location);
+                    var accessors = SyntaxFactory.AccessorList(
+                        SyntaxFactory.List(
+                            new[] { getter, setter }
+                            .Where(a => a != null)));
 
-                var accessors = SyntaxFactory.AccessorList(
-                    SyntaxFactory.List(
-                        new[] { getter, setter }
-                        .Where(a => a != null)));
+                    result = node.WithAccessorList(accessors);
+                }
 
-                result = node.WithAccessorList(accessors);
+                return base.VisitPropertyDeclaration(result);
             }
-
-            return base.VisitPropertyDeclaration(result);
+            catch (Exception e) {
+                context.Diagnostics.Add(DiagnosticProvider.ContractInjectionFailed(node.GetLocation(), e));
+                return node;
+            }
         }
 
         private AccessorDeclarationSyntax InsertPropertyPrecondition(TypeInfo type, AccessorDeclarationSyntax node, Location location) {
@@ -130,5 +140,21 @@ namespace Traction {
 
         protected abstract SyntaxList<StatementSyntax> CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location);
 
+        protected string GenerateValidLocalVariableName(ReturnStatementSyntax node) {
+            Debugger.Launch();
+            //Find all symbol names accessible from the defining type (excessive but thorough)
+
+            var illegalNames = node
+                .FirstAncestorOrSelf<MethodDeclarationSyntax>()
+                .IllegalVariableNames(model)
+                .ToArray();
+
+            //Call the temporary var "result", but prepend underscores until there is no name conflict
+            var tempVariableName = "result";
+            while (illegalNames.Contains(tempVariableName)) {
+                tempVariableName = "_" + tempVariableName;
+            }
+            return tempVariableName;
+        }
     }
 }

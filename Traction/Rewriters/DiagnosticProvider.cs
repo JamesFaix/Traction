@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using System;
 
 namespace Traction {
 
@@ -28,5 +29,16 @@ namespace Traction {
                 location: location);
         }
 
+        public static Diagnostic ContractInjectionFailed(Location location, Exception e) {
+            return Diagnostic.Create(
+                descriptor: new DiagnosticDescriptor(
+                    id: "TC0003",
+                    title: "Contract injection failed",
+                    messageFormat: $"Contract injection failed. {e.GetType()}: {e.Message}",
+                    category: "Traction",
+                    defaultSeverity: DiagnosticSeverity.Error,
+                    isEnabledByDefault: true),
+                location: location);
+        }
     }
 }
