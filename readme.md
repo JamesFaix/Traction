@@ -51,7 +51,11 @@ will be transformed into this:
 		}
 	}
 	
-An extra `{}` block is created here to ensure no naming conflict with the local variable `result`.
-
 The transformations for properties are similar, with the precondition being inserted into the `set` accessor and postcondition in the `get` accessor.
 
+## Tools
+
+Visual Studio 2015
+Roslyn SDK
+StackExchange.Precompilation
+ILSpy (Any .NET disassembler will do, but ILSpy is free and has a handy VS plugin.)
