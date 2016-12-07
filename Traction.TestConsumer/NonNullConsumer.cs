@@ -1,59 +1,63 @@
 ﻿using System.Collections;
 using System;
 
-namespace Traction.ExperimentApp {
+namespace Traction {
 
-    class NonNullAttributeTest {
+    public class NonNullConsumer {
 
-        //#region Properties 
+        #region Properties 
 
-        //private string _normalProperty = null;
-        //private string _readonlyPropertyWithContract = null;
-        //private string _writeonlyPropertyWithContract = null;
-        //private string _readWritePropertyWithContract = null;
-
-        //public string NormalProperty {
-        //    get { return _normalProperty; }
-        //    set { _normalProperty = value; }
-        //}
-
-        //[NonNull]
-        //public string ReadonlyPropertyWithContract {
-        //    get { return _readonlyPropertyWithContract; }
-        //}
-
-        //[NonNull]
-        //public string WriteonlyPropertyWithContract {
-        //    set { _writeonlyPropertyWithContract = value; }
-        //}
-
-        //[NonNull]
-        //public string ReadWritePropertyWithContract {
-        //    get { return _readWritePropertyWithContract; }
-        //    set { _readWritePropertyWithContract = value; }
-        //}
-
-        //[NonNull]
-        //public string ReadonlyPropertyWithContractAndMultipleReturns {
-        //    get {
-        //        if (DateTime.Now.Second > 30) {
-        //            return _readonlyPropertyWithContract;
-        //        }
-        //        else {
-        //            return "";
-        //        }
-        //    }
-        //}
+        public string _normalProperty;
+        public string _readonlyPropertyWithContract;
+        public string _writeonlyPropertyWithContract;
+        public string _readWritePropertyWithContract;
+        public string _readonlyPropertyWithContractAndMultipleReturns1;
+        public string _readonlyPropertyWithContractAndMultipleReturns2;
+        private bool _readonlyPropertyWithContractAndMultipleReturnsToggle;
         
-        ////public string NormalAutoProperty { get; set; }
+        public string NormalProperty {
+            get { return _normalProperty; }
+            set { _normalProperty = value; }
+        }
 
-        ////// [NonNull]
-        ////public string ReadWriteAutoProperty { get; set; }
+        [NonNull]
+        public string ReadonlyPropertyWithContract {
+            get { return _readonlyPropertyWithContract; }
+        }
 
-        //////  [NonNull]
-        ////public string ReadonlyAutoProperty { get; }
+        [NonNull]
+        public string WriteonlyPropertyWithContract {
+            set { _writeonlyPropertyWithContract = value; }
+        }
 
-        //#endregion
+        [NonNull]
+        public string ReadWritePropertyWithContract {
+            get { return _readWritePropertyWithContract; }
+            set { _readWritePropertyWithContract = value; }
+        }
+
+        [NonNull]
+        public string ReadonlyPropertyWithContractAndMultipleReturns {
+            get {
+                _readonlyPropertyWithContractAndMultipleReturnsToggle = !_readonlyPropertyWithContractAndMultipleReturnsToggle;
+                if (_readonlyPropertyWithContractAndMultipleReturnsToggle) {
+                    return _readonlyPropertyWithContractAndMultipleReturns1;
+                }
+                else {
+                    return _readonlyPropertyWithContractAndMultipleReturns2;
+                }
+            }
+        }
+
+        //public string NormalAutoProperty { get; set; }
+
+        //// [NonNull]
+        //public string ReadWriteAutoProperty { get; set; }
+
+        ////  [NonNull]
+        //public string ReadonlyAutoProperty { get; }
+
+        #endregion
 
         #region Methods
 
