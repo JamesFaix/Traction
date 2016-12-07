@@ -1,9 +1,6 @@
-﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using System.Collections;
+using NUnit.Framework;
 
 namespace Traction.Tests {
 
@@ -353,8 +350,8 @@ namespace Traction.Tests {
 
         [Test]
         public void NonNull_OperatorWithPreAndPostcondition_ThrowsIfArgNull() {
-            var consumer1 = new NonNullConsumer();
-            NonNullConsumer consumer2 = null;
+            NonNullConsumer consumer1 = null;
+            var consumer2 = new NonNullConsumer();
 
             Assert.Throws<ArgumentNullException>(() => {
                 var x = consumer1 / consumer2;
@@ -401,6 +398,133 @@ namespace Traction.Tests {
             });
             Assert.Throws<ReturnValueException>(() => {
                 var x = consumer1 % consumer1;
+            });
+        }
+        #endregion
+        #endregion
+
+        #region Conversions
+
+        #region NormalConversion (int)
+        [Test]
+        public void NonNull_NormalConversion_DoesNotThrow() {
+            NonNullConsumer consumer = null;
+
+            Assert.DoesNotThrow(() => {
+                var x = (int)consumer;
+            });
+        }
+        #endregion
+
+        #region Precondition conversion (long)
+        [Test]
+        public void NonNull_ConversionWithPrecondition_DoesNotThrowIfArgNotNull() {
+            var consumer = new NonNullConsumer();
+
+            Assert.DoesNotThrow(() => {
+                var x = (long)consumer;
+            });
+        }
+
+        [Test]
+        public void NonNull_ConversionWithPrecondition_ThrowsIfArgNull() {
+            NonNullConsumer consumer = null;
+
+            Assert.Throws<ArgumentNullException>(() => {
+                var x = (long)consumer;
+            });
+        }
+        #endregion
+
+        #region Postcondition conversion (string)
+        // returns null if arg is null
+
+        [Test]
+        public void NonNull_ConversionWithPostcondition_DoesNotThrowIfResultNotNull() {
+            var consumer = new NonNullConsumer();
+
+            Assert.DoesNotThrow(() => {
+                var x = (string)consumer;
+            });
+        }
+
+        [Test]
+        public void NonNull_ConversionWithPostcondition_ThrowsIfResultNull() {
+            NonNullConsumer consumer = null;
+
+            Assert.Throws<ReturnValueException>(() => {
+                var x = (string)consumer;
+            });
+        }
+        #endregion
+
+        #region Pre and Postcondition conversion (ArrayList)
+        //returns null if argument's _returnValue1 field is null
+
+        [Test]
+        public void NonNull_ConversionWithPreAndPostcondition_DoesNotThrowIfArgAndResultNotNull() {
+            var consumer = new NonNullConsumer();
+            consumer._returnValue1 = "test";
+
+            Assert.DoesNotThrow(() => {
+                var x = (ArrayList)consumer;
+            });
+        }
+
+        [Test]
+        public void NonNull_ConversionWithPreAndPostcondition_ThrowsIfArgNull() {
+            NonNullConsumer consumer = null;
+
+            Assert.Throws<ArgumentNullException>(() => {
+                var x = (ArrayList)consumer;
+            });
+        }
+
+        [Test]
+        public void NonNull_ConversionWithPreAndPostcondition_ThrowsIfResultNull() {
+            var consumer = new NonNullConsumer();
+
+            Assert.Throws<ReturnValueException>(() => {
+                var x = (ArrayList)consumer;
+            });
+        }
+        #endregion
+
+        #region Post with multiple returns (int[])
+        //chooses argument's _returnValue1 or _returnValue2, the first that is not null
+        //returns int array that is length of selected field, or null if field is empty string
+
+        [Test]
+        public void NonNull_ConversionWithPostconditionAndMultipleReturns_DoesNotThrowIfResultsNonNull() {
+            var consumer = new NonNullConsumer();
+            consumer._returnValue1 = "test";
+            
+            Assert.DoesNotThrow(() => {
+                var x = (int[])consumer;
+            });
+
+            consumer._returnValue1 = null;
+            consumer._returnValue2 = "test";
+
+            Assert.DoesNotThrow(() => {
+                var x = (int[])consumer;
+            });
+        }
+
+        [Test]
+        public void NonNull_ConversionWithPostconditionAndMultipleReturns_ThrowsIfResultNull() {
+            var consumer = new NonNullConsumer();
+            consumer._returnValue1 = "";
+
+            Assert.Throws<ReturnValueException>(() => {
+                var x = (int[])consumer;
+            });
+
+            consumer._returnValue1 = null;
+            consumer._returnValue2 = "";
+
+            Assert.Throws<ReturnValueException>(() => {
+                var x = (int[])consumer;
             });
         }
         #endregion

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 
 namespace Traction {
 
@@ -14,7 +15,7 @@ namespace Traction {
         public string _readonlyPropertyWithContract;
         public string _writeonlyPropertyWithContract;
         public string _readWritePropertyWithContract;
-                
+
         public string NormalProperty {
             get { return _normalProperty; }
             set { _normalProperty = value; }
@@ -48,7 +49,7 @@ namespace Traction {
                 }
             }
         }
-        
+
         #endregion
 
         #region Methods
@@ -127,30 +128,44 @@ namespace Traction {
 
         #endregion
 
-        //#region Conversions
+        #region Conversions
 
-        ////Normal conversion
-        //public static explicit operator int(NonNullAttributeTest a) {
-        //    return 1;
-        //}
+        //Normal conversion
+        public static explicit operator int(NonNullConsumer a) {
+            return 1;
+        }
 
-        ////Precondition
-        //public static explicit operator long([NonNull] NonNullAttributeTest a) {
-        //    return 1;
-        //}
+        //Precondition
+        public static explicit operator long([NonNull] NonNullConsumer a) {
+            return 1;
+        }
 
-        ////Postcondition
-        //[return: NonNull]
-        //public static explicit operator string(NonNullAttributeTest a) {
-        //    return "test";
-        //}
+        //Postcondition
+        [return: NonNull]
+        public static explicit operator string(NonNullConsumer a) {
+            var result = (a == null) ? null : "test";
+            return result;
+        }
 
-        ////Pre & Postcondition
-        //[return: NonNull]
-        //public static explicit operator ArrayList([NonNull] NonNullAttributeTest a) {
-        //    return new ArrayList();
-        //}
+        //Pre & Postcondition
+        [return: NonNull]
+        public static explicit operator ArrayList([NonNull] NonNullConsumer a) {
+            return a._returnValue1 == null ? null : new ArrayList();
+        }
 
-        //#endregion
+        //Post with multiple returns
+        [return: NonNull]
+        public static explicit operator int[](NonNullConsumer a) {
+            if (a._returnValue1 == null) {
+                var size = a._returnValue2.Length;
+                return (size > 0) ? new int[size] : null;
+            }
+            else {
+                var size = a._returnValue1.Length;
+                return (size > 0) ? new int[size] : null;
+            }
+        }
+
+        #endregion
     }
 }
