@@ -60,6 +60,7 @@
     <Compile Include="Exceptions\ReturnValueException.cs" />
     <Compile Include="ExtensionMethods\AttributeSyntaxExtensions.cs" />
     <Compile Include="ExtensionMethods\BaseMethodDeclarationSyntaxExtensions.cs" />
+    <Compile Include="ExtensionMethods\SyntaxNodeExtensions.cs" />
     <Compile Include="ExtensionMethods\CSharpSyntaxNodeExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeSymbolExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />

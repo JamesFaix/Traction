@@ -8,7 +8,7 @@ namespace Traction {
 
     class NonNullAttributeReWriter : ContractRewriterBase<NonNullAttribute> {
 
-        public NonNullAttributeReWriter(SemanticModel model, ICompileContext context) 
+        public NonNullAttributeReWriter(SemanticModel model, ICompileContext context)
             : base(model, context) { }
 
         private const string preconditionTemplate =
@@ -23,42 +23,40 @@ namespace Traction {
                   return {0};
               }}";
 
-        protected override SyntaxList<StatementSyntax> CreatePrecondition(TypeInfo type, string parameterName, Location location) {
+        protected override StatementSyntax CreatePrecondition(TypeInfo type, string parameterName, Location location) {
             if (parameterName == null) throw new ArgumentNullException(nameof(parameterName));
             if (location == null) throw new ArgumentNullException(nameof(location));
 
             if (!type.Type.IsReferenceType) {
                 context.Diagnostics.Add(DiagnosticProvider.NonNullAttributeCanOnlyBeAppliedToReferenceTypes(location));
-                return new SyntaxList<StatementSyntax>();
+                return SyntaxFactory.Block();
             }
 
             var text = string.Format(preconditionTemplate, parameterName);
             var statement = SyntaxFactory.ParseStatement(text);
 
-            return new SyntaxList<StatementSyntax>().Add(statement);
+            return SyntaxFactory.Block(statement);
         }
 
-        protected override SyntaxList<StatementSyntax> CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location) {
+        protected override StatementSyntax CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location) {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (location == null) throw new ArgumentNullException(nameof(location));
-            
+
             if (!returnType.Type.IsReferenceType) {
                 context.Diagnostics.Add(DiagnosticProvider.NonNullAttributeCanOnlyBeAppliedToReferenceTypes(location));
-                return new SyntaxList<StatementSyntax>();
+                return node;
             }
 
             var returnedExpression = node.ChildNodes().FirstOrDefault();
 
             if (returnedExpression == null) {
                 context.Diagnostics.Add(DiagnosticProvider.NonNullAttributeCannotBeAppliedToMethodWithNoReturnType(location));
-                return new SyntaxList<StatementSyntax>();
+                return node;
             }
 
             var tempVariableName = GenerateValidLocalVariableName(node);
             var text = string.Format(postconditionTemplate, tempVariableName, returnedExpression);
-            var statement = SyntaxFactory.ParseStatement(text);
-
-            return new SyntaxList<StatementSyntax>().Add(statement);
+            return SyntaxFactory.ParseStatement(text);
         }
     }
 }

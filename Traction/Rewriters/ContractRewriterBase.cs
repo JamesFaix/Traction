@@ -85,47 +85,48 @@ namespace Traction {
                .Where(p => p.HasAttribute<TAttribute>(model))
                .ToArray();
 
-            if (preconditionParameters.Any()) {
-                var location = node.GetLocation();
-
-                return preconditionParameters
-                    .SelectMany(p => CreatePrecondition(model.GetTypeInfo(p.Type), p.Identifier.ValueText, location));
-            }
-            else {
+            if (!preconditionParameters.Any()) {
                 return new StatementSyntax[0];
             }
+
+            var location = node.GetLocation();
+
+            return preconditionParameters
+                .Select(p => CreatePrecondition(model.GetTypeInfo(p.Type), p.Identifier.ValueText, location));
         }
 
         private TNode InsertMethodPostconditions<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
-            if (node.HasAttribute<TAttribute>(model)) {
-                var returnStatements = node.Body.Statements.OfType<ReturnStatementSyntax>();
-
-                var result = node;
-                var returnType = model.GetTypeInfo(node.ReturnType());
-                var location = node.GetLocation();
-
-                foreach (var ret in returnStatements) {
-                    var postcondition = CreatePostcondition(returnType, ret, location);
-                    result = result.ReplaceNode(ret, postcondition);
-                }
-
-                return result;
-            }
-            else {
+            if (!node.HasAttribute<TAttribute>(model)) {
                 return node;
             }
+            
+            var result = node;
+            var returnType = model.GetTypeInfo(node.ReturnType());
+            var location = node.GetLocation();
+
+            return node.ReplaceReturnStatements(ret => 
+                CreatePostcondition(returnType, ret, location));
+
+            //var returnStatements = node.Body.GetAllReturnStatements().ToArray();
+
+            //foreach (var ret in returnStatements) {
+            //    var postcondition = CreatePostcondition(returnType, ret, location);
+            //    var statements = result.Body.Statements.Replace(ret, postcondition);
+
+            //    result = result.WithBody( 
+            //        result.Body.WithStatements(statements));
+            //}
+            
+            //return result;
         }
 
         private AccessorDeclarationSyntax InsertPropertyPrecondition(TypeInfo type, AccessorDeclarationSyntax node, Location location) {
             if (node == null) return null;
 
-            var statements = new SyntaxList<StatementSyntax>()
-                .AddRange(CreatePrecondition(type, "value", location))
-                .AddRange(node.Body.Statements);
-
-            return node.WithBody(node.Body
-                .WithStatements(statements));
+            return node.WithBody(
+                SyntaxFactory.Block(CreatePrecondition(type, "value", location))
+                    .AddStatements(node.Body.Statements.ToArray()));
         }
 
         private AccessorDeclarationSyntax InsertPropertyPostcondition(TypeInfo type, AccessorDeclarationSyntax node, Location location) {
@@ -144,9 +145,9 @@ namespace Traction {
             return node.WithBody(body);
         }
 
-        protected abstract SyntaxList<StatementSyntax> CreatePrecondition(TypeInfo parameterType, string identifier, Location location);
+        protected abstract StatementSyntax CreatePrecondition(TypeInfo parameterType, string identifier, Location location);
 
-        protected abstract SyntaxList<StatementSyntax> CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location);
+        protected abstract StatementSyntax CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location);
 
         protected string GenerateValidLocalVariableName(ReturnStatementSyntax node) {
 
