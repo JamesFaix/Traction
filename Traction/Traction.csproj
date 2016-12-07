@@ -62,6 +62,7 @@
     <Compile Include="ExtensionMethods\BaseMethodDeclarationSyntaxExtensions.cs" />
     <Compile Include="ExtensionMethods\SyntaxNodeExtensions.cs" />
     <Compile Include="ExtensionMethods\CSharpSyntaxNodeExtensions.cs" />
+    <Compile Include="ExtensionMethods\TypeInfoExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeSymbolExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="CompileContext\AfterCompileContextWrapper.cs" />

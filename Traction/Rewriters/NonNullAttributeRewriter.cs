@@ -17,10 +17,10 @@ namespace Traction {
 
         private const string postconditionTemplate =
             @"{{
-                  var {0} = {1};
-                  if (global::System.Object.Equals({0}, null))
+                  {0} {1} = {2};
+                  if (global::System.Object.Equals({1}, null))
                       throw new global::Traction.ReturnValueException(""Return value cannot be null."");
-                  return {0};
+                  return {1};
               }}";
 
         protected override StatementSyntax CreatePrecondition(TypeInfo type, string parameterName, Location location) {
@@ -54,8 +54,9 @@ namespace Traction {
                 return node;
             }
 
+            var typeName = returnType.FullName();
             var tempVariableName = GenerateValidLocalVariableName(node);
-            var text = string.Format(postconditionTemplate, tempVariableName, returnedExpression);
+            var text = string.Format(postconditionTemplate, typeName, tempVariableName, returnedExpression);
             return SyntaxFactory.ParseStatement(text);
         }
     }
