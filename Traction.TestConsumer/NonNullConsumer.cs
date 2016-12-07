@@ -11,9 +11,9 @@ namespace Traction {
         public string _readonlyPropertyWithContract;
         public string _writeonlyPropertyWithContract;
         public string _readWritePropertyWithContract;
-        public string _readonlyPropertyWithContractAndMultipleReturns1;
-        public string _readonlyPropertyWithContractAndMultipleReturns2;
-        private bool _readonlyPropertyWithContractAndMultipleReturnsToggle;
+        public string _returnValue1;
+        public string _returnValue2;
+        private bool _toggle;
         
         public string NormalProperty {
             get { return _normalProperty; }
@@ -39,12 +39,12 @@ namespace Traction {
         [NonNull]
         public string ReadonlyPropertyWithContractAndMultipleReturns {
             get {
-                _readonlyPropertyWithContractAndMultipleReturnsToggle = !_readonlyPropertyWithContractAndMultipleReturnsToggle;
-                if (_readonlyPropertyWithContractAndMultipleReturnsToggle) {
-                    return _readonlyPropertyWithContractAndMultipleReturns1;
+                _toggle = !_toggle;
+                if (_toggle) {
+                    return _returnValue1;
                 }
                 else {
-                    return _readonlyPropertyWithContractAndMultipleReturns2;
+                    return _returnValue2;
                 }
             }
         }
@@ -61,36 +61,36 @@ namespace Traction {
 
         #region Methods
 
-        //public void NormalMethod() {
+        public void NormalMethod() {
 
-        //}
+        }
 
-        //public void MethodWithPrecondition([NonNull] string text) {
+        public void MethodWithPrecondition([NonNull] string text) {
 
-        //}
-
-        //[return: NonNull]
-        //public string MethodWithPostcondition() {
-        //    return "x";
-        //}
-
-        //[return: NonNull]
-        //public string MethodWithPreAndPostcondition([NonNull] string text) {
-        //    return text;
-        //}
-
-        //public string MethodWithMultiplePreconditions([NonNull] string text, [NonNull] object obj) {
-        //    return text + obj.ToString();
-        //}
+        }
 
         [return: NonNull]
-        public string MethodWithPostconditionAndMultipleReturns(int n) {
+        public string MethodWithPostcondition(string text) {
+            return text;
+        }
 
-            if (n > 0) {
-                return "abc";
+        [return: NonNull]
+        public string MethodWithPreAndPostcondition([NonNull] Func<string> textGenerator) {
+            return textGenerator();
+        }
+
+        public string MethodWithMultiplePreconditions([NonNull] string text, [NonNull] object obj) {
+            return text + obj.ToString();
+        }
+
+        [return: NonNull]
+        public string MethodWithPostconditionAndMultipleReturns() {
+            _toggle = !_toggle;
+            if (_toggle) {
+                return _returnValue1;
             }
             else {
-                return "123";
+                return _returnValue2;
             }
         }
 
