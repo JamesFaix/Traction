@@ -1,6 +1,0 @@
-C:\Users\James\Documents\GitHub\Traction\ControlApp\bin\Debug\Traction.ControlApp.exe.config
-C:\Users\James\Documents\GitHub\Traction\ControlApp\bin\Debug\Traction.ControlApp.exe
-C:\Users\James\Documents\GitHub\Traction\ControlApp\bin\Debug\Traction.ControlApp.pdb
-C:\Users\James\Documents\GitHub\Traction\ControlApp\obj\Debug\Traction.ControlApp.exe
-C:\Users\James\Documents\GitHub\Traction\ControlApp\obj\Debug\Traction.ControlApp.pdb
-C:\Users\James\Documents\GitHub\Traction\ControlApp\obj\Debug\ControlApp.csprojResolveAssemblyReference.cache
