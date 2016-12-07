@@ -55,7 +55,7 @@ namespace Traction {
             }
 
             var typeName = returnType.FullName();
-            var tempVariableName = GenerateValidLocalVariableName(node);
+            var tempVariableName = GeneratePostconditionVariableName(node);
             var text = string.Format(postconditionTemplate, typeName, tempVariableName, returnedExpression);
             return SyntaxFactory.ParseStatement(text);
         }

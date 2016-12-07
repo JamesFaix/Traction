@@ -149,12 +149,12 @@ namespace Traction {
 
         protected abstract StatementSyntax CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location);
 
-        protected string GenerateValidLocalVariableName(ReturnStatementSyntax node) {
+        protected string GeneratePostconditionVariableName(ReturnStatementSyntax node) {
 
             CSharpSyntaxNode declaration = node.FirstAncestorOrSelf<BaseMethodDeclarationSyntax>();
             declaration = declaration ?? node.FirstAncestorOrSelf<AccessorDeclarationSyntax>();
 
-            return declaration.GenerateUniqueMemberName(model);
+            return declaration.GenerateUniqueMemberName(model, "result");
         }
     }
 }

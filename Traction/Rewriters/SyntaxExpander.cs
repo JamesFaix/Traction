@@ -70,7 +70,8 @@ namespace Traction {
             var getter = node.Getter();
             var setter = node.Setter();
 
-            var fieldName = node.GenerateUniqueMemberName(model);
+            var propertyName = node.Identifier.ToString();
+            var fieldName = node.GenerateUniqueMemberName(model, $"_{propertyName}");
             var fieldModifier = (setter == null) ? "private readonly" : "private";
             var field = SyntaxFactory.ParseStatement($"{fieldModifier} {fieldName};");
 
