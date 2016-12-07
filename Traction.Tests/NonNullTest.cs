@@ -59,7 +59,7 @@ namespace Traction.Tests {
         [Test]
         public void NonNull_WriteonlyPropertyWithContract_DoesNotThrowIfNotNull() {
             var consumer = new NonNullConsumer();
-            
+
             Assert.DoesNotThrow(() => {
                 consumer.WriteonlyPropertyWithContract = "test";
             });
@@ -122,7 +122,7 @@ namespace Traction.Tests {
             //This property internally toggles between returning two fields from two return statements.
             consumer._returnValue1 = "test1";
             consumer._returnValue2 = "test2";
-            
+
             Assert.DoesNotThrow(() => {
                 //Getting value twice will hit check return statements.
                 var x = consumer.ReadonlyPropertyWithContractAndMultipleReturns;
@@ -130,7 +130,7 @@ namespace Traction.Tests {
                 Assert.AreNotEqual(x, y);
             });
         }
-        
+
         [Test]
         public void NonNull_ReadonlyPropertyWithContractAndMultipleReturns_ThrowsIfNull() {
             var consumer = new NonNullConsumer();
@@ -156,7 +156,7 @@ namespace Traction.Tests {
         public void NonNull_NormalMethod_DoesNotThrow() {
             var consumer = new NonNullConsumer();
 
-            Assert.DoesNotThrow(() => 
+            Assert.DoesNotThrow(() =>
                 consumer.NormalMethod());
         }
         #endregion
@@ -166,7 +166,7 @@ namespace Traction.Tests {
         public void NonNull_MethodWithPrecondition_DoesNotThrowIfArgNotNull() {
             var consumer = new NonNullConsumer();
 
-            Assert.DoesNotThrow(() => 
+            Assert.DoesNotThrow(() =>
                 consumer.MethodWithPrecondition("test"));
         }
 
@@ -174,7 +174,7 @@ namespace Traction.Tests {
         public void NonNull_MethodWithPrecondition_ThrowsIfArgNull() {
             var consumer = new NonNullConsumer();
 
-            Assert.Throws<ArgumentNullException>(() => 
+            Assert.Throws<ArgumentNullException>(() =>
                 consumer.MethodWithPrecondition(null));
         }
         #endregion
@@ -277,6 +277,133 @@ namespace Traction.Tests {
         }
         #endregion
         #endregion
-        
+
+        #region Operators
+
+        #region Normal operator (+)
+        [Test]
+        public void NonNull_NormalOperator_DoesNotThrow() {
+            var consumer1 = new NonNullConsumer();
+            var consumer2 = new NonNullConsumer();
+
+            Assert.DoesNotThrow(() => {
+                var x = consumer1 + consumer2;
+            });
+        }
+        #endregion
+
+        #region Precondition operator (-)
+        [Test]
+        public void NonNull_OperatorWithPrecondition_DoesNotThrowIfArgNotNull() {
+            var consumer1 = new NonNullConsumer();
+            var consumer2 = new NonNullConsumer();
+
+            Assert.DoesNotThrow(() => {
+                var x = consumer1 - consumer2;
+            });
+        }
+
+        [Test]
+        public void NonNull_OperatorWithPrecondition_ThrowsIfArgNull() {
+            NonNullConsumer consumer1 = null;
+            var consumer2 = new NonNullConsumer();
+
+            Assert.Throws<ArgumentNullException>(() => {
+                var x = consumer1 - consumer2;
+            });
+        }
+        #endregion
+
+        #region Postcondition operator (*)
+        // * returns null if either parameter is null
+
+        [Test]
+        public void NonNull_OperatorWithPostcondition_DoesNotThrowIfResultNotNull() {
+            var consumer1 = new NonNullConsumer();
+            var consumer2 = new NonNullConsumer();
+
+            Assert.DoesNotThrow(() => {
+                var x = consumer1 * consumer2;
+            });
+        }
+
+        [Test]
+        public void NonNull_OperatorWithPostcondition_ThrowsIfResultNull() {
+            var consumer1 = new NonNullConsumer();
+            NonNullConsumer consumer2 = null;
+
+            Assert.Throws<ReturnValueException>(() => {
+                var x = consumer1 * consumer2;
+            });
+        }
+        #endregion
+
+        #region Pre and Postcondition operator (/)
+        // / returns null if both arguments are equal
+
+        [Test]
+        public void NonNull_OperatorWithPreAndPostcondition_DoesNotThrowIfArgAndResultNotNull() {
+            var consumer1 = new NonNullConsumer();
+            var consumer2 = new NonNullConsumer();
+
+            Assert.DoesNotThrow(() => {
+                var x = consumer1 / consumer2;
+            });
+        }
+
+        [Test]
+        public void NonNull_OperatorWithPreAndPostcondition_ThrowsIfArgNull() {
+            var consumer1 = new NonNullConsumer();
+            NonNullConsumer consumer2 = null;
+
+            Assert.Throws<ArgumentNullException>(() => {
+                var x = consumer1 / consumer2;
+            });
+        }
+
+        [Test]
+        public void NonNull_OperatorWithPreAndPostcondition_ThrowsIfResultNull() {
+            var consumer1 = new NonNullConsumer();
+
+            Assert.Throws<ReturnValueException>(() => {
+                var x = consumer1 / consumer1;
+            });
+        }
+        #endregion
+
+        #region Postcondition operator with multiple returns (%)
+        // % returns different values depending on whether the arguments are equal
+
+        [Test]
+        public void NonNull_OperatorWithPostconditionAndMultipleReturns_DoesNotThrowIfResultsNonNull() {
+            var consumer1 = new NonNullConsumer();
+            var consumer2 = new NonNullConsumer();
+            consumer1._returnValue1 = "test";
+            consumer1._returnValue2 = "testing";
+
+            Assert.DoesNotThrow(() => {
+                var x = consumer1 % consumer2;
+            });
+            Assert.DoesNotThrow(() => {
+                var x = consumer1 % consumer1;
+            });
+        }
+
+        [Test]
+        public void NonNull_OperatorWithPostconditionAndMultipleReturns_ThrowsIfResultNull() {
+            var consumer1 = new NonNullConsumer();
+            var consumer2 = new NonNullConsumer();
+            consumer1._returnValue1 = null;
+            consumer1._returnValue2 = null;
+
+            Assert.Throws<ReturnValueException>(() => {
+                var x = consumer1 % consumer2;
+            });
+            Assert.Throws<ReturnValueException>(() => {
+                var x = consumer1 % consumer1;
+            });
+        }
+        #endregion
+        #endregion
     }
 }

@@ -1,9 +1,12 @@
-﻿using System.Collections;
-using System;
+﻿using System;
 
 namespace Traction {
 
     public class NonNullConsumer {
+
+        public string _returnValue1;
+        public string _returnValue2;
+        private bool _toggle;
 
         #region Properties 
 
@@ -11,10 +14,7 @@ namespace Traction {
         public string _readonlyPropertyWithContract;
         public string _writeonlyPropertyWithContract;
         public string _readWritePropertyWithContract;
-        public string _returnValue1;
-        public string _returnValue2;
-        private bool _toggle;
-        
+                
         public string NormalProperty {
             get { return _normalProperty; }
             set { _normalProperty = value; }
@@ -48,15 +48,7 @@ namespace Traction {
                 }
             }
         }
-
-        //public string NormalAutoProperty { get; set; }
-
-        //// [NonNull]
-        //public string ReadWriteAutoProperty { get; set; }
-
-        ////  [NonNull]
-        //public string ReadonlyAutoProperty { get; }
-
+        
         #endregion
 
         #region Methods
@@ -96,42 +88,44 @@ namespace Traction {
 
         #endregion
 
-        //#region Operators
+        #region Operators
 
-        ////Normal operator
-        //public static int operator +(NonNullAttributeTest a, NonNullAttribute b) {
-        //    return 1;
-        //}
+        //Normal operator
+        public static int operator +(NonNullConsumer a, NonNullConsumer b) {
+            return 1;
+        }
 
-        ////Precondition
-        //public static int operator -([NonNull] NonNullAttributeTest a, NonNullAttributeTest b) {
-        //    return 1;
-        //}
+        //Precondition
+        public static int operator -([NonNull] NonNullConsumer a, NonNullConsumer b) {
+            return 1;
+        }
 
-        ////Postcondition
-        //[return: NonNull]
-        //public static string operator *(NonNullAttributeTest a, NonNullAttributeTest b) {
-        //    return "test";
-        //}
+        //Postcondition
+        [return: NonNull]
+        public static string operator *(NonNullConsumer a, NonNullConsumer b) {
+            if (a == null || b == null) return null;
+            return "test";
+        }
 
-        ////Pre & Postcondition
-        //[return: NonNull]
-        //public static string operator /([NonNull] NonNullAttributeTest a, NonNullAttributeTest b) {
-        //    return "test";
-        //}
+        //Pre & Postcondition
+        [return: NonNull]
+        public static string operator /([NonNull] NonNullConsumer a, NonNullConsumer b) {
+            var result = Equals(a, b) ? null : "test";
+            return result;
+        }
 
-        ////Postcondition and multiple returns
-        //[return: NonNull]
-        //public static string operator %(NonNullAttributeTest a, NonNullAttributeTest b) {
-        //    if (Equals(a, b)) {
-        //        return "ABC";
-        //    }
-        //    else {
-        //        return "123";
-        //    }
-        //}
+        //Postcondition and multiple returns
+        [return: NonNull]
+        public static string operator %(NonNullConsumer a, NonNullConsumer b) {
+            if (Equals(a, b)) {
+                return a._returnValue1;
+            }
+            else {
+                return a._returnValue2;
+            }
+        }
 
-        //#endregion
+        #endregion
 
         //#region Conversions
 
