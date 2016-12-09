@@ -600,5 +600,18 @@ namespace Traction.Tests {
         }
         #endregion
         #endregion
+
+        #region Nested/Anonymous methods
+
+        [Test]
+        public void NonNull_MethodWithAnonyousMethodAndPostcondition_DoesNotThrow() {
+            var consumer = new NonNullConsumer();
+
+            Assert.DoesNotThrow(() => {
+                var x = consumer.MethodWithAnonymousMethodAndPostcondition();
+            });
+        }
+
+        #endregion
     }
 }

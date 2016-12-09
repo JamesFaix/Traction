@@ -167,7 +167,7 @@ namespace Traction {
 
         //Post with multiple returns
         [return: NonNull]
-        public static explicit operator int[](NonNullConsumer a) {
+        public static explicit operator int[] (NonNullConsumer a) {
             if (a._returnValue1 == null) {
                 var size = a._returnValue2.Length;
                 return (size > 0) ? new int[size] : null;
@@ -176,6 +176,28 @@ namespace Traction {
                 var size = a._returnValue1.Length;
                 return (size > 0) ? new int[size] : null;
             }
+        }
+
+        #endregion
+
+        #region Nested/Anonymous methods
+
+        public string NormalMethodWithAnonymousMethod() {
+            Func<string> anonymousMethod = () => {
+                return null;
+            };
+
+            return "test";
+        }
+
+        [return: NonNull]
+        public string MethodWithAnonymousMethodAndPostcondition() {
+
+            Func<string> anonymousMethod = () => {
+                return null;
+            };
+
+            return "test";
         }
 
         #endregion
