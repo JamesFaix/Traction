@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Generic;
 
 namespace Traction {
 
@@ -14,6 +14,11 @@ namespace Traction {
 
         public SyntaxExpander(SemanticModel model, ICompileContext context)
             : base(model, context) { }
+        
+        private CSharpSyntaxNode originalTypeDeclarationNode;
+
+        //Accumulates used identifiers within type definition as new members are generated
+        private List<string> usedIdentifiers;
 
         public override SyntaxNode VisitClassDeclaration(ClassDeclarationSyntax node) {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -28,57 +33,80 @@ namespace Traction {
             node = VisitMembers(node);
             return base.VisitStructDeclaration(node);
         }
-
+        
         private TNode VisitMembers<TNode>(TNode node)
-            where TNode : SyntaxNode {
+            where TNode : CSharpSyntaxNode {
+
+            this.originalTypeDeclarationNode = node;
+            this.usedIdentifiers = IdentifierFactory.GetUsedIdentifiers(node, model).ToList();
+
+            node = ExpandAutoProperties(node);
+
             var descendants = node.DescendantNodes();
 
             //var markedMethods = descendants.OfType<BaseMethodDeclarationSyntax>()
             //    .Where(m => m.HasAnyAttributeExtending<ContractAttribute>(model));
 
-            var markedProperties = descendants.OfType<PropertyDeclarationSyntax>()
-                .Where(m => m.HasAttributeExtending<ContractAttribute>(model)
-                    && m.IsAutoImplentedProperty());
-
             //foreach (var m in markedMethods) {
             //    var expanded = ExpandMethod(m);
             //    node = node.ReplaceNode(m, expanded);
             //}
-
-            foreach (var m in markedProperties) {
-                SyntaxList<SyntaxNode> expanded = ExpandProperty(m);
-                node = node.ReplaceNode(m, expanded);
-                var x = node;
-            }
-
+            
             return node;
         }
 
-        private SyntaxList<SyntaxNode> ExpandMethod(BaseMethodDeclarationSyntax node) {
-            return new SyntaxList<SyntaxNode>().Add(node);
+        //private SyntaxList<SyntaxNode> ExpandMethod(BaseMethodDeclarationSyntax node) {
+        //    return new SyntaxList<SyntaxNode>().Add(node);
+        //}
+
+        //private SyntaxList<SyntaxNode> ExpandProperty(PropertyDeclarationSyntax node) {
+        //    if (node.IsAutoImplentedProperty()) {
+        //        return ExpandAutoProperty(node);
+        //    }
+        //    else if (false) {
+        //        //Expression-bodied member
+        //    }
+        //    else {
+        //        return new SyntaxList<SyntaxNode>().Add(node);
+        //    }
+        //}
+
+        private TNode ExpandAutoProperties<TNode>(TNode typeDeclaration)
+            where TNode: CSharpSyntaxNode {
+           
+            var propertiesToExpand = typeDeclaration.DescendantNodes()
+                .OfType<PropertyDeclarationSyntax>()
+                .Where(prop => prop.HasAttributeExtending<ContractAttribute>(model)
+                    && prop.IsAutoImplentedProperty())
+                .Select(prop => new {
+                    Name = prop.Identifier.ValueText,
+                    Type = model.GetTypeInfo(prop.Type)
+                });
+
+            foreach (var prop in propertiesToExpand) {
+                var oldProperty = typeDeclaration.DescendantNodes().OfType<PropertyDeclarationSyntax>()
+                    .Single(p => p.Identifier.ValueText == prop.Name);
+
+                var newProperty = ExpandAutoProperty(oldProperty, prop.Type);
+
+                typeDeclaration = typeDeclaration.ReplaceNode(oldProperty, newProperty);
+            }
+
+            return typeDeclaration;
         }
 
-        private SyntaxList<SyntaxNode> ExpandProperty(PropertyDeclarationSyntax node) {
-            if (node.IsAutoImplentedProperty()) {
-                return ExpandAutoProperty(node);
-            }
-            else if (false) {
-                //Expression-bodied member
-            }
-            else {
-                return new SyntaxList<SyntaxNode>().Add(node);
-            }
-        }
-
-        public SyntaxList<SyntaxNode> ExpandAutoProperty(PropertyDeclarationSyntax node) {
+        private SyntaxList<SyntaxNode> ExpandAutoProperty(PropertyDeclarationSyntax node, TypeInfo propertyType) {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
             var getter = node.Getter();
             var setter = node.Setter();
 
             var propertyName = node.Identifier.ToString();
-            var fieldName = node.GenerateUniqueMemberName(model, $"_{propertyName}");
-            var fieldType = model.GetTypeInfo(node.Type).FullName();
+
+            var fieldName = IdentifierFactory.CreateUnique(this.usedIdentifiers, $"_{propertyName}");
+            this.usedIdentifiers.Add(fieldName);
+
+            var fieldType = propertyType.FullName();
 
             var modifiers = SyntaxFactory.TokenList(
                 SyntaxFactory.ParseToken("private")

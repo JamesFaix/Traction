@@ -144,6 +144,58 @@ namespace Traction.Tests {
         }
 
         #endregion
+
+        #region ReadonlyAutoProperty
+        
+        [Test]
+        public void NonNull_ReadonlyAutoproperty_ThrowsIfNull() {
+            var consumer = new NonNullConsumer();
+
+            Assert.Throws<ReturnValueException>(() => {
+                var x = consumer.ReadonlyAutoproperty;
+            });
+        }
+        #endregion
+
+        #region ReadWriteAutoProperty
+        [Test]
+        public void NonNull_ReadWriteAutoProperty_GetDoesNotThrowIfNotNull() {
+            var consumer = new NonNullConsumer();
+            consumer.ReadWriteAutoproperty = "test";
+
+            Assert.DoesNotThrow(() => {
+                var x = consumer.ReadWriteAutoproperty;
+            });
+        }
+
+        [Test]
+        public void NonNull_ReadWriteAutoProperty_GetThrowsIfNull() {
+            var consumer = new NonNullConsumer();
+
+            Assert.Throws<ReturnValueException>(() => {
+                var x = consumer.ReadWriteAutoproperty;
+            });
+        }
+
+        [Test]
+        public void NonNull_ReadWriteAutoProperty_SetDoesNotThrowIfNotNull() {
+            var consumer = new NonNullConsumer();
+
+            Assert.DoesNotThrow(() => {
+                consumer.ReadWriteAutoproperty = "test";
+            });
+        }
+
+        [Test]
+        public void NonNull_ReadWriteAutoProperty_SetThrowsIfNull() {
+            var consumer = new NonNullConsumer();
+
+            Assert.Throws<ArgumentNullException>(() => {
+                consumer.ReadWriteAutoproperty = null;
+            });
+        }
+        #endregion
+
         #endregion
 
         #region Methods

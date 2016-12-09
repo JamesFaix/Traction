@@ -10,7 +10,7 @@ namespace Traction {
             Debugger.Launch();
 #endif
             AddBeforeRewriterProvider(RewriterFactory.SyntaxExpander);
-           // AddBeforeRewriterProvider(RewriterFactory.NonNullAttribute);
+            AddBeforeRewriterProvider(RewriterFactory.NonNullAttribute);
         }
     }
 }

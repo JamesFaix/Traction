@@ -61,12 +61,12 @@
     <Compile Include="ExtensionMethods\AttributeSyntaxExtensions.cs" />
     <Compile Include="ExtensionMethods\BaseMethodDeclarationSyntaxExtensions.cs" />
     <Compile Include="ExtensionMethods\SyntaxNodeExtensions.cs" />
-    <Compile Include="ExtensionMethods\CSharpSyntaxNodeExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeInfoExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeSymbolExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="CompileContext\AfterCompileContextWrapper.cs" />
     <Compile Include="CompileContext\BeforeCompileContextWrapper.cs" />
+    <Compile Include="Rewriters\IdentifierFactory.cs" />
     <Compile Include="Modules\CompileModuleBase.cs" />
     <Compile Include="Modules\ContractModule.cs" />
     <Compile Include="CompileContext\ICompileContext.cs" />

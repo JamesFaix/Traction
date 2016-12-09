@@ -148,13 +148,6 @@ namespace Traction {
         protected abstract StatementSyntax CreatePrecondition(TypeInfo parameterType, string identifier, Location location);
 
         protected abstract StatementSyntax CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location);
-
-        protected string GeneratePostconditionVariableName(ReturnStatementSyntax node) {
-
-            CSharpSyntaxNode declaration = node.FirstAncestorOrSelf<BaseMethodDeclarationSyntax>();
-            declaration = declaration ?? node.FirstAncestorOrSelf<AccessorDeclarationSyntax>();
-
-            return declaration.GenerateUniqueMemberName(model, "result");
-        }
+        
     }
 }
