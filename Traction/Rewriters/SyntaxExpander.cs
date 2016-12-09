@@ -12,12 +12,12 @@ namespace Traction {
     /// </summary>
     sealed class SyntaxExpander : RewriterBase {
 
-        public SyntaxExpander(SemanticModel model, ICompileContext context) 
+        public SyntaxExpander(SemanticModel model, ICompileContext context)
             : base(model, context) { }
-        
+
         public override SyntaxNode VisitClassDeclaration(ClassDeclarationSyntax node) {
             if (node == null) throw new ArgumentNullException(nameof(node));
-                     
+
             node = VisitMembers(node);
             return base.VisitClassDeclaration(node);
         }
@@ -25,26 +25,32 @@ namespace Traction {
         public override SyntaxNode VisitStructDeclaration(StructDeclarationSyntax node) {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
-            node = VisitMembers(node);        
+            node = VisitMembers(node);
             return base.VisitStructDeclaration(node);
         }
 
         private TNode VisitMembers<TNode>(TNode node)
-            where TNode: SyntaxNode {
+            where TNode : SyntaxNode {
             var descendants = node.DescendantNodes();
 
-            var markedMethods = descendants.OfType<BaseMethodDeclarationSyntax>()
-                .Where(m => m.HasAnyAttributeExtending<ContractAttribute>(model));   
-                   
-            var markedProperties = descendants.OfType<PropertyDeclarationSyntax>()
-                .Where(m => m.HasAttributeExtending<ContractAttribute>(model));
+            //var markedMethods = descendants.OfType<BaseMethodDeclarationSyntax>()
+            //    .Where(m => m.HasAnyAttributeExtending<ContractAttribute>(model));
 
-            foreach (var m in markedMethods) {
-                node = node.ReplaceNode(m, ExpandMethod(m));
-            }
+            var markedProperties = descendants.OfType<PropertyDeclarationSyntax>()
+                .Where(m => m.HasAttributeExtending<ContractAttribute>(model)
+                    && m.IsAutoImplentedProperty());
+
+            //foreach (var m in markedMethods) {
+            //    var expanded = ExpandMethod(m);
+            //    node = node.ReplaceNode(m, expanded);
+            //}
+
             foreach (var m in markedProperties) {
-                node = node.ReplaceNode(m, ExpandProperty(m));
+                SyntaxList<SyntaxNode> expanded = ExpandProperty(m);
+                node = node.ReplaceNode(m, expanded);
+                var x = node;
             }
+
             return node;
         }
 
@@ -62,7 +68,7 @@ namespace Traction {
             else {
                 return new SyntaxList<SyntaxNode>().Add(node);
             }
-        }        
+        }
 
         public SyntaxList<SyntaxNode> ExpandAutoProperty(PropertyDeclarationSyntax node) {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -72,26 +78,51 @@ namespace Traction {
 
             var propertyName = node.Identifier.ToString();
             var fieldName = node.GenerateUniqueMemberName(model, $"_{propertyName}");
-            var fieldModifier = (setter == null) ? "private readonly" : "private";
-            var field = SyntaxFactory.ParseStatement($"{fieldModifier} {fieldName};");
+            var fieldType = model.GetTypeInfo(node.Type).FullName();
+
+            var modifiers = SyntaxFactory.TokenList(
+                SyntaxFactory.ParseToken("private")
+                    .WithTrailingTrivia(SyntaxFactory.Space));
+
+            if (node.Modifiers.Any(m => m.ValueText == "static")) {
+                modifiers = modifiers.Add(
+                    SyntaxFactory.ParseToken("static")
+                    .WithTrailingTrivia(SyntaxFactory.Space));
+            }
+
+            if (setter == null) {
+                modifiers = modifiers.Add(
+                    SyntaxFactory.ParseToken("readonly")
+                    .WithTrailingTrivia(SyntaxFactory.Space));
+            }
+
+            var field = SyntaxFactory.FieldDeclaration(
+                    SyntaxFactory.VariableDeclaration(
+                        SyntaxFactory.ParseTypeName(fieldType)
+                            .WithTrailingTrivia(SyntaxFactory.Space),
+                        SyntaxFactory.SeparatedList<VariableDeclaratorSyntax>()
+                            .Add(SyntaxFactory.VariableDeclarator(fieldName))))
+                .WithModifiers(modifiers);
 
             getter = getter.WithBody(SyntaxFactory.Block(
-                SyntaxFactory.ParseStatement($"{{ return {fieldName}; }}")));
+                SyntaxFactory.ParseStatement($"return {fieldName};")));
 
             if (setter != null) {
                 setter = setter.WithBody(SyntaxFactory.Block(
-                    SyntaxFactory.ParseStatement($"{{ {fieldName} = value }}")));
+                    SyntaxFactory.ParseStatement($"{fieldName} = value;")));
             }
 
             var accessors = new[] { getter, setter }
                 .Where(x => x != null);
 
-            return new SyntaxList<CSharpSyntaxNode>()
+            var result = new SyntaxList<CSharpSyntaxNode>()
                 .Add(field)
                 .Add(node
                     .WithAccessorList(node.AccessorList
                         .WithAccessors(new SyntaxList<AccessorDeclarationSyntax>()
                             .AddRange(accessors))));
+
+            return result;
         }
     }
 }

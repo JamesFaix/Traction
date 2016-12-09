@@ -50,6 +50,12 @@ namespace Traction {
             }
         }
 
+        [NonNull]
+        public string ReadonlyAutoproperty { get; }
+
+        [NonNull]
+        public string ReadWriteAutoproperty { get; set; }
+
         #endregion
 
         #region Methods
