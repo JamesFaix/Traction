@@ -100,25 +100,15 @@ namespace Traction {
             if (!node.HasAttribute<TAttribute>(model)) {
                 return node;
             }
-            
+
             var result = node;
             var returnType = model.GetTypeInfo(node.ReturnType());
             var location = node.GetLocation();
 
-            return node.ReplaceReturnStatements(ret => 
-                CreatePostcondition(returnType, ret, location));
+            var returnStatements = node.GetAllReturnStatements();
 
-            //var returnStatements = node.Body.GetAllReturnStatements().ToArray();
-
-            //foreach (var ret in returnStatements) {
-            //    var postcondition = CreatePostcondition(returnType, ret, location);
-            //    var statements = result.Body.Statements.Replace(ret, postcondition);
-
-            //    result = result.WithBody( 
-            //        result.Body.WithStatements(statements));
-            //}
-            
-            //return result;
+            return node.ReplaceNodes(returnStatements,
+                (oldNode, newNode) => CreatePostcondition(returnType, newNode, location));
         }
 
         private AccessorDeclarationSyntax InsertPropertyPrecondition(TypeInfo type, AccessorDeclarationSyntax node, Location location) {
@@ -132,22 +122,15 @@ namespace Traction {
         private AccessorDeclarationSyntax InsertPropertyPostcondition(TypeInfo type, AccessorDeclarationSyntax node, Location location) {
             if (node == null) return null;
 
-            var returnStatements = node.DescendantNodes()
-                .OfType<ReturnStatementSyntax>();
+            var returnStatements = node.GetAllReturnStatements();
 
-            BlockSyntax body = node.Body;
-
-            foreach (var ret in returnStatements) {
-                var postcondition = CreatePostcondition(type, ret, location);
-                body = body.ReplaceNode(ret, postcondition);
-            }
-
-            return node.WithBody(body);
+            return node.ReplaceNodes(returnStatements,
+                (oldNode, newNode) => CreatePostcondition(type, newNode, location));
         }
 
         protected abstract StatementSyntax CreatePrecondition(TypeInfo parameterType, string identifier, Location location);
 
         protected abstract StatementSyntax CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location);
-        
+
     }
 }
