@@ -56,6 +56,9 @@ namespace Traction {
         [NonNull]
         public string ReadWriteAutoproperty { get; set; }
 
+        [NonNull]
+        public string ReadonlyExpressionBodiedProperty => null;
+
         #endregion
 
         #region Methods
@@ -92,6 +95,9 @@ namespace Traction {
                 return _returnValue2;
             }
         }
+
+        [return: NonNull]
+        public string ExpressionBodiedMethodWithPostcondition() => null;
 
         #endregion
 

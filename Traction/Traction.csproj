@@ -66,6 +66,8 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="CompileContext\AfterCompileContextWrapper.cs" />
     <Compile Include="CompileContext\BeforeCompileContextWrapper.cs" />
+    <Compile Include="Rewriters\AutoPropertyExpander.cs" />
+    <Compile Include="Rewriters\ExpressionBodiedMemberExpander.cs" />
     <Compile Include="Rewriters\IdentifierFactory.cs" />
     <Compile Include="Modules\CompileModuleBase.cs" />
     <Compile Include="Modules\ContractModule.cs" />
@@ -78,7 +80,6 @@
     <Compile Include="ExtensionMethods\PropertySyntaxExtensions.cs" />
     <Compile Include="Rewriters\RewriterBase.cs" />
     <Compile Include="Rewriters\RewriterFactory.cs" />
-    <Compile Include="Rewriters\SyntaxExpander.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

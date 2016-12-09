@@ -145,8 +145,7 @@ namespace Traction.Tests {
 
         #endregion
 
-        #region ReadonlyAutoProperty
-        
+        #region ReadonlyAutoProperty        
         [Test]
         public void NonNull_ReadonlyAutoproperty_ThrowsIfNull() {
             var consumer = new NonNullConsumer();
@@ -196,6 +195,16 @@ namespace Traction.Tests {
         }
         #endregion
 
+        #region ReadonlyExpressionBodiedProperty 
+        [Test]
+        public void NonNull_ReadonlyExpressionBodiedProperty_ThrowsIfNull() {
+            var consumer = new NonNullConsumer();
+
+            Assert.Throws<ReturnValueException>(() => {
+                var x = consumer.ReadonlyExpressionBodiedProperty;
+            });
+        }
+        #endregion
         #endregion
 
         #region Methods
@@ -323,6 +332,16 @@ namespace Traction.Tests {
                     consumer.MethodWithPostconditionAndMultipleReturns();
                 });
             }
+        }
+        #endregion
+
+        #region ExpressionBodiedMethodWithPostcondition
+        [Test]
+        public void NonNull_ExpressionBodiedMethodWithPostcondition_ThrowsIfResultNull() {
+            var consumer = new NonNullConsumer();
+
+            Assert.Throws<ReturnValueException>(() =>
+                consumer.ExpressionBodiedMethodWithPostcondition());
         }
         #endregion
         #endregion

@@ -9,13 +9,17 @@ namespace Traction {
         public static AccessorDeclarationSyntax Getter(this PropertyDeclarationSyntax node) {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
+            if (node.ExpressionBody != null) return null;
+
             return node.AccessorList.Accessors
                 .SingleOrDefault(accessor => accessor.Kind().ToString().StartsWith("Get"));
         }
 
         public static AccessorDeclarationSyntax Setter(this PropertyDeclarationSyntax node) {
             if (node == null) throw new ArgumentNullException(nameof(node));
-            
+
+            if (node.ExpressionBody != null) return null;
+
             return node.AccessorList.Accessors
                 .SingleOrDefault(accessor => accessor.Kind().ToString().StartsWith("Set"));
         }
@@ -27,5 +31,6 @@ namespace Traction {
             return getter != null  //Auto-properties must have getter
                 && getter.Body == null;
         }
+        
     }
 }

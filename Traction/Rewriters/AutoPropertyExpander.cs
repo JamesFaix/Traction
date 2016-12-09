@@ -8,13 +8,13 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Traction {
 
     /// <summary>
-    /// Expands syntactic sugar in syntax trees (auto-properties, expression-bodied members, etc.)
+    /// Expands automatically implemented properties.
     /// </summary>
-    sealed class SyntaxExpander : RewriterBase {
+    sealed class AutoPropertyExpander : RewriterBase {
 
-        public SyntaxExpander(SemanticModel model, ICompileContext context)
+        public AutoPropertyExpander(SemanticModel model, ICompileContext context)
             : base(model, context) { }
-        
+
         private CSharpSyntaxNode originalTypeDeclarationNode;
 
         //Accumulates used identifiers within type definition as new members are generated
@@ -33,7 +33,7 @@ namespace Traction {
             node = VisitMembers(node);
             return base.VisitStructDeclaration(node);
         }
-        
+
         private TNode VisitMembers<TNode>(TNode node)
             where TNode : CSharpSyntaxNode {
 
@@ -42,38 +42,12 @@ namespace Traction {
 
             node = ExpandAutoProperties(node);
 
-            var descendants = node.DescendantNodes();
-
-            //var markedMethods = descendants.OfType<BaseMethodDeclarationSyntax>()
-            //    .Where(m => m.HasAnyAttributeExtending<ContractAttribute>(model));
-
-            //foreach (var m in markedMethods) {
-            //    var expanded = ExpandMethod(m);
-            //    node = node.ReplaceNode(m, expanded);
-            //}
-            
             return node;
         }
 
-        //private SyntaxList<SyntaxNode> ExpandMethod(BaseMethodDeclarationSyntax node) {
-        //    return new SyntaxList<SyntaxNode>().Add(node);
-        //}
-
-        //private SyntaxList<SyntaxNode> ExpandProperty(PropertyDeclarationSyntax node) {
-        //    if (node.IsAutoImplentedProperty()) {
-        //        return ExpandAutoProperty(node);
-        //    }
-        //    else if (false) {
-        //        //Expression-bodied member
-        //    }
-        //    else {
-        //        return new SyntaxList<SyntaxNode>().Add(node);
-        //    }
-        //}
-
         private TNode ExpandAutoProperties<TNode>(TNode typeDeclaration)
-            where TNode: CSharpSyntaxNode {
-           
+            where TNode : CSharpSyntaxNode {
+
             var propertiesToExpand = typeDeclaration.DescendantNodes()
                 .OfType<PropertyDeclarationSyntax>()
                 .Where(prop => prop.HasAttributeExtending<ContractAttribute>(model)
@@ -151,6 +125,6 @@ namespace Traction {
                             .AddRange(accessors))));
 
             return result;
-        }
+        }        
     }
 }
