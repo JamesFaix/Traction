@@ -76,7 +76,7 @@ namespace Traction.TestConsumer {
         }
 
         [return: NonDefault]
-        public string PostconditionRefrenceTypeMethod(string text) {
+        public string PostconditionReferenceTypeMethod(string text) {
             return text;
         }
 

@@ -47,6 +47,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\NonDefaultReferenceTypeTest.cs" />
     <Compile Include="Attributes\NonNullTest.cs" />
     <Compile Include="Features\AutoPropertyTest.cs" />
     <Compile Include="Features\ConversionTest.cs" />
