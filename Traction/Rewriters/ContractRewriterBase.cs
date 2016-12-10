@@ -52,7 +52,7 @@ namespace Traction {
                             .AddRange(result.Body.Statements)));
             }
             catch (Exception e) {
-                context.Diagnostics.Add(DiagnosticProvider.ContractInjectionFailed(node.GetLocation(), e));
+                context.Diagnostics.Add(DiagnosticProvider.SyntaxRewriteFailed(node.GetLocation(), e));
                 return node;
             }
         }
@@ -78,7 +78,7 @@ namespace Traction {
                 return node.WithAccessorList(accessors);
             }
             catch (Exception e) {
-                context.Diagnostics.Add(DiagnosticProvider.ContractInjectionFailed(node.GetLocation(), e));
+                context.Diagnostics.Add(DiagnosticProvider.SyntaxRewriteFailed(node.GetLocation(), e));
                 return node;
             }
         }

@@ -53,7 +53,7 @@ namespace Traction {
             var returnedExpression = node.ChildNodes().FirstOrDefault();
 
             if (returnedExpression == null) {
-                context.Diagnostics.Add(DiagnosticProvider.NonNullAttributeCannotBeAppliedToMethodWithNoReturnType(location));
+                context.Diagnostics.Add(DiagnosticProvider.ContractAttributeCannotBeAppliedToMethodWithNoReturnType(location));
                 return node;
             }
 
