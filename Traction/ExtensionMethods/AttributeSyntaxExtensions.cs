@@ -7,6 +7,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Traction {
 
+    /// <summary>
+    /// Extension methods for syntax nodes to get information about attributes decorating those nodes.
+    /// </summary>
     static class AttributeSyntaxExtensions {
 
         #region All Attributes

@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.CSharp;
 namespace Traction {
 
     /// <summary>
-    /// Expands expression-bodied members.
+    /// Rewrites expression-bodied members as normal "blocked" members.
     /// </summary>
     sealed class ExpressionBodiedMemberExpander : RewriterBase {
 

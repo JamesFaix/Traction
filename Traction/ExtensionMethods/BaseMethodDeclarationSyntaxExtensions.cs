@@ -3,6 +3,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Traction {
 
+    /// <summary>
+    /// Extension methods for <see cref="BaseMethodDeclarationSyntax"/> 
+    /// </summary>
     static class BaseMethodDeclarationSyntaxExtensions {
 
         public static TypeSyntax ReturnType(this BaseMethodDeclarationSyntax node) {

@@ -4,6 +4,12 @@ using Traction.TestConsumer;
 
 namespace Traction.Tests {
 
+    /// <summary>
+    /// Tests for contracts being applied to operators.
+    /// The implementation for operators is 99% the same as methods.
+    /// Correct operator behavior for any attribute can be assumed 
+    /// if that attribute can be applied to normal methods, and these tests pass.
+    /// </summary>
     [TestFixture]
     public class OperatorTest {
 

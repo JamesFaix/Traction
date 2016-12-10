@@ -3,6 +3,9 @@ using System;
 
 namespace Traction {
 
+    /// <summary>
+    /// Factory for contract rewriting diagnostics.
+    /// </summary>
     static class DiagnosticProvider {
 
         public static Diagnostic NonNullAttributeCanOnlyBeAppliedToReferenceTypes(Location location) {

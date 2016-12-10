@@ -4,6 +4,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Traction {
 
+    /// <summary>
+    /// Extension methods for <see cref="PropertyDeclarationSyntax"/> 
+    /// </summary>
     static class PropertySyntaxExtensions {
 
         public static AccessorDeclarationSyntax Getter(this PropertyDeclarationSyntax node) {

@@ -4,6 +4,9 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Traction {
 
+    /// <summary>
+    /// Base class for syntax rewriters.
+    /// </summary>
     abstract class RewriterBase : CSharpSyntaxRewriter {
 
         protected RewriterBase(SemanticModel model, ICompileContext context) {

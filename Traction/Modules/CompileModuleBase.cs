@@ -4,6 +4,9 @@ using StackExchange.Precompilation;
 
 namespace Traction {
 
+    /// <summary>
+    /// Basic implementation of <c>ICompileModule</c> that can perform a series of rewriting operations.
+    /// </summary>
     public abstract class CompileModuleBase : ICompileModule {
 
         protected CompileModuleBase() {

@@ -4,6 +4,9 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Traction {
 
+    /// <summary>
+    /// Context data for current compilation stage.
+    /// </summary>
     public interface ICompileContext {
 
         CSharpCompilation Compilation { get; set; }

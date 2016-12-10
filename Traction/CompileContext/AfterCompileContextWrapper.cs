@@ -6,6 +6,9 @@ using StackExchange.Precompilation;
 
 namespace Traction {
 
+    /// <summary>
+    /// Context data for post-compilation stage.
+    /// </summary>
     class AfterCompileContextWrapper : ICompileContext {
 
         public AfterCompileContextWrapper(AfterCompileContext context) {

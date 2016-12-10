@@ -3,6 +3,11 @@ using Traction.TestConsumer;
 
 namespace Traction.Tests {
 
+    /// <summary>
+    /// Test for postconditions being applied to members with multiple return statements or nested methods.
+    /// Correct multiple-return-statement behavior for any attribute can be assumed 
+    /// if that attribute can be applied to normal methods/properties, and these tests pass.
+    /// </summary>
     [TestFixture]
     public class MultipleReturnsTest {
 

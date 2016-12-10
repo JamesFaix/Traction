@@ -3,6 +3,9 @@ using StackExchange.Precompilation;
 
 namespace Traction {
 
+    /// <summary>
+    /// <c>ICompileModule</c> for contract rewriting.
+    /// </summary>
     public class ContractModule : CompileModuleBase, ICompileModule {
 
         public ContractModule() : base() {

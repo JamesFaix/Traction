@@ -5,6 +5,12 @@ using Traction.TestConsumer;
 
 namespace Traction.Tests {
 
+    /// <summary>
+    /// Tests for contracts being applied to conversion operators.
+    /// The implementation for conversions is 99% the same as methods.
+    /// Correct conversion operator behavior for any attribute can be assumed 
+    /// if that attribute can be applied to normal methods, and these tests pass.
+    /// </summary>
     [TestFixture]
     public class ConversionTest {
 

@@ -8,6 +8,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Traction {
 
+    /// <summary>
+    /// Produces unique identifiers for specific contexts.
+    /// </summary>
     static class IdentifierFactory {
 
         private static Regex validIdentifierRegex = new Regex(@"[A-Za-z_][A-Za-z0-9_]*", RegexOptions.Compiled);

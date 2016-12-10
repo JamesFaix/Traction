@@ -7,6 +7,10 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Traction {
 
+    /// <summary>
+    /// Base class for contract attribute syntax rewriters.
+    /// </summary>
+    /// <typeparam name="TAttribute"></typeparam>
     abstract class ContractRewriterBase<TAttribute> : RewriterBase
         where TAttribute : Attribute {
 

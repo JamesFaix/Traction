@@ -3,6 +3,9 @@ using System.Runtime.Serialization;
 
 namespace Traction {
 
+    /// <summary>
+    /// Exception to throw when the return value of a method is invalid. (Postcondition assertion.)
+    /// </summary>
     [Serializable]
     public class ReturnValueException : Exception {
 

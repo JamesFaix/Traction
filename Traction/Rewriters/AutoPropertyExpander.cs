@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Traction {
 
     /// <summary>
-    /// Expands automatically implemented properties.
+    /// Rewrites automatically implemented properties as normal properties with backing fields.
     /// </summary>
     sealed class AutoPropertyExpander : RewriterBase {
 

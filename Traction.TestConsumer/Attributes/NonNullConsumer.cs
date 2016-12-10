@@ -2,6 +2,9 @@
 
 namespace Traction.TestConsumer {
 
+    /// <summary>
+    /// Class to demonstrate NonNull contracts being applied to basic method and property use cases.
+    /// </summary>
     public class NonNullConsumer {
         
         #region Properties 

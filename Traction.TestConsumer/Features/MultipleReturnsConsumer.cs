@@ -2,6 +2,11 @@
 
 namespace Traction.TestConsumer {
 
+    /// <summary>
+    /// Class to demonstrate postconditions being applied to members with multiple return statements or nested methods.
+    /// Correct multiple-return-statement behavior for any attribute can be assumed 
+    /// if that attribute can be applied to normal methods/properties, and this class works correctly.
+    /// </summary>
     public class MultipleReturnsConsumer {
 
         public string _returnValue1;

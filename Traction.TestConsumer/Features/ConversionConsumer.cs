@@ -2,6 +2,12 @@
 
 namespace Traction.TestConsumer {
 
+    /// <summary>
+    /// Class to demonstrate contracts being applied to conversion operators.
+    /// The implementation for conversions is 99% the same as methods.
+    /// Correct conversion operator behavior for any attribute can be assumed 
+    /// if that attribute can be applied to normal methods, and this class works correctly.
+    /// </summary>
     public class ConversionConsumer {
         
         public string testField;

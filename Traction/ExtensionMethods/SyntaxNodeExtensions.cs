@@ -6,6 +6,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Traction {
 
+    /// <summary>
+    /// Extension methods for <see cref="SyntaxNode"/> 
+    /// </summary>
     static class SyntaxNodeExtensions {
 
         public static IEnumerable<ReturnStatementSyntax> GetAllReturnStatements(this SyntaxNode node) {

@@ -3,7 +3,12 @@ using Traction.TestConsumer;
 using NUnit.Framework;
 
 namespace Traction.Tests {
-    
+
+    /// <summary>
+    /// Test for contracts being applied to auto-properties.
+    /// Correct auto-property behavior for any attribute can be assumed 
+    /// if that attribute can be applied to normal properties, and these tests pass.
+    /// </summary>
     [TestFixture]
     public class AutoPropertyTest {
 

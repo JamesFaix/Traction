@@ -4,6 +4,9 @@ using Traction.TestConsumer;
 
 namespace Traction.Tests {
 
+    /// <summary>
+    /// Tests for basic NonNull property and method use cases.
+    /// </summary>
     [TestFixture]
     public class NonNullTest {
 

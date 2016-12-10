@@ -6,6 +6,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Traction {
 
+    /// <summary>
+    /// Syntax rewriter for <see cref="NonNullAttribute"/>.
+    /// </summary>
     class NonNullReWriter : ContractRewriterBase<NonNullAttribute> {
 
         public NonNullReWriter(SemanticModel model, ICompileContext context)

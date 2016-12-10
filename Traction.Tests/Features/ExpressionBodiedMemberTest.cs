@@ -3,6 +3,11 @@ using Traction.TestConsumer;
 
 namespace Traction.Tests {
 
+    /// <summary>
+    /// Tests for contracts being applied to expression-bodied members.
+    /// Correct expression-bodied member behavior for any attribute can be assumed 
+    /// if that attribute can be applied to normal properties and methods, and these tests pass.
+    /// </summary>
     [TestFixture]
     public class ExpressionBodiedMemberTest {
 
