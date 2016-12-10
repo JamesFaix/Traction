@@ -5,8 +5,8 @@ namespace Traction {
 
     static class RewriterFactory {
         
-        public static CSharpSyntaxRewriter NonNullAttribute(SemanticModel model, ICompileContext context) {
-            return new NonNullAttributeReWriter(model, context);
+        public static CSharpSyntaxRewriter NonNull(SemanticModel model, ICompileContext context) {
+            return new NonNullReWriter(model, context);
         }
 
         public static CSharpSyntaxRewriter AutoPropertyExpander(SemanticModel model, ICompileContext context) {

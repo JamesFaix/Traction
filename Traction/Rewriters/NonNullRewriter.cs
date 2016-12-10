@@ -6,9 +6,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Traction {
 
-    class NonNullAttributeReWriter : ContractRewriterBase<NonNullAttribute> {
+    class NonNullReWriter : ContractRewriterBase<NonNullAttribute> {
 
-        public NonNullAttributeReWriter(SemanticModel model, ICompileContext context)
+        public NonNullReWriter(SemanticModel model, ICompileContext context)
             : base(model, context) { }
 
         private const string preconditionTemplate =
