@@ -47,7 +47,12 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NonNullTest.cs" />
+    <Compile Include="Attributes\NonNullTest.cs" />
+    <Compile Include="Features\AutoPropertyTest.cs" />
+    <Compile Include="Features\ConversionTest.cs" />
+    <Compile Include="Features\ExpressionBodiedMemberTest.cs" />
+    <Compile Include="Features\MultipleReturnsTest.cs" />
+    <Compile Include="Features\OperatorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

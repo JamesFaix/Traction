@@ -84,7 +84,7 @@
     <Compile Include="Exceptions\DiagnosticProvider.cs" />
     <Compile Include="Rewriters\Delegates.cs" />
     <Compile Include="Rewriters\ContractRewriterBase.cs" />
-    <Compile Include="Rewriters\NonNullAttributeRewriter.cs" />
+    <Compile Include="Rewriters\NonNullRewriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ExtensionMethods\PropertySyntaxExtensions.cs" />
     <Compile Include="Rewriters\RewriterBase.cs" />
