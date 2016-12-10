@@ -6,7 +6,7 @@ namespace Traction {
     public class ContractModule : CompileModuleBase, ICompileModule {
 
         public ContractModule() : base() {
-#if DEBUG
+#if DEBUG_ON_BUILD
             Debugger.Launch();
 #endif
             AddBeforeRewriterProvider(RewriterFactory.AutoPropertyExpander);
