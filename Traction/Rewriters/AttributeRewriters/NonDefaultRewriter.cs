@@ -43,7 +43,8 @@ namespace Traction {
             var returnedExpression = node.ChildNodes().FirstOrDefault();
             var tempVariableName = IdentifierFactory.CreatePostconditionLocal(node, model);
             var text = string.Format(postconditionTemplate, returnType.FullName(), tempVariableName, returnedExpression);
-            return SyntaxFactory.ParseStatement(text);
+            var statement = SyntaxFactory.ParseStatement(text);
+            return statement;
         }
     }
 }

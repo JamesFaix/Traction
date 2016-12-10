@@ -81,14 +81,13 @@ namespace Traction.TestConsumer {
         }
 
         [return: NonDefault]
-        public string PreAndPostconditionReferenceTypeMethod([NonDefault] Func<string> textGenerator) {
-            return textGenerator();
+        public string PreAndPostconditionReferenceTypeMethod([NonDefault] string name) {
+            return null;
         }
-        
         #endregion
 
         #region Value types
-        
+
         public void PreconditionValueTypeMethod([NonDefault] int index) {
 
         }
@@ -99,15 +98,28 @@ namespace Traction.TestConsumer {
         }
 
         [return: NonDefault]
-        public int PreAndPostconditionValueTypeMethod([NonDefault] Func<int> indexGenerator) {
-            return indexGenerator();
+        public int PreAndPostconditionValueTypeMethod([NonDefault] int index) {
+            return 0;
         }
-        
+
         #endregion
 
         public int MultiplePreconditionsMethod([NonDefault] int index, [NonDefault] object obj) {
             return index + obj.ToString().Length;
         }
+        #endregion
+
+        #region Generic types
+
+        public void PreconditionGenericMethod([NonDefault] Func<int> function) {
+
+        }
+
+        [return: NonDefault]
+        public Func<int> PostconditionGenericMethod() {
+            return null;
+        }
+
         #endregion
     }
 }
