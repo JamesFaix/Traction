@@ -29,7 +29,7 @@ namespace Traction {
         protected override StatementSyntax CreatePrecondition(TypeInfo type, string parameterName, Location location) {
             if (parameterName == null) throw new ArgumentNullException(nameof(parameterName));
             if (location == null) throw new ArgumentNullException(nameof(location));
-            
+
             var text = string.Format(preconditionTemplate, parameterName, type.FullName());
             var statement = SyntaxFactory.ParseStatement(text);
 
@@ -39,14 +39,8 @@ namespace Traction {
         protected override StatementSyntax CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location) {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (location == null) throw new ArgumentNullException(nameof(location));
-            
+
             var returnedExpression = node.ChildNodes().FirstOrDefault();
-
-            if (returnedExpression == null) {
-                context.Diagnostics.Add(DiagnosticProvider.ContractAttributeCannotBeAppliedToMethodWithNoReturnType(location));
-                return node;
-            }
-
             var tempVariableName = IdentifierFactory.CreatePostconditionLocal(node, model);
             var text = string.Format(postconditionTemplate, returnType.FullName(), tempVariableName, returnedExpression);
             return SyntaxFactory.ParseStatement(text);

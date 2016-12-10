@@ -17,70 +17,59 @@ namespace Traction {
         protected ContractRewriterBase(SemanticModel model, ICompileContext context)
             : base(model, context) { }
 
-        public sealed override SyntaxNode VisitOperatorDeclaration(OperatorDeclarationSyntax node) {
-            return base.VisitOperatorDeclaration(VisitMethodImpl(node));
-        }
-
-        public sealed override SyntaxNode VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node) {
-            return base.VisitConversionOperatorDeclaration(VisitMethodImpl(node));
-        }
+        public sealed override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node) => VisitPropertyImpl(node);
+        public sealed override SyntaxNode VisitOperatorDeclaration(OperatorDeclarationSyntax node) => VisitMethodImpl(node);
+        public sealed override SyntaxNode VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node) => VisitMethodImpl(node);
 
         public sealed override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node) {
-            return base.VisitMethodDeclaration(VisitMethodImpl(node));
-        }
-
-        public sealed override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node) {
-            return base.VisitPropertyDeclaration(VisitPropertyImpl(node));
+            if (node.ReturnType.GetText().ToString() == "void") {
+                context.Diagnostics.Add(DiagnosticProvider.ContractAttributeCannotBeAppliedToMethodReturningVoid(node.GetLocation()));
+                VisitMethodImpl(node); //Visit to check for other errors, but ignore returned value
+                return node; //Return original node
+            }
+            else {
+                return VisitMethodImpl(node);
+            }
         }
 
         private TNode VisitMethodImpl<TNode>(TNode node)
+            where TNode : BaseMethodDeclarationSyntax =>
+            node.HasAnyAttribute<TAttribute>(model)
+                ? TryRewrite(node, VisitMethodImplInner)
+                : node;
+
+        private PropertyDeclarationSyntax VisitPropertyImpl(PropertyDeclarationSyntax node) =>
+            node.HasAttribute<TAttribute>(model)
+                ? TryRewrite(node, VisitPropertyImplInner)
+                : node;
+
+        private TNode VisitMethodImplInner<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
 
-            if (!node.HasAnyAttribute<TAttribute>(model)) {
-                return node;
-            }
+            var preconditionStatements = GetMethodPreconditions(node);
 
-            try {
-                var preconditionStatements = GetMethodPreconditions(node);
+            var result = InsertMethodPostconditions(node);
 
-                var result = InsertMethodPostconditions(node);
-
-                return result
-                    .WithBody(result.Body
-                        .WithStatements(new SyntaxList<StatementSyntax>()
-                            .AddRange(preconditionStatements)
-                            .AddRange(result.Body.Statements)));
-            }
-            catch (Exception e) {
-                context.Diagnostics.Add(DiagnosticProvider.SyntaxRewriteFailed(node.GetLocation(), e));
-                return node;
-            }
+            return result
+                .WithBody(result.Body
+                    .WithStatements(new SyntaxList<StatementSyntax>()
+                        .AddRange(preconditionStatements)
+                        .AddRange(result.Body.Statements)));
         }
 
-        private PropertyDeclarationSyntax VisitPropertyImpl(PropertyDeclarationSyntax node) {
+        private PropertyDeclarationSyntax VisitPropertyImplInner(PropertyDeclarationSyntax node) {
+            var propertyType = model.GetTypeInfo(node.Type);
 
-            if (!node.HasAttribute<TAttribute>(model)) {
-                return node;
-            }
+            var location = node.GetLocation();
+            var setter = InsertPropertyPrecondition(propertyType, node.Setter(), location);
+            var getter = InsertPropertyPostcondition(propertyType, node.Getter(), location);
 
-            try {
-                var propertyType = model.GetTypeInfo(node.Type);
+            var accessors = SyntaxFactory.AccessorList(
+                SyntaxFactory.List(
+                    new[] { getter, setter }
+                    .Where(a => a != null)));
 
-                var location = node.GetLocation();
-                var setter = InsertPropertyPrecondition(propertyType, node.Setter(), location);
-                var getter = InsertPropertyPostcondition(propertyType, node.Getter(), location);
-
-                var accessors = SyntaxFactory.AccessorList(
-                    SyntaxFactory.List(
-                        new[] { getter, setter }
-                        .Where(a => a != null)));
-
-                return node.WithAccessorList(accessors);
-            }
-            catch (Exception e) {
-                context.Diagnostics.Add(DiagnosticProvider.SyntaxRewriteFailed(node.GetLocation(), e));
-                return node;
-            }
+            return node.WithAccessorList(accessors);
         }
 
         private IEnumerable<StatementSyntax> GetMethodPreconditions<TNode>(TNode node)

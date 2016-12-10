@@ -51,15 +51,8 @@ namespace Traction {
             }
 
             var returnedExpression = node.ChildNodes().FirstOrDefault();
-
-            if (returnedExpression == null) {
-                context.Diagnostics.Add(DiagnosticProvider.ContractAttributeCannotBeAppliedToMethodWithNoReturnType(location));
-                return node;
-            }
-
-            var typeName = returnType.FullName();
             var tempVariableName = IdentifierFactory.CreatePostconditionLocal(node, model);
-            var text = string.Format(postconditionTemplate, typeName, tempVariableName, returnedExpression);
+            var text = string.Format(postconditionTemplate, returnType.FullName(), tempVariableName, returnedExpression);
             return SyntaxFactory.ParseStatement(text);
         }
     }

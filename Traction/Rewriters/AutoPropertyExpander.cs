@@ -39,10 +39,7 @@ namespace Traction {
 
             this.originalTypeDeclarationNode = node;
             this.usedIdentifiers = IdentifierFactory.GetUsedIdentifiers(node, model).ToList();
-
-            node = ExpandAutoProperties(node);
-
-            return node;
+            return TryRewrite(node, ExpandAutoProperties);
         }
 
         private TNode ExpandAutoProperties<TNode>(TNode typeDeclaration)

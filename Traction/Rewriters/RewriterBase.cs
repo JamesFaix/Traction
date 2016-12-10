@@ -20,5 +20,23 @@ namespace Traction {
         protected readonly ICompileContext context;
         protected readonly SemanticModel model;
 
+        /// <summary>
+        /// Attempts to rewrite the given node using the given function, and return the rewritten copy.
+        /// Creates diagnostic and returns original node if rewrite failed.
+        /// </summary>
+        protected TNode TryRewrite<TNode>(TNode node, Func<TNode, TNode> rewrite)
+            where TNode : SyntaxNode {
+
+            try {
+                return rewrite(node);
+            }
+            catch (Exception e) {
+                context.Diagnostics.Add(
+                    DiagnosticProvider.SyntaxRewriteFailed(
+                        location: node.GetLocation(), 
+                        exception: e));
+                return node;
+            }
+        }
     }
 }

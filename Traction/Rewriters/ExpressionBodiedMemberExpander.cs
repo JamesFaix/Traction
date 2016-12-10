@@ -20,9 +20,10 @@ namespace Traction {
             var expr = node.ExpressionBody.Expression;
             var statement = SyntaxFactory.ReturnStatement(expr);
 
-            return node
-                .WithExpressionBody(null)
-                .WithBody(SyntaxFactory.Block(statement));
+            return TryRewrite(node, 
+                n => n
+                    .WithExpressionBody(null)
+                    .WithBody(SyntaxFactory.Block(statement)));
         }
 
         public override SyntaxNode VisitOperatorDeclaration(OperatorDeclarationSyntax node) {
@@ -32,9 +33,10 @@ namespace Traction {
             var expr = node.ExpressionBody.Expression;
             var statement = SyntaxFactory.ReturnStatement(expr);
 
-            return node
-                .WithExpressionBody(null)
-                .WithBody(SyntaxFactory.Block(statement));
+            return TryRewrite(node,
+                n => n
+                    .WithExpressionBody(null)
+                    .WithBody(SyntaxFactory.Block(statement)));
         }
 
         public override SyntaxNode VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node) {
@@ -44,9 +46,10 @@ namespace Traction {
             var expr = node.ExpressionBody.Expression;
             var statement = SyntaxFactory.ReturnStatement(expr);
 
-            return node
-                .WithExpressionBody(null)
-                .WithBody(SyntaxFactory.Block(statement));
+            return TryRewrite(node,
+                n => n
+                    .WithExpressionBody(null)
+                    .WithBody(SyntaxFactory.Block(statement)));
         }
 
         public override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node) {
@@ -64,9 +67,10 @@ namespace Traction {
                 SyntaxFactory.List<AccessorDeclarationSyntax>()
                 .Add(getter));
 
-            return node
-                .WithExpressionBody(null)
-                .WithAccessorList(accessors);
+            return TryRewrite(node,
+                n => n
+                    .WithExpressionBody(null)
+                    .WithAccessorList(accessors));
         }
     }
 }
