@@ -47,8 +47,8 @@ namespace Traction {
             var sb = new StringBuilder();
             sb.AppendLine("{");
             sb.AppendLine($"    {returnTypeName} {tempVarName} = {returnedExpression};");
-            sb.AppendLine($"    if ({GetConditionExpression(tempVarName, returnTypeName)}");
-            sb.AppendLine($"        throw new global::Traction.ReturnValueException(\"{ExceptionMessage}\");");
+            sb.AppendLine($"    if ({GetConditionExpression(tempVarName, returnTypeName)})");
+            sb.AppendLine($"        throw new global::Traction.PostconditionException(\"{ExceptionMessage}\");");
             sb.AppendLine($"    return {tempVarName};");
             sb.AppendLine("}");
             return sb.ToString();
