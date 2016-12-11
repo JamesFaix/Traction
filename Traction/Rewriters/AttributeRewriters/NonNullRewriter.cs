@@ -14,7 +14,7 @@ namespace Traction {
         
         protected override string ExceptionMessage => "Value cannot be null.";
 
-        protected override ExpressionSyntax GetConditionExpression(string expression, string expressionType) {
+        protected override ExpressionSyntax GetConditionExpression(string expression, TypeInfo expressionType) {
             return SyntaxFactory.ParseExpression(
                 $"!global::System.Object.Equals({expression}, null)");
         }

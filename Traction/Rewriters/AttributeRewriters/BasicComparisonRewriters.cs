@@ -13,10 +13,13 @@ namespace Traction {
 
         protected sealed override string ExceptionMessage => $"Value must be {OperatorDescription} default(T).";
 
-        protected sealed override ExpressionSyntax GetConditionExpression(string expression, string expressionType) {
+        protected sealed override ExpressionSyntax GetConditionExpression(string expression, TypeInfo expressionType) {
+            var typeName = expressionType.FullName();
+            if (typeName.EndsWith("?")) { //If type is nullable (T?), compare to default(T) instead of default(T?)
+                typeName = typeName.Substring(0, typeName.Length - 1);
+            }
             return SyntaxFactory.ParseExpression(
-                $"global::System.Collections.Generic.Comparer<{expressionType}>.Default" +
-                    $".Compare({expression}, default({expressionType})) {Operator} 0");
+                $"{expression}.CompareTo(default({typeName})) {Operator} 0");
         }
 
         protected abstract string Operator { get; }

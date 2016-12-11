@@ -143,7 +143,7 @@ namespace Traction {
         }
 
         private StatementSyntax CreatePrecondition(TypeInfo parameterType, string parameterName, Location location) {
-            var text = GetPreconditionText(parameterName, parameterType.FullName());
+            var text = GetPreconditionText(parameterName, parameterType);
             var statement = SyntaxFactory.ParseStatement(text);
             return SyntaxFactory.Block(statement);
         }
@@ -151,23 +151,23 @@ namespace Traction {
         private StatementSyntax CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location) {           
             var returnedExpression = node.ChildNodes().FirstOrDefault();
             var tempVariableName = IdentifierFactory.CreatePostconditionLocal(node, model);
-            var text = GetPostconditionText(returnType.FullName(), returnedExpression.ToString(), tempVariableName);
+            var text = GetPostconditionText(returnType, returnedExpression.ToString(), tempVariableName);
             var statement = SyntaxFactory.ParseStatement(text);
             return statement;
         }
 
-        private string GetPreconditionText(string parameterName, string parameterTypeName) {
+        private string GetPreconditionText(string parameterName, TypeInfo parameterType) {
             var sb = new StringBuilder();
-            sb.AppendLine($"if (!({GetConditionExpression(parameterName, parameterTypeName)}))");
+            sb.AppendLine($"if (!({GetConditionExpression(parameterName, parameterType)}))");
             sb.AppendLine($"    throw new global::Traction.PreconditionException(\"{ExceptionMessage}\", nameof({parameterName}));");
             return sb.ToString();
         }
 
-        private string GetPostconditionText(string returnTypeName, string returnedExpression, string tempVarName) {
+        private string GetPostconditionText(TypeInfo returnType, string returnedExpression, string tempVarName) {
             var sb = new StringBuilder();
             sb.AppendLine("{");
-            sb.AppendLine($"    {returnTypeName} {tempVarName} = {returnedExpression};");
-            sb.AppendLine($"    if (!({GetConditionExpression(tempVarName, returnTypeName)}))");
+            sb.AppendLine($"    {returnType.FullName()} {tempVarName} = {returnedExpression};");
+            sb.AppendLine($"    if (!({GetConditionExpression(tempVarName, returnType)}))");
             sb.AppendLine($"        throw new global::Traction.PostconditionException(\"{ExceptionMessage}\");");
             sb.AppendLine($"    return {tempVarName};");
             sb.AppendLine("}");
@@ -177,7 +177,7 @@ namespace Traction {
         /// <summary>
         /// Gets boolean expression to evaluate.  Should return false if contract is broken.
         /// </summary>
-        protected abstract ExpressionSyntax GetConditionExpression(string expression, string expressionType);
+        protected abstract ExpressionSyntax GetConditionExpression(string expression, TypeInfo expressionType);
 
         protected abstract string ExceptionMessage { get; }
 
