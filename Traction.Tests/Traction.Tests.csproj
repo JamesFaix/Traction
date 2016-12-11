@@ -64,9 +64,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Traction.TestConsumer\Traction.TestConsumer.csproj">
+    <ProjectReference Include="..\Traction.Demo\Traction.Demo.csproj">
       <Project>{8cae99a0-3e60-4c93-a5b7-2fed1b219581}</Project>
-      <Name>Traction.TestConsumer</Name>
+      <Name>Traction.Demo</Name>
     </ProjectReference>
     <ProjectReference Include="..\Traction\Traction.csproj">
       <Project>{2c61d50d-4411-4643-977a-e0f72d87840b}</Project>

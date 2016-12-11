@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Traction.TestConsumer {
+namespace Traction.Demo {
 
     /// <summary>
     /// Class to demonstrate NonNull contracts being applied to basic method and property use cases.

@@ -7,8 +7,8 @@
     <ProjectGuid>{8CAE99A0-3E60-4C93-A5B7-2FED1B219581}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Traction.TestConsumer</RootNamespace>
-    <AssemblyName>Traction.TestConsumer</AssemblyName>
+    <RootNamespace>Traction.Demo</RootNamespace>
+    <AssemblyName>Traction.Demo</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

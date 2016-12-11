@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Traction.TestConsumer {
+namespace Traction.Demo {
 
     /// <summary>
     /// Class to demonstrate postconditions being applied to members with multiple return statements or nested methods.

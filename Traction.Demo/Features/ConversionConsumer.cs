@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Traction.TestConsumer {
+namespace Traction.Demo {
 
     /// <summary>
     /// Class to demonstrate contracts being applied to conversion operators.

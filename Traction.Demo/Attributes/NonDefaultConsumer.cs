@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Traction.TestConsumer {
+namespace Traction.Demo {
 
     public class NonDefaultConsumer {
 

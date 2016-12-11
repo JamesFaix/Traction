@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Traction.TestConsumer", "Traction.TestConsumer\Traction.TestConsumer.csproj", "{8CAE99A0-3E60-4C93-A5B7-2FED1B219581}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Traction.Demo", "Traction.Demo\Traction.Demo.csproj", "{8CAE99A0-3E60-4C93-A5B7-2FED1B219581}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Traction", "Traction\Traction.csproj", "{2C61D50D-4411-4643-977A-E0F72D87840B}"
 EndProject

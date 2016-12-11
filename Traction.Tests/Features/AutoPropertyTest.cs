@@ -1,5 +1,5 @@
 ﻿using System;
-using Traction.TestConsumer;
+using Traction.Demo;
 using NUnit.Framework;
 
 namespace Traction.Tests {

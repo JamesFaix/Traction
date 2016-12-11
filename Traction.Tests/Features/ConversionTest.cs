@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using NUnit.Framework;
-using Traction.TestConsumer;
+using Traction.Demo;
 
 namespace Traction.Tests {
 
