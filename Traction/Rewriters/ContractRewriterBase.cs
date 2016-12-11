@@ -158,7 +158,7 @@ namespace Traction {
 
         private string GetPreconditionText(string parameterName, string parameterTypeName) {
             var sb = new StringBuilder();
-            sb.AppendLine($"if ({GetConditionExpression(parameterName, parameterTypeName)})");
+            sb.AppendLine($"if (!({GetConditionExpression(parameterName, parameterTypeName)}))");
             sb.AppendLine($"    throw new global::Traction.PreconditionException(\"{ExceptionMessage}\", nameof({parameterName}));");
             return sb.ToString();
         }
@@ -167,13 +167,16 @@ namespace Traction {
             var sb = new StringBuilder();
             sb.AppendLine("{");
             sb.AppendLine($"    {returnTypeName} {tempVarName} = {returnedExpression};");
-            sb.AppendLine($"    if ({GetConditionExpression(tempVarName, returnTypeName)})");
+            sb.AppendLine($"    if (!({GetConditionExpression(tempVarName, returnTypeName)}))");
             sb.AppendLine($"        throw new global::Traction.PostconditionException(\"{ExceptionMessage}\");");
             sb.AppendLine($"    return {tempVarName};");
             sb.AppendLine("}");
             return sb.ToString();
         }
-        
+
+        /// <summary>
+        /// Gets boolean expression to evaluate.  Should return false if contract is broken.
+        /// </summary>
         protected abstract ExpressionSyntax GetConditionExpression(string expression, string expressionType);
 
         protected abstract string ExceptionMessage { get; }

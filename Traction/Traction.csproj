@@ -64,6 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\BasicComparisonAttributes.cs" />
     <Compile Include="Attributes\ContractAttribute.cs" />
     <Compile Include="Attributes\NonDefaultAttribute.cs" />
     <Compile Include="Attributes\NonEmptyAttribute.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="CompileContext\AfterCompileContextWrapper.cs" />
     <Compile Include="CompileContext\BeforeCompileContextWrapper.cs" />
+    <Compile Include="Rewriters\AttributeRewriters\BasicComparisonRewriters.cs" />
     <Compile Include="Rewriters\AttributeRewriters\NonDefaultRewriter.cs" />
     <Compile Include="Rewriters\AttributeRewriters\NonEmptyRewriter.cs" />
     <Compile Include="Rewriters\AutoPropertyExpander.cs" />

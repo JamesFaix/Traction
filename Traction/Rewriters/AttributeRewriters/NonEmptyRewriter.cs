@@ -17,18 +17,14 @@ namespace Traction {
 
         protected override ExpressionSyntax GetConditionExpression(string expression, string expressionType) {
             return SyntaxFactory.ParseExpression(
-                $"!global::System.Linq.Enumerable.Any({expression})");
+                $"global::System.Linq.Enumerable.Any({expression})");
         }
 
         //Applies to types implementing IEnumerable<T>
-        protected override bool IsValidType(TypeInfo type) {
-            var interfaceNames = type.Type.AllInterfaces
-                .Select(i => i.FullName())
-                .ToArray();
-
-            return interfaceNames.Any(i => i.StartsWith("global::System.Collections.Generic.IEnumerable"));
-        }
-
+        protected override bool IsValidType(TypeInfo type) =>
+            type.Type.AllInterfaces
+            .Any(i => i.FullName().StartsWith("global::System.Collections.Generic.IEnumerable"));
+        
         protected override Diagnostic InvalidTypeDiagnostic(Location location) => DiagnosticFactory.Create(
             title: $"Incorrect attribute usage",
             message: $"{nameof(NonEmptyAttribute)} can only be applied to members with types implementing IEnumerable<T>.",

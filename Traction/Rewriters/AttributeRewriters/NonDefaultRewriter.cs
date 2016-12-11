@@ -17,7 +17,7 @@ namespace Traction {
 
         protected override ExpressionSyntax GetConditionExpression(string expression, string expressionType) {
             return SyntaxFactory.ParseExpression(
-                $"global::System.Object.Equals({expression}, default({expressionType}))");
+                $"!global::System.Object.Equals({expression}, default({expressionType}))");
         }
 
         //Applies to all types
