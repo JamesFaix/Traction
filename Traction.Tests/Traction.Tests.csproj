@@ -51,6 +51,7 @@
     <Compile Include="Attributes\NonDefaultNullableTest.cs" />
     <Compile Include="Attributes\NonDefaultReferenceTypeTest.cs" />
     <Compile Include="Attributes\NonDefaultValueTypeTest.cs" />
+    <Compile Include="Attributes\NonEmptyStringTest.cs" />
     <Compile Include="Attributes\NonNullNullableTest.cs" />
     <Compile Include="Attributes\NonNullTest.cs" />
     <Compile Include="Features\AutoPropertyTest.cs" />

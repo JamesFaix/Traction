@@ -67,7 +67,7 @@ namespace Traction.Tests {
             var consumer1 = GetConsumer();
             OperatorConsumer consumer2 = null;
 
-            Assert.Throws<ReturnValueException>(() => {
+            Assert.Throws<PostconditionException>(() => {
                 var x = consumer1 * consumer2;
             });
         }
@@ -100,7 +100,7 @@ namespace Traction.Tests {
         public void Operator_PreAndPost_ThrowsIfPostconditionBroken() {
             var consumer1 = GetConsumer();
 
-            Assert.Throws<ReturnValueException>(() => {
+            Assert.Throws<PostconditionException>(() => {
                 var x = consumer1 / consumer1;
             });
         }

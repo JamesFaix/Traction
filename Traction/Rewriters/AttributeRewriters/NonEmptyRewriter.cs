@@ -8,11 +8,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Traction {
 
     /// <summary>
-    /// Syntax rewriter for <see cref="NonDefaultAttribute"/>.
+    /// Syntax rewriter for <see cref="NonEmptyAttribute"/>.
     /// </summary>
-    class NonDefaultRewriter : ContractRewriterBase<NonDefaultAttribute> {
+    class NonEmptyRewriter : ContractRewriterBase<NonEmptyAttribute> {
 
-        public NonDefaultRewriter(SemanticModel model, ICompileContext context)
+        public NonEmptyRewriter(SemanticModel model, ICompileContext context)
             : base(model, context) { }
 
         protected override StatementSyntax CreatePrecondition(TypeInfo type, string parameterName, Location location) {
@@ -38,7 +38,7 @@ namespace Traction {
 
         private string GetPreconditionText(string parameterName, string parameterTypeName) {
             var sb = new StringBuilder();
-            sb.AppendLine($"if ({GetConditionExpression(parameterName, parameterTypeName)})");
+            sb.AppendLine($"if ({GetConditionExpression(parameterName, null)})");
             sb.AppendLine($"    throw new global::System.ArgumentException(\"{ExceptionMessage}\", nameof({parameterName}));");
             return sb.ToString();
         }
@@ -47,25 +47,32 @@ namespace Traction {
             var sb = new StringBuilder();
             sb.AppendLine("{");
             sb.AppendLine($"    {returnTypeName} {tempVarName} = {returnedExpression};");
-            sb.AppendLine($"    if ({GetConditionExpression(tempVarName, returnTypeName)})");
+            sb.AppendLine($"    if ({GetConditionExpression(tempVarName, null)})");
             sb.AppendLine($"        throw new global::Traction.PostconditionException(\"{ExceptionMessage}\");");
             sb.AppendLine($"    return {tempVarName};");
             sb.AppendLine("}");
             return sb.ToString();
         }
 
-        protected override string ExceptionMessage => "Value cannot be default(T).";
+        protected override string ExceptionMessage => "Sequence cannot be empty.";
 
         protected override ExpressionSyntax GetConditionExpression(string expression, string expressionType) {
             return SyntaxFactory.ParseExpression(
-                $"global::System.Object.Equals({expression}, default({expressionType}))");
+                $"!global::System.Linq.Enumerable.Any({expression})");
         }
 
-        //Applies to all types
-        protected override bool IsValidType(TypeInfo type) => true;
+        //Applies to types implementing IEnumerable<T>
+        protected override bool IsValidType(TypeInfo type) {
+            var interfaceNames = type.Type.AllInterfaces
+                .Select(i => i.FullName())
+                .ToArray();
 
-        protected override Diagnostic InvalidTypeDiagnostic(Location location) {
-            throw new InvalidOperationException($"{nameof(NonDefaultRewriter)} should never throw an invalid type diagnostic.");
+            return interfaceNames.Any(i => i.StartsWith("global::System.Collections.Generic.IEnumerable"));
         }
+
+        protected override Diagnostic InvalidTypeDiagnostic(Location location) => DiagnosticFactory.Create(
+            title: $"Incorrect attribute usage",
+            message: $"{nameof(NonEmptyAttribute)} can only be applied to members with types implementing IEnumerable<T>.",
+            location: location);
     }
 }

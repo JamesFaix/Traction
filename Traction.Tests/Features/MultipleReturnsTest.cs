@@ -38,7 +38,7 @@ namespace Traction.Tests {
 
             //Getting value twice will hit check return statements.
             for (var i = 0; i <= 1; i++) {
-                Assert.Throws<ReturnValueException>(() => {
+                Assert.Throws<PostconditionException>(() => {
                     var x = consumer.ContractProperty;
                 });
             }
@@ -70,7 +70,7 @@ namespace Traction.Tests {
 
             //Getting value twice will hit check return statements.
             for (var i = 0; i <= 1; i++) {
-                Assert.Throws<ReturnValueException>(() => {
+                Assert.Throws<PostconditionException>(() => {
                     consumer.PostconditionMethod();
                 });
             }

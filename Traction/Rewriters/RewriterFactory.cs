@@ -21,7 +21,11 @@ namespace Traction {
         }
 
         public static CSharpSyntaxRewriter NonDefault(SemanticModel model, ICompileContext context) {
-            return new NonDefaultReWriter(model, context);
+            return new NonDefaultRewriter(model, context);
+        }
+
+        public static CSharpSyntaxRewriter NonEmpty(SemanticModel model, ICompileContext context) {
+            return new NonEmptyRewriter(model, context);
         }
     }
 }

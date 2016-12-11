@@ -37,7 +37,7 @@ namespace Traction.Tests {
         [Test]
         public void NonDefault_PostconditionGenericMethod_ThrowsIfDefault() {
             var consumer = GetConsumer();
-            Assert.Throws<ReturnValueException>(() =>
+            Assert.Throws<PostconditionException>(() =>
                 consumer.PostconditionGenericMethod(null));
         }
     }

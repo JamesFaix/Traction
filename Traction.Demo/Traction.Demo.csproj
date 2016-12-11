@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\NonDefaultConsumer.cs" />
+    <Compile Include="Attributes\NonEmptyConsumer.cs" />
     <Compile Include="Features\AutoPropertyConsumer.cs" />
     <Compile Include="Features\ConversionConsumer.cs" />
     <Compile Include="Features\ExpressionBodiedMemberConsumer.cs" />

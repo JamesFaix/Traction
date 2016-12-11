@@ -32,7 +32,7 @@ namespace Traction {
             }
             catch (Exception e) {
                 context.Diagnostics.Add(
-                    DiagnosticProvider.SyntaxRewriteFailed(
+                    DiagnosticFactory.SyntaxRewriteFailed(
                         location: node.GetLocation(), 
                         exception: e));
                 return node;

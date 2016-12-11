@@ -51,7 +51,7 @@ namespace Traction.Tests {
             var consumer = GetConsumer();
             consumer._contractReadonlyReferenceTypeProperty = null;
 
-            Assert.Throws<ReturnValueException>(() => {
+            Assert.Throws<PostconditionException>(() => {
                 var x = consumer.ContractReadonlyReferenceTypeProperty;
             });
         }
@@ -93,7 +93,7 @@ namespace Traction.Tests {
             var consumer = GetConsumer();
             consumer._contractReadWriteReferenceTypeProperty = null;
 
-            Assert.Throws<ReturnValueException>(() => {
+            Assert.Throws<PostconditionException>(() => {
                 var x = consumer.ContractReadWriteReferenceTypeProperty;
             });
         }
@@ -162,7 +162,7 @@ namespace Traction.Tests {
         public void NonDefault_PostconditionReferenceTypeMethod_ThrowsIfResultDefault() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ReturnValueException>(() =>
+            Assert.Throws<PostconditionException>(() =>
                 consumer.PostconditionReferenceTypeMethod(null));
         }
         #endregion
@@ -188,7 +188,7 @@ namespace Traction.Tests {
         public void NonDefault_PreAndPostconditionReferenceTypeMethod_ThrowsIfResultDefault() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ReturnValueException>(() =>
+            Assert.Throws<PostconditionException>(() =>
                 consumer.PreAndPostconditionReferenceTypeMethod(""));
         }
         #endregion
