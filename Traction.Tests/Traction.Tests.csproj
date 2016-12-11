@@ -54,11 +54,13 @@
     <Compile Include="Attributes\NonEmptyStringTest.cs" />
     <Compile Include="Attributes\NonNullNullableTest.cs" />
     <Compile Include="Attributes\NonNullTest.cs" />
+    <Compile Include="Attributes\PositiveTest.cs" />
     <Compile Include="Features\AutoPropertyTest.cs" />
     <Compile Include="Features\ConversionTest.cs" />
     <Compile Include="Features\ExpressionBodiedMemberTest.cs" />
     <Compile Include="Features\MultipleReturnsTest.cs" />
     <Compile Include="Features\OperatorTest.cs" />
+    <Compile Include="Features\SingleAccessorPropertiesTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -16,7 +16,8 @@ namespace Traction {
                 RewriterFactory.ExpressionBodiedMemberExpander,
                 RewriterFactory.NonNull,
                 RewriterFactory.NonDefault,
-                RewriterFactory.NonEmpty
+                RewriterFactory.NonEmpty,
+                RewriterFactory.Positive
             });
         }
     }
