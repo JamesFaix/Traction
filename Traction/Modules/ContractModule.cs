@@ -16,6 +16,7 @@ namespace Traction {
             AddBeforeRewriterProvider(RewriterFactory.ExpressionBodiedMemberExpander);
             AddBeforeRewriterProvider(RewriterFactory.NonNull);
             AddBeforeRewriterProvider(RewriterFactory.NonDefault);
+            AddBeforeRewriterProvider(RewriterFactory.NonEmpty);
         }
     }
 }

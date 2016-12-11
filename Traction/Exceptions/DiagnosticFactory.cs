@@ -6,7 +6,7 @@ namespace Traction {
     /// <summary>
     /// Factory for contract rewriting diagnostics.
     /// </summary>
-    static class DiagnosticProvider {
+    static class DiagnosticFactory {
 
         public static Diagnostic SyntaxRewriteFailed(Location location, Exception exception) => Create(
             title: "Syntax rewrite failed",
@@ -17,13 +17,8 @@ namespace Traction {
             title: $"Incorrect attribute usage",
             message: $"Attributes inheriting {nameof(ContractAttribute)} cannot be applied to methods returning void.",
             location: location);
-
-        public static Diagnostic NonNullAttributeCanOnlyBeAppliedToReferenceTypes(Location location) => Create(
-            title: $"Incorrect attribute usage",
-            message: $"{nameof(NonNullAttribute)} can only be applied to members with reference or nullable types.",
-            location: location);
-
-        private static Diagnostic Create(string title, string message, Location location) => Diagnostic.Create(
+        
+        public static Diagnostic Create(string title, string message, Location location) => Diagnostic.Create(
             descriptor: new DiagnosticDescriptor(
                 id: "TRACTION",
                 title: "Traction: " + title,

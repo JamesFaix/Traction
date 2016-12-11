@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Attributes\ContractAttribute.cs" />
     <Compile Include="Attributes\NonDefaultAttribute.cs" />
+    <Compile Include="Attributes\NonEmptyAttribute.cs" />
     <Compile Include="Attributes\NonNullAttribute.cs" />
     <Compile Include="Exceptions\ReturnValueException.cs" />
     <Compile Include="ExtensionMethods\AttributeSyntaxExtensions.cs" />
@@ -78,13 +79,14 @@
     <Compile Include="CompileContext\AfterCompileContextWrapper.cs" />
     <Compile Include="CompileContext\BeforeCompileContextWrapper.cs" />
     <Compile Include="Rewriters\AttributeRewriters\NonDefaultRewriter.cs" />
+    <Compile Include="Rewriters\AttributeRewriters\NonEmptyRewriter.cs" />
     <Compile Include="Rewriters\AutoPropertyExpander.cs" />
     <Compile Include="Rewriters\ExpressionBodiedMemberExpander.cs" />
     <Compile Include="Rewriters\IdentifierFactory.cs" />
     <Compile Include="Modules\CompileModuleBase.cs" />
     <Compile Include="Modules\ContractModule.cs" />
     <Compile Include="CompileContext\ICompileContext.cs" />
-    <Compile Include="Exceptions\DiagnosticProvider.cs" />
+    <Compile Include="Exceptions\DiagnosticFactory.cs" />
     <Compile Include="Rewriters\Delegates.cs" />
     <Compile Include="Rewriters\ContractRewriterBase.cs" />
     <Compile Include="Rewriters\AttributeRewriters\NonNullRewriter.cs" />

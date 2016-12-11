@@ -23,7 +23,7 @@ namespace Traction {
 
         public sealed override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node) {
             if (node.ReturnType.GetText().ToString() == "void") {
-                context.Diagnostics.Add(DiagnosticProvider.ContractAttributeCannotBeAppliedToMethodReturningVoid(node.GetLocation()));
+                context.Diagnostics.Add(DiagnosticFactory.ContractAttributeCannotBeAppliedToMethodReturningVoid(node.GetLocation()));
                 VisitMethodImpl(node); //Visit to check for other errors, but ignore returned value
                 return node; //Return original node
             }
@@ -85,7 +85,7 @@ namespace Traction {
             var location = node.GetLocation();
 
             return preconditionParameters
-                .Select(p => CreatePrecondition(model.GetTypeInfo(p.Type), p.Identifier.ValueText, location));
+                .Select(p => CreatePreconditionIfValidType(model.GetTypeInfo(p.Type), p.Identifier.ValueText, location));
         }
 
         private TNode InsertMethodPostconditions<TNode>(TNode node)
@@ -101,14 +101,14 @@ namespace Traction {
             var returnStatements = node.GetAllReturnStatements();
 
             return node.ReplaceNodes(returnStatements,
-                (oldNode, newNode) => CreatePostcondition(returnType, newNode, location));
+                (oldNode, newNode) => CreatePostconditionIfValidType(returnType, newNode, location));
         }
 
         private AccessorDeclarationSyntax InsertPropertyPrecondition(TypeInfo type, AccessorDeclarationSyntax node, Location location) {
             if (node == null) return null;
 
             return node.WithBody(
-                SyntaxFactory.Block(CreatePrecondition(type, "value", location))
+                SyntaxFactory.Block(CreatePreconditionIfValidType(type, "value", location))
                     .AddStatements(node.Body.Statements.ToArray()));
         }
 
@@ -118,7 +118,27 @@ namespace Traction {
             var returnStatements = node.GetAllReturnStatements();
 
             return node.ReplaceNodes(returnStatements,
-                (oldNode, newNode) => CreatePostcondition(type, newNode, location));
+                (oldNode, newNode) => CreatePostconditionIfValidType(type, newNode, location));
+        }
+
+        private StatementSyntax CreatePreconditionIfValidType(TypeInfo parameterType, string identifier, Location location) {
+            if (IsValidType(parameterType)) {
+                return CreatePrecondition(parameterType, identifier, location);
+            }
+            else {
+                context.Diagnostics.Add(InvalidTypeDiagnostic(location));
+                return SyntaxFactory.Block();
+            }
+        }
+
+        private StatementSyntax CreatePostconditionIfValidType(TypeInfo returnType, ReturnStatementSyntax node, Location location) {
+            if (IsValidType(returnType)) {
+                return CreatePostcondition(returnType, node, location);
+            }
+            else {
+                context.Diagnostics.Add(InvalidTypeDiagnostic(location));
+                return SyntaxFactory.Block();
+            }
         }
 
         protected abstract StatementSyntax CreatePrecondition(TypeInfo parameterType, string identifier, Location location);
@@ -126,5 +146,7 @@ namespace Traction {
         protected abstract StatementSyntax CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location);
 
         protected abstract bool IsValidType(TypeInfo type);
+
+        protected abstract Diagnostic InvalidTypeDiagnostic(Location location);
     }
 }

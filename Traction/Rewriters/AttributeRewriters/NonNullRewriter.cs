@@ -29,12 +29,7 @@ namespace Traction {
         protected override StatementSyntax CreatePrecondition(TypeInfo type, string parameterName, Location location) {
             if (parameterName == null) throw new ArgumentNullException(nameof(parameterName));
             if (location == null) throw new ArgumentNullException(nameof(location));
-
-            if (!IsValidType(type)) {
-                context.Diagnostics.Add(DiagnosticProvider.NonNullAttributeCanOnlyBeAppliedToReferenceTypes(location));
-                return SyntaxFactory.Block();
-            }
-
+            
             var text = string.Format(preconditionTemplate, parameterName);
             var statement = SyntaxFactory.ParseStatement(text);
 
@@ -44,12 +39,7 @@ namespace Traction {
         protected override StatementSyntax CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location) {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (location == null) throw new ArgumentNullException(nameof(location));
-
-            if (!IsValidType(returnType)) {
-                context.Diagnostics.Add(DiagnosticProvider.NonNullAttributeCanOnlyBeAppliedToReferenceTypes(location));
-                return node;
-            }
-
+            
             var returnedExpression = node.ChildNodes().FirstOrDefault();
             var tempVariableName = IdentifierFactory.CreatePostconditionLocal(node, model);
             var text = string.Format(postconditionTemplate, returnType.FullName(), tempVariableName, returnedExpression);
@@ -61,5 +51,10 @@ namespace Traction {
             return !type.Type.IsValueType
             || type.FullName().EndsWith("?");
         }
+
+        protected override Diagnostic InvalidTypeDiagnostic(Location location) => DiagnosticFactory.Create(
+            title: $"Incorrect attribute usage",
+            message: $"{nameof(NonNullAttribute)} can only be applied to members with reference or nullable types.",
+            location: location);
     }
 }

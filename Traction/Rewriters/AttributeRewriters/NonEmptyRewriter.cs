@@ -7,22 +7,22 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Traction {
 
     /// <summary>
-    /// Syntax rewriter for <see cref="NonDefaultAttribute"/>.
+    /// Syntax rewriter for <see cref="NonEmptyAttribute"/>.
     /// </summary>
-    class NonDefaultRewriter : ContractRewriterBase<NonDefaultAttribute> {
+    class NonEmptyRewriter : ContractRewriterBase<NonEmptyAttribute> {
 
-        public NonDefaultRewriter(SemanticModel model, ICompileContext context)
+        public NonEmptyRewriter(SemanticModel model, ICompileContext context)
             : base(model, context) { }
 
-        private const string preconditionTemplate = //0 = value, 1 = type name
-            @"if (global::System.Object.Equals({0}, default({1}))) 
-                  throw new global::System.ArgumentException(""Value cannot be default({1})."", nameof({0}));";
+        private const string preconditionTemplate = //0 = value
+            @"if (!global::System.Linq.Enumerable.Any({0})) 
+                  throw new global::System.ArgumentException(""Sequence cannot be empty."", nameof({0}));";
 
         private const string postconditionTemplate = //0 = type name, 1 = identifier, 2 = return expression
             @"{{
                   {0} {1} = {2};
-                  if (global::System.Object.Equals({1}, default({0})))
-                      throw new global::Traction.ReturnValueException(""Return value cannot be default({0})."");
+                  if (!global::System.Linq.Enumerable.Any({1}))
+                      throw new global::Traction.ReturnValueException(""Sequence cannot be empty."");
                   return {1};
               }}";
 
@@ -47,11 +47,18 @@ namespace Traction {
             return statement;
         }
 
-        //Applies to all types
-        protected override bool IsValidType(TypeInfo type) => true;
+        //Applies to types implementing IEnumerable<T>
+        protected override bool IsValidType(TypeInfo type) {
+            var interfaceNames = type.Type.AllInterfaces
+                .Select(i => i.FullName())
+                .ToArray();
 
-        protected override Diagnostic InvalidTypeDiagnostic(Location location) {
-            throw new InvalidOperationException($"{nameof(NonDefaultRewriter)} should never throw an invalid type diagnostic.");
+            return interfaceNames.Any(i => i.StartsWith("global::System.Collections.Generic.IEnumerable"));
         }
+
+        protected override Diagnostic InvalidTypeDiagnostic(Location location) => DiagnosticFactory.Create(
+            title: $"Incorrect attribute usage",
+            message: $"{nameof(NonEmptyAttribute)} can only be applied to members with types implementing IEnumerable<T>.",
+            location: location);
     }
 }
