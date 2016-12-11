@@ -71,7 +71,7 @@ namespace Traction.Tests {
         public void NonDefault_ContractWriteonlyReferenceTypeProperty_ThrowsIfDefault() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ArgumentNullException>(() => {
+            Assert.Throws<ArgumentException>(() => {
                 consumer.ContractWriteonlyReferenceTypeProperty = null;
             });
         }
@@ -111,7 +111,7 @@ namespace Traction.Tests {
         public void NonDefault_ContractReadWriteReferenceTypeProperty_SetThrowsIfDefault() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ArgumentNullException>(() => {
+            Assert.Throws<ArgumentException>(() => {
                 consumer.ContractReadWriteReferenceTypeProperty = null;
             });
         }
@@ -133,7 +133,7 @@ namespace Traction.Tests {
 
         #region PreconditionMethod
         [Test]
-        public void NonDefault_PreconditionReferenceTypeMethod_DoesNotThrowIfArgNotNull() {
+        public void NonDefault_PreconditionReferenceTypeMethod_DoesNotThrowIfArgNotDefault() {
             var consumer = GetConsumer();
 
             Assert.DoesNotThrow(() =>
@@ -141,17 +141,17 @@ namespace Traction.Tests {
         }
 
         [Test]
-        public void NonDefault_PreconditionReferenceTypeMethod_ThrowsIfArgNull() {
+        public void NonDefault_PreconditionReferenceTypeMethod_ThrowsIfArgDefault() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<ArgumentException>(() =>
                 consumer.PreconditionReferenceTypeMethod(null));
         }
         #endregion
 
         #region PostconditionMethod
         [Test]
-        public void NonDefault_PostconditionReferenceTypeMethod_DoesNotThrowIfResultNotNull() {
+        public void NonDefault_PostconditionReferenceTypeMethod_DoesNotThrowIfResultNotDefault() {
             var consumer = GetConsumer();
 
             Assert.DoesNotThrow(() =>
@@ -159,7 +159,7 @@ namespace Traction.Tests {
         }
 
         [Test]
-        public void NonDefault_PostconditionReferenceTypeMethod_ThrowsIfResultNull() {
+        public void NonDefault_PostconditionReferenceTypeMethod_ThrowsIfResultDefault() {
             var consumer = GetConsumer();
 
             Assert.Throws<ReturnValueException>(() =>
@@ -169,7 +169,7 @@ namespace Traction.Tests {
 
         #region PreAndPostconditionMethod
         [Test]
-        public void NonDefault_PreAndPostconditioReferenceTypenMethod_DoesNotThrowIfArgAndResultNotNull() {
+        public void NonDefault_PreAndPostconditioReferenceTypenMethod_DoesNotThrowIfArgAndResultNotDefault() {
             var consumer = GetConsumer();
 
             Assert.DoesNotThrow(() =>
@@ -177,19 +177,19 @@ namespace Traction.Tests {
         }
 
         [Test]
-        public void NonDefault_PreAndPostconditionReferenceTypeMethod_ThrowsIfArgNull() {
+        public void NonDefault_PreAndPostconditionReferenceTypeMethod_ThrowsIfArgDefault() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<ArgumentException>(() =>
                 consumer.PreAndPostconditionReferenceTypeMethod(null));
         }
 
         [Test]
-        public void NonDefault_PreAndPostconditionReferenceTypeMethod_ThrowsIfResultNull() {
+        public void NonDefault_PreAndPostconditionReferenceTypeMethod_ThrowsIfResultDefault() {
             var consumer = GetConsumer();
 
             Assert.Throws<ReturnValueException>(() =>
-                consumer.PreAndPostconditionReferenceTypeMethod("test"));
+                consumer.PreAndPostconditionReferenceTypeMethod(""));
         }
         #endregion
         

@@ -68,9 +68,9 @@ namespace Traction.TestConsumer {
         public void NormalMethod() {
 
         }
-        
+
         #region Reference types
-        
+
         public void PreconditionReferenceTypeMethod([NonDefault] string text) {
 
         }
@@ -82,7 +82,7 @@ namespace Traction.TestConsumer {
 
         [return: NonDefault]
         public string PreAndPostconditionReferenceTypeMethod([NonDefault] string name) {
-            return null;
+            return name == "" ? null : name;
         }
         #endregion
 
@@ -93,13 +93,13 @@ namespace Traction.TestConsumer {
         }
 
         [return: NonDefault]
-        public int PostconditionRefrenceTypeMethod(int index) {
+        public int PostconditionValueTypeMethod(int index) {
             return index;
         }
 
         [return: NonDefault]
         public int PreAndPostconditionValueTypeMethod([NonDefault] int index) {
-            return 0;
+            return index - 1;
         }
 
         #endregion
@@ -116,8 +116,21 @@ namespace Traction.TestConsumer {
         }
 
         [return: NonDefault]
-        public Func<int> PostconditionGenericMethod() {
-            return null;
+        public Func<int> PostconditionGenericMethod(Func<int> function) {
+            return function;
+        }
+
+        #endregion
+
+        #region Nullable Types
+
+        public void PreconditionNullableMethod([NonDefault] int? index) {
+
+        }
+
+        [return: NonDefault]
+        public int? PostconditionNullableMethod(int? index) {
+            return index;
         }
 
         #endregion
