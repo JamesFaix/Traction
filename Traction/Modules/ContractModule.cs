@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using StackExchange.Precompilation;
+﻿using StackExchange.Precompilation;
 
 namespace Traction {
 
@@ -12,11 +11,13 @@ namespace Traction {
 #if DEBUG_ON_BUILD
             Debugger.Launch();
 #endif
-            AddBeforeRewriterProvider(RewriterFactory.AutoPropertyExpander);
-            AddBeforeRewriterProvider(RewriterFactory.ExpressionBodiedMemberExpander);
-            AddBeforeRewriterProvider(RewriterFactory.NonNull);
-            AddBeforeRewriterProvider(RewriterFactory.NonDefault);
-            AddBeforeRewriterProvider(RewriterFactory.NonEmpty);
+            AddBeforeRewriterProviders(new RewriterFactoryMethod[] {
+                RewriterFactory.AutoPropertyExpander,
+                RewriterFactory.ExpressionBodiedMemberExpander,
+                RewriterFactory.NonNull,
+                RewriterFactory.NonDefault,
+                RewriterFactory.NonEmpty
+            });
         }
     }
 }

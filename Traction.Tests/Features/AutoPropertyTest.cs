@@ -89,7 +89,7 @@ namespace Traction.Tests {
         public void AutoProperty_ContractReadWrite_SetThrowsIfContractBroken() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ArgumentNullException>(() => {
+            Assert.Throws<PreconditionException>(() => {
                 consumer.ContractReadWrite = null;
             });
         }

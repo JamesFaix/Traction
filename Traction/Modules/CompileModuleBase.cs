@@ -22,9 +22,19 @@ namespace Traction {
             beforeRewriterProviders.Add(provider);
         }
 
+        protected void AddBeforeRewriterProviders(IEnumerable<RewriterFactoryMethod> providers) {
+            if (providers == null) throw new ArgumentNullException(nameof(providers));
+            beforeRewriterProviders.AddRange(providers);
+        }
+
         protected void AddAfterRewriterProvider(RewriterFactoryMethod provider) {
             if (provider == null) throw new ArgumentNullException(nameof(provider));
             afterRewriterProviders.Add(provider);
+        }
+
+        protected void AddAfterRewriterProvider(IEnumerable<RewriterFactoryMethod> providers) {
+            if (providers == null) throw new ArgumentNullException(nameof(providers));
+            afterRewriterProviders.AddRange(providers);
         }
 
         public void BeforeCompile(BeforeCompileContext context) {

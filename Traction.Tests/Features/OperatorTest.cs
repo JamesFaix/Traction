@@ -43,7 +43,7 @@ namespace Traction.Tests {
             OperatorConsumer consumer1 = null;
             var consumer2 = GetConsumer();
 
-            Assert.Throws<ArgumentNullException>(() => {
+            Assert.Throws<PreconditionException>(() => {
                 var x = consumer1 - consumer2;
             });
         }
@@ -91,7 +91,7 @@ namespace Traction.Tests {
             OperatorConsumer consumer1 = null;
             var consumer2 = GetConsumer();
 
-            Assert.Throws<ArgumentNullException>(() => {
+            Assert.Throws<PreconditionException>(() => {
                 var x = consumer1 / consumer2;
             });
         }

@@ -68,7 +68,7 @@ namespace Traction.Tests {
         public void NonDefault_ContractWriteonlyValueTypeProperty_ThrowsIfDefault() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ArgumentException>(() => {
+            Assert.Throws<PreconditionException>(() => {
                 consumer.ContractWriteonlyValueTypeProperty = 0;
             });
         }
@@ -108,7 +108,7 @@ namespace Traction.Tests {
         public void NonDefault_ContractReadWriteValueTypeProperty_SetThrowsIfDefault() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ArgumentException>(() => {
+            Assert.Throws<PreconditionException>(() => {
                 consumer.ContractReadWriteValueTypeProperty = 0;
             });
         }
@@ -141,7 +141,7 @@ namespace Traction.Tests {
         public void NonDefault_PreconditionValueTypeMethod_ThrowsIfArgDefault() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<PreconditionException>(() =>
                 consumer.PreconditionValueTypeMethod(0));
         }
         #endregion
@@ -177,7 +177,7 @@ namespace Traction.Tests {
         public void NonDefault_PreAndPostconditionValueTypeMethod_ThrowsIfArgDefault() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<PreconditionException>(() =>
                 consumer.PreAndPostconditionValueTypeMethod(0));
         }
 

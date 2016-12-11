@@ -21,7 +21,7 @@ namespace Traction.Tests {
         [Test]
         public void NonDefault_PreconditionGenericMethod_ThrowsIfDefault() {
             var consumer = GetConsumer();
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<PreconditionException>(() =>
                 consumer.PreconditionGenericMethod(null));
         }
 

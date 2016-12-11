@@ -41,7 +41,7 @@ namespace Traction.Tests {
         public void Conversion_Precondition_ThrowsIfContractBroken() {
             ConversionConsumer consumer = null;
 
-            Assert.Throws<ArgumentNullException>(() => {
+            Assert.Throws<PreconditionException>(() => {
                 var x = (long)consumer;
             });
         }
@@ -86,7 +86,7 @@ namespace Traction.Tests {
         public void Conversion_PreAndPostcondition_ThrowsIfPreconditionBroken() {
             ConversionConsumer consumer = null;
 
-            Assert.Throws<ArgumentNullException>(() => {
+            Assert.Throws<PreconditionException>(() => {
                 var x = (ArrayList)consumer;
             });
         }

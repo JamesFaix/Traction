@@ -20,7 +20,7 @@ namespace Traction.Tests {
         [Test]
         public void NonNull_PreconditionNullableMethod_ThrowsIfDefault() {
             var consumer = GetConsumer();
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<PreconditionException>(() =>
                 consumer.PreconditionNullableMethod(null));
         }
 
