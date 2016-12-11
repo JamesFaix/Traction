@@ -68,7 +68,7 @@ namespace Traction.Tests {
         public void NonEmpty_ContractWriteonlyProperty_ThrowsIfEmpty() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ArgumentException>(() => {
+            Assert.Throws<PreconditionException>(() => {
                 consumer.ContractWriteonlyProperty = "";
             });
         }
@@ -108,7 +108,7 @@ namespace Traction.Tests {
         public void NonEmpty_ContractReadWriteProperty_SetThrowsIfEmpty() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ArgumentException>(() => {
+            Assert.Throws<PreconditionException>(() => {
                 consumer.ContractReadWriteProperty = "";
             });
         }
@@ -141,7 +141,7 @@ namespace Traction.Tests {
         public void NonEmpty_PreconditionMethod_ThrowsIfArgEmpty() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<PreconditionException>(() =>
                 consumer.PreconditionMethod(""));
         }
         #endregion
@@ -177,7 +177,7 @@ namespace Traction.Tests {
         public void NonEmpty_PreAndPostconditionMethod_ThrowsIfArgEmpty() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<PreconditionException>(() =>
                 consumer.PreAndPostconditionMethod(""));
         }
 
@@ -203,10 +203,10 @@ namespace Traction.Tests {
         public void NonEmpty_MultiplePreconditionsMethod_ThrowsIfAnyArgEmpty() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<PreconditionException>(() =>
                 consumer.MultiplePreconditionsMethod("test", ""));
 
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<PreconditionException>(() =>
                 consumer.MultiplePreconditionsMethod("", "test"));
         }
         #endregion

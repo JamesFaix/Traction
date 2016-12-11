@@ -69,7 +69,7 @@ namespace Traction.Tests {
         public void NonNull_ContractWriteonlyProperty_ThrowsIfNull() {
             var consumer = new NonNullConsumer();
 
-            Assert.Throws<ArgumentNullException>(() => {
+            Assert.Throws<PreconditionException>(() => {
                 consumer.ContractWriteonlyProperty = null;
             });
         }
@@ -109,7 +109,7 @@ namespace Traction.Tests {
         public void NonNull_ContractReadWriteProperty_SetThrowsIfNull() {
             var consumer = new NonNullConsumer();
 
-            Assert.Throws<ArgumentNullException>(() => {
+            Assert.Throws<PreconditionException>(() => {
                 consumer.ContractReadWriteProperty = null;
             });
         }
@@ -142,7 +142,7 @@ namespace Traction.Tests {
         public void NonNull_PreconditionMethod_ThrowsIfArgNull() {
             var consumer = new NonNullConsumer();
 
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<PreconditionException>(() =>
                 consumer.PreconditionMethod(null));
         }
         #endregion
@@ -179,7 +179,7 @@ namespace Traction.Tests {
         public void NonNull_PreAndPostconditionMethod_ThrowsIfArgNull() {
             var consumer = new NonNullConsumer();
 
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<PreconditionException>(() =>
                 consumer.PreAndPostconditionMethod(null));
         }
 
@@ -206,10 +206,10 @@ namespace Traction.Tests {
         public void NonNull_MultiplePreconditionsMethod_ThrowsIfAnyArgNull() {
             var consumer = new NonNullConsumer();
 
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<PreconditionException>(() =>
                 consumer.MultiplePreconditionsMethod("test", null));
 
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<PreconditionException>(() =>
                 consumer.MultiplePreconditionsMethod(null, "test"));
         }
         #endregion

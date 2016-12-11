@@ -39,7 +39,7 @@ namespace Traction {
         private string GetPreconditionText(string parameterName, string parameterTypeName) {
             var sb = new StringBuilder();
             sb.AppendLine($"if ({GetConditionExpression(parameterName, null)})");
-            sb.AppendLine($"    throw new global::System.ArgumentException(\"{ExceptionMessage}\", nameof({parameterName}));");
+            sb.AppendLine($"    throw new global::Traction.PreconditionException(\"{ExceptionMessage}\", nameof({parameterName}));");
             return sb.ToString();
         }
 
