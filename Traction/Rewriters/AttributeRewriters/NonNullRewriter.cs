@@ -30,7 +30,7 @@ namespace Traction {
             if (parameterName == null) throw new ArgumentNullException(nameof(parameterName));
             if (location == null) throw new ArgumentNullException(nameof(location));
 
-            if (!type.Type.IsReferenceType) {
+            if (!IsValidType(type)) {
                 context.Diagnostics.Add(DiagnosticProvider.NonNullAttributeCanOnlyBeAppliedToReferenceTypes(location));
                 return SyntaxFactory.Block();
             }
@@ -45,7 +45,7 @@ namespace Traction {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (location == null) throw new ArgumentNullException(nameof(location));
 
-            if (!returnType.Type.IsReferenceType) {
+            if (!IsValidType(returnType)) {
                 context.Diagnostics.Add(DiagnosticProvider.NonNullAttributeCanOnlyBeAppliedToReferenceTypes(location));
                 return node;
             }
@@ -54,6 +54,12 @@ namespace Traction {
             var tempVariableName = IdentifierFactory.CreatePostconditionLocal(node, model);
             var text = string.Format(postconditionTemplate, returnType.FullName(), tempVariableName, returnedExpression);
             return SyntaxFactory.ParseStatement(text);
+        }
+
+        //Applies to reference and Nullable types
+        protected override bool IsValidType(TypeInfo type) {
+            return !type.Type.IsValueType
+            || type.FullName().EndsWith("?");
         }
     }
 }

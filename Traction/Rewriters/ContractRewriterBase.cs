@@ -125,5 +125,6 @@ namespace Traction {
 
         protected abstract StatementSyntax CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location);
 
+        protected abstract bool IsValidType(TypeInfo type);
     }
 }

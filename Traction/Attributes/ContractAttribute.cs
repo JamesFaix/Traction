@@ -12,7 +12,5 @@ namespace Traction {
 
         protected ContractAttribute() {
         }
-        
-        public abstract bool IsValidType(TypeInfo typeInfo);
     }
 }

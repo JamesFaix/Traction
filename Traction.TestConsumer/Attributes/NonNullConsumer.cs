@@ -62,5 +62,17 @@ namespace Traction.TestConsumer {
         }
 
         #endregion
+
+        #region Nullable types
+
+        public void PreconditionNullableMethod([NonNull] int? index) {
+
+        }
+
+        [return: NonNull]
+        public int? PostconditionNullableMethod(int? index) {
+            return index;
+        }
+        #endregion
     }
 }

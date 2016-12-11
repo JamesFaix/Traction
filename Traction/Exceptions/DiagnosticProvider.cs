@@ -20,12 +20,12 @@ namespace Traction {
 
         public static Diagnostic NonNullAttributeCanOnlyBeAppliedToReferenceTypes(Location location) => Create(
             title: $"Incorrect attribute usage",
-            message: $"{nameof(NonNullAttribute)} can only be applied to reference-typed members.",
+            message: $"{nameof(NonNullAttribute)} can only be applied to members with reference or nullable types.",
             location: location);
 
         private static Diagnostic Create(string title, string message, Location location) => Diagnostic.Create(
             descriptor: new DiagnosticDescriptor(
-                id: "",
+                id: "TRACTION",
                 title: "Traction: " + title,
                 messageFormat: message,
                 category: "Traction",

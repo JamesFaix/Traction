@@ -10,9 +10,6 @@ namespace Traction {
     public sealed class NonNullAttribute : ContractAttribute {
 
         public NonNullAttribute() : base() { }
-
-        public override bool IsValidType(TypeInfo typeInfo) {
-            return !typeInfo.Type.IsValueType;
-        }
+        
     }
 }

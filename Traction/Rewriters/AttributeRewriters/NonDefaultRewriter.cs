@@ -46,5 +46,8 @@ namespace Traction {
             var statement = SyntaxFactory.ParseStatement(text);
             return statement;
         }
+
+        //Applies to all types
+        protected override bool IsValidType(TypeInfo type) => true;
     }
 }
