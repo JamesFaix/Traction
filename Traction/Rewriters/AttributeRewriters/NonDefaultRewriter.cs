@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -14,23 +15,11 @@ namespace Traction {
         public NonDefaultRewriter(SemanticModel model, ICompileContext context)
             : base(model, context) { }
 
-        private const string preconditionTemplate = //0 = value, 1 = type name
-            @"if (global::System.Object.Equals({0}, default({1}))) 
-                  throw new global::System.ArgumentException(""Value cannot be default({1})."", nameof({0}));";
-
-        private const string postconditionTemplate = //0 = type name, 1 = identifier, 2 = return expression
-            @"{{
-                  {0} {1} = {2};
-                  if (global::System.Object.Equals({1}, default({0})))
-                      throw new global::Traction.ReturnValueException(""Return value cannot be default({0})."");
-                  return {1};
-              }}";
-
         protected override StatementSyntax CreatePrecondition(TypeInfo type, string parameterName, Location location) {
             if (parameterName == null) throw new ArgumentNullException(nameof(parameterName));
             if (location == null) throw new ArgumentNullException(nameof(location));
 
-            var text = string.Format(preconditionTemplate, parameterName, type.FullName());
+            var text = GetPreconditionText(parameterName, type.FullName());
             var statement = SyntaxFactory.ParseStatement(text);
 
             return SyntaxFactory.Block(statement);
@@ -42,9 +31,27 @@ namespace Traction {
 
             var returnedExpression = node.ChildNodes().FirstOrDefault();
             var tempVariableName = IdentifierFactory.CreatePostconditionLocal(node, model);
-            var text = string.Format(postconditionTemplate, returnType.FullName(), tempVariableName, returnedExpression);
+            var text = GetPostconditionText(returnType.FullName(), returnedExpression.ToString(), tempVariableName);
             var statement = SyntaxFactory.ParseStatement(text);
             return statement;
+        }
+
+        private string GetPreconditionText(string parameterName, string parameterTypeName) {
+            var sb = new StringBuilder();
+            sb.AppendLine($"if (global::System.Object.Equals({parameterName}, default({parameterTypeName})))");
+            sb.AppendLine($"    throw new global::System.ArgumentException(\"Value cannot be default(T).\", nameof({parameterName}));");
+            return sb.ToString();
+        }
+
+        private string GetPostconditionText(string returnTypeName, string returnedExpression, string tempVarName) {
+            var sb = new StringBuilder();
+            sb.AppendLine("{");
+            sb.AppendLine($"    {returnTypeName} {tempVarName} = {returnedExpression};");
+            sb.AppendLine($"    if (global::System.Object.Equals({tempVarName}, default({returnTypeName})))");
+            sb.AppendLine($"        throw new global::Traction.ReturnValueException(\"Value cannot be default(T).\");");
+            sb.AppendLine($"    return {tempVarName};");
+            sb.AppendLine("}");
+            return sb.ToString();
         }
 
         //Applies to all types
