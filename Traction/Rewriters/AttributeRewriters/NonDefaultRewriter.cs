@@ -38,8 +38,8 @@ namespace Traction {
 
         private string GetPreconditionText(string parameterName, string parameterTypeName) {
             var sb = new StringBuilder();
-            sb.AppendLine($"if (global::System.Object.Equals({parameterName}, default({parameterTypeName})))");
-            sb.AppendLine($"    throw new global::System.ArgumentException(\"Value cannot be default(T).\", nameof({parameterName}));");
+            sb.AppendLine($"if ({GetConditionExpression(parameterName, parameterTypeName)})");
+            sb.AppendLine($"    throw new global::System.ArgumentException(\"{ExceptionMessage}\", nameof({parameterName}));");
             return sb.ToString();
         }
 
@@ -47,11 +47,18 @@ namespace Traction {
             var sb = new StringBuilder();
             sb.AppendLine("{");
             sb.AppendLine($"    {returnTypeName} {tempVarName} = {returnedExpression};");
-            sb.AppendLine($"    if (global::System.Object.Equals({tempVarName}, default({returnTypeName})))");
-            sb.AppendLine($"        throw new global::Traction.ReturnValueException(\"Value cannot be default(T).\");");
+            sb.AppendLine($"    if ({GetConditionExpression(tempVarName, returnTypeName)}");
+            sb.AppendLine($"        throw new global::Traction.ReturnValueException(\"{ExceptionMessage}\");");
             sb.AppendLine($"    return {tempVarName};");
             sb.AppendLine("}");
             return sb.ToString();
+        }
+
+        protected override string ExceptionMessage => "Value cannot be default(T).";
+
+        protected override ExpressionSyntax GetConditionExpression(string expression, string expressionType) {
+            return SyntaxFactory.ParseExpression(
+                $"global::System.Object.Equals({expression}, default({expressionType}))");
         }
 
         //Applies to all types

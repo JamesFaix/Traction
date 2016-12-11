@@ -141,6 +141,10 @@ namespace Traction {
             }
         }
 
+        protected abstract ExpressionSyntax GetConditionExpression(string expression, string expressionType);
+
+        protected abstract string ExceptionMessage { get; }
+
         protected abstract StatementSyntax CreatePrecondition(TypeInfo parameterType, string identifier, Location location);
 
         protected abstract StatementSyntax CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location);

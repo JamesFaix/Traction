@@ -63,7 +63,7 @@ namespace Traction.Tests {
         public void Conversion_Postcondition_ThrowsIfContractBroken() {
             ConversionConsumer consumer = null;
 
-            Assert.Throws<ReturnValueException>(() => {
+            Assert.Throws<PostconditionException>(() => {
                 var x = (string)consumer;
             });
         }
@@ -95,7 +95,7 @@ namespace Traction.Tests {
         public void Conversion_PreAndPostcondition_ThrowsIfPostconditionBroken() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ReturnValueException>(() => {
+            Assert.Throws<PostconditionException>(() => {
                 var x = (ArrayList)consumer;
             });
         }

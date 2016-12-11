@@ -35,7 +35,7 @@ namespace Traction.Tests {
         [Test]
         public void NonNull_PostconditionNullableMethod_ThrowsIfDefault() {
             var consumer = GetConsumer();
-            Assert.Throws<ReturnValueException>(() =>
+            Assert.Throws<PostconditionException>(() =>
                 consumer.PostconditionNullableMethod(null));
         }
     }

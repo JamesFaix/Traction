@@ -29,7 +29,7 @@ namespace Traction.Tests {
         public void ExpressionBodiedMember_ContractProperty_ThrowsIfContractBroken() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ReturnValueException>(() => {
+            Assert.Throws<PostconditionException>(() => {
                 var x = consumer.ContractProperty;
             });
         }
@@ -51,7 +51,7 @@ namespace Traction.Tests {
         public void ExpressionBodiedMember_PostconditionMethod_ThrowsIfContractBroken() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ReturnValueException>(() =>
+            Assert.Throws<PostconditionException>(() =>
                 consumer.PostconditionMethod());
         }
         #endregion

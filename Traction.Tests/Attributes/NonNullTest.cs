@@ -49,7 +49,7 @@ namespace Traction.Tests {
             var consumer = new NonNullConsumer();
             consumer._readonlyPropertyWithContract = null;
 
-            Assert.Throws<ReturnValueException>(() => {
+            Assert.Throws<PostconditionException>(() => {
                 var x = consumer.ContractReadonlyProperty;
             });
         }
@@ -91,7 +91,7 @@ namespace Traction.Tests {
             var consumer = new NonNullConsumer();
             consumer._readWritePropertyWithContract = null;
 
-            Assert.Throws<ReturnValueException>(() => {
+            Assert.Throws<PostconditionException>(() => {
                 var x = consumer.ContractReadWriteProperty;
             });
         }
@@ -160,7 +160,7 @@ namespace Traction.Tests {
         public void NonNull_PostconditionMethod_ThrowsIfResultNull() {
             var consumer = new NonNullConsumer();
 
-            Assert.Throws<ReturnValueException>(() =>
+            Assert.Throws<PostconditionException>(() =>
                 consumer.PostconditionMethod(null));
         }
         #endregion
@@ -188,7 +188,7 @@ namespace Traction.Tests {
             var consumer = new NonNullConsumer();
             Func<string> textGenerator = () => null;
 
-            Assert.Throws<ReturnValueException>(() =>
+            Assert.Throws<PostconditionException>(() =>
                 consumer.PreAndPostconditionMethod(textGenerator));
         }
         #endregion

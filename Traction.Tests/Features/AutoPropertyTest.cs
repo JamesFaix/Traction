@@ -30,7 +30,7 @@ namespace Traction.Tests {
         public void AutoProperty_ContractReadonly_ThrowsIfContractBroken() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ReturnValueException>(() => {
+            Assert.Throws<PostconditionException>(() => {
                 var x = consumer.ContractReadonly;
             });
         }
@@ -71,7 +71,7 @@ namespace Traction.Tests {
         public void AutoProperty_ContractReadWrite_GetThrowsIfContractBroken() {
             var consumer = GetConsumer();
 
-            Assert.Throws<ReturnValueException>(() => {
+            Assert.Throws<PostconditionException>(() => {
                 var x = consumer.ContractReadWrite;
             });
         }

@@ -38,8 +38,8 @@ namespace Traction {
 
         private string GetPreconditionText(string parameterName, string parameterTypeName) {
             var sb = new StringBuilder();
-            sb.AppendLine($"if (!global::System.Linq.Enumerable.Any({parameterName}))");
-            sb.AppendLine($"    throw new global::System.ArgumentException(\"Sequence cannot be empty.\", nameof({parameterName}));");
+            sb.AppendLine($"if ({GetConditionExpression(parameterName, null)})");
+            sb.AppendLine($"    throw new global::System.ArgumentException(\"{ExceptionMessage}\", nameof({parameterName}));");
             return sb.ToString();
         }
 
@@ -47,11 +47,18 @@ namespace Traction {
             var sb = new StringBuilder();
             sb.AppendLine("{");
             sb.AppendLine($"    {returnTypeName} {tempVarName} = {returnedExpression};");
-            sb.AppendLine($"    if (!global::System.Linq.Enumerable.Any({tempVarName}))");
-            sb.AppendLine($"        throw new global::Traction.ReturnValueException(\"Sequence cannot be empty.\");");
+            sb.AppendLine($"    if ({GetConditionExpression(tempVarName, null)})");
+            sb.AppendLine($"        throw new global::Traction.ReturnValueException(\"{ExceptionMessage}\");");
             sb.AppendLine($"    return {tempVarName};");
             sb.AppendLine("}");
             return sb.ToString();
+        }
+
+        protected override string ExceptionMessage => "Sequence cannot be empty.";
+
+        protected override ExpressionSyntax GetConditionExpression(string expression, string expressionType) {
+            return SyntaxFactory.ParseExpression(
+                $"!global::System.Linq.Enumerable.Any({expression})");
         }
 
         //Applies to types implementing IEnumerable<T>

@@ -37,7 +37,7 @@ namespace Traction {
 
         private string GetPreconditionText(string parameterName) {
             var sb = new StringBuilder();
-            sb.AppendLine($"if (global::System.Object.Equals({parameterName}, null))");
+            sb.AppendLine($"if ({GetConditionExpression(parameterName, null)})");
             sb.AppendLine($"    throw new global::System.ArgumentNullException(nameof({parameterName}));");
             return sb.ToString();
         }
@@ -46,11 +46,18 @@ namespace Traction {
             var sb = new StringBuilder();
             sb.AppendLine("{");
             sb.AppendLine($"    {returnTypeName} {tempVarName} = {returnedExpression};");
-            sb.AppendLine($"    if (global::System.Object.Equals({tempVarName}, null))");
-            sb.AppendLine($"        throw new global::Traction.ReturnValueException(\"Return value cannot be null\");");
+            sb.AppendLine($"    if ({GetConditionExpression(tempVarName, null)})");
+            sb.AppendLine($"        throw new global::Traction.ReturnValueException(\"{ExceptionMessage}\");");
             sb.AppendLine($"    return {tempVarName};");
             sb.AppendLine("}");
             return sb.ToString();
+        }
+
+        protected override string ExceptionMessage => "Value cannot be null.";
+
+        protected override ExpressionSyntax GetConditionExpression(string expression, string expressionType) {
+            return SyntaxFactory.ParseExpression(
+                $"global::System.Object.Equals({expression}, null)");
         }
 
         //Applies to reference and Nullable types
