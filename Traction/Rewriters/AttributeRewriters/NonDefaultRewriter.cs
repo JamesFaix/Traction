@@ -15,9 +15,15 @@ namespace Traction {
         
         protected override string ExceptionMessage => "Value cannot be default(T).";
 
-        protected override ExpressionSyntax GetConditionExpression(string expression, string expressionType) {
+        protected override ExpressionSyntax GetConditionExpression(string expression, TypeInfo expressionType) {
+            var symbol = expressionType.Type;
+            var typeName = symbol.FullName();
+
+            if (symbol.IsNullable()) { //If type is nullable (T?), compare to default(T) instead of default(T?)
+                typeName = (symbol as INamedTypeSymbol).TypeArguments[0].FullName();
+            }
             return SyntaxFactory.ParseExpression(
-                $"global::System.Object.Equals({expression}, default({expressionType}))");
+                $"!global::System.Object.Equals({expression}, default({typeName}))");
         }
 
         //Applies to all types

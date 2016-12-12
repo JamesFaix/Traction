@@ -14,16 +14,13 @@ namespace Traction {
         
         protected override string ExceptionMessage => "Value cannot be null.";
 
-        protected override ExpressionSyntax GetConditionExpression(string expression, string expressionType) {
+        protected override ExpressionSyntax GetConditionExpression(string expression, TypeInfo expressionType) {
             return SyntaxFactory.ParseExpression(
-                $"global::System.Object.Equals({expression}, null)");
+                $"!global::System.Object.Equals({expression}, null)");
         }
 
         //Applies to reference and Nullable types
-        protected override bool IsValidType(TypeInfo type) {
-            return !type.Type.IsValueType
-            || type.FullName().EndsWith("?");
-        }
+        protected override bool IsValidType(TypeInfo type) => type.Type.CanBeNull();
 
         protected override Diagnostic InvalidTypeDiagnostic(Location location) => DiagnosticFactory.Create(
             title: $"Incorrect attribute usage",

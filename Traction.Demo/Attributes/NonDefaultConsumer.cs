@@ -8,23 +8,11 @@ namespace Traction.Demo {
 
         #region Reference types
         public string _normalReferenceTypeProperty;
-        public string _contractReadonlyReferenceTypeProperty;
-        public string _contractWriteonlyReferenceTypeProperty;
         public string _contractReadWriteReferenceTypeProperty;
 
         public string NormalReadWriteReferenceTypeProperty {
             get { return _normalReferenceTypeProperty; }
             set { _normalReferenceTypeProperty = value; }
-        }
-
-        [NonDefault]
-        public string ContractReadonlyReferenceTypeProperty {
-            get { return _contractReadonlyReferenceTypeProperty; }
-        }
-
-        [NonDefault]
-        public string ContractWriteonlyReferenceTypeProperty {
-            set { _contractWriteonlyReferenceTypeProperty = value; }
         }
 
         [NonDefault]
@@ -36,23 +24,11 @@ namespace Traction.Demo {
 
         #region Value types
         public int _normalValueTypeProperty;
-        public int _contractReadonlyValueTypeProperty;
-        public int _contractWriteonlyValueTypeProperty;
         public int _contractReadWriteValueTypeProperty;
 
         public int NormalReadWriteValueTypeProperty {
             get { return _normalValueTypeProperty; }
             set { _normalValueTypeProperty = value; }
-        }
-
-        [NonDefault]
-        public int ContractReadonlyValueTypeProperty {
-            get { return _contractReadonlyValueTypeProperty; }
-        }
-
-        [NonDefault]
-        public int ContractWriteonlyValueTypeProperty {
-            set { _contractWriteonlyValueTypeProperty = value; }
         }
 
         [NonDefault]

@@ -27,5 +27,21 @@ namespace Traction {
         public static CSharpSyntaxRewriter NonEmpty(SemanticModel model, ICompileContext context) {
             return new NonEmptyRewriter(model, context);
         }
+
+        public static CSharpSyntaxRewriter Positive(SemanticModel model, ICompileContext context) {
+            return new PositiveRewriter(model, context);
+        }
+
+        public static CSharpSyntaxRewriter Negative(SemanticModel model, ICompileContext context) {
+            return new NegativeRewriter(model, context);
+        }
+
+        public static CSharpSyntaxRewriter NonPositive(SemanticModel model, ICompileContext context) {
+            return new NonPositiveRewriter(model, context);
+        }
+
+        public static CSharpSyntaxRewriter NonNegative(SemanticModel model, ICompileContext context) {
+            return new NonNegativeRewriter(model, context);
+        }
     }
 }

@@ -77,7 +77,7 @@ namespace Traction {
             var fieldName = IdentifierFactory.CreateUnique(this.usedIdentifiers, $"_{propertyName}");
             this.usedIdentifiers.Add(fieldName);
 
-            var fieldType = propertyType.FullName();
+            var fieldType = propertyType.Type.FullName();
 
             var modifiers = SyntaxFactory.TokenList(
                 SyntaxFactory.ParseToken("private")

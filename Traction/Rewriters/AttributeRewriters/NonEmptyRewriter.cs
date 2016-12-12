@@ -13,21 +13,19 @@ namespace Traction {
         public NonEmptyRewriter(SemanticModel model, ICompileContext context)
             : base(model, context) { }
 
-        protected override string ExceptionMessage => "Sequence cannot be empty.";
+        protected override string ExceptionMessage => "Sequence cannot be null or empty.";
 
-        protected override ExpressionSyntax GetConditionExpression(string expression, string expressionType) {
-            return SyntaxFactory.ParseExpression(
-                $"!global::System.Linq.Enumerable.Any({expression})");
+        protected override ExpressionSyntax GetConditionExpression(string expression, TypeInfo expressionType) {
+            var text = "";
+            if (!expressionType.Type.IsValueType) { //Check for null if reference type.
+                text += $"!global::System.Object.Equals({expression}, null) && ";
+            }
+            text += $"global::System.Linq.Enumerable.Any({expression})";
+            return SyntaxFactory.ParseExpression(text);
         }
 
         //Applies to types implementing IEnumerable<T>
-        protected override bool IsValidType(TypeInfo type) {
-            var interfaceNames = type.Type.AllInterfaces
-                .Select(i => i.FullName())
-                .ToArray();
-
-            return interfaceNames.Any(i => i.StartsWith("global::System.Collections.Generic.IEnumerable"));
-        }
+        protected override bool IsValidType(TypeInfo type) => type.Type.IsEnumerable();
 
         protected override Diagnostic InvalidTypeDiagnostic(Location location) => DiagnosticFactory.Create(
             title: $"Incorrect attribute usage",

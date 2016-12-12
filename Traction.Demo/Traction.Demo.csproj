@@ -76,6 +76,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\NonPositiveConsumer.cs" />
+    <Compile Include="Attributes\NonNegativeConsumer.cs" />
+    <Compile Include="Attributes\NegativeConsumer.cs" />
+    <Compile Include="Attributes\PositiveConsumer.cs" />
     <Compile Include="Attributes\NonDefaultConsumer.cs" />
     <Compile Include="Attributes\NonEmptyConsumer.cs" />
     <Compile Include="Features\AutoPropertyConsumer.cs" />
@@ -84,6 +88,7 @@
     <Compile Include="Features\MultipleReturnsConsumer.cs" />
     <Compile Include="Attributes\NonNullConsumer.cs" />
     <Compile Include="Features\OperatorConsumer.cs" />
+    <Compile Include="Features\SingleAccessorPropertyConsumer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

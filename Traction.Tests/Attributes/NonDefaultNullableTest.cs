@@ -14,14 +14,22 @@ namespace Traction.Tests {
             var consumer = GetConsumer();
 
             Assert.DoesNotThrow(() =>
-                consumer.PreconditionNullableMethod(0));
+                consumer.PreconditionNullableMethod(123));
+        }
+
+        [Test]
+        public void NonDefault_PreconditionNullableMethod_DoesNotThrowIfNull() {
+            var consumer = GetConsumer();
+
+            Assert.DoesNotThrow(() =>
+                consumer.PreconditionNullableMethod(null));
         }
 
         [Test]
         public void NonDefault_PreconditionNullableMethod_ThrowsIfDefault() {
             var consumer = GetConsumer();
             Assert.Throws<PreconditionException>(() =>
-                consumer.PreconditionNullableMethod(null));
+                consumer.PreconditionNullableMethod(0));
         }
 
         [Test]
@@ -29,14 +37,22 @@ namespace Traction.Tests {
             var consumer = GetConsumer();
 
             Assert.DoesNotThrow(() =>
-                consumer.PostconditionNullableMethod(0));
+                consumer.PostconditionNullableMethod(123));
+        }
+
+        [Test]
+        public void NonDefault_PostconditionNullableMethod_DoesNotThrowIfNull() {
+            var consumer = GetConsumer();
+
+            Assert.DoesNotThrow(() =>
+                consumer.PostconditionNullableMethod(null));
         }
 
         [Test]
         public void NonDefault_PostconditionNullableMethod_ThrowsIfDefault() {
             var consumer = GetConsumer();
             Assert.Throws<PostconditionException>(() =>
-                consumer.PostconditionNullableMethod(null));
+                consumer.PostconditionNullableMethod(0));
         }
     }
 }
