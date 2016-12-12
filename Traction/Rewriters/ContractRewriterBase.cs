@@ -166,7 +166,7 @@ namespace Traction {
         private string GetPostconditionText(TypeInfo returnType, string returnedExpression, string tempVarName) {
             var sb = new StringBuilder();
             sb.AppendLine("{");
-            sb.AppendLine($"    {returnType.FullName()} {tempVarName} = {returnedExpression};");
+            sb.AppendLine($"    {returnType.Type.FullName()} {tempVarName} = {returnedExpression};");
             sb.AppendLine($"    if (!({GetConditionExpression(tempVarName, returnType)}))");
             sb.AppendLine($"        throw new global::Traction.PostconditionException(\"{ExceptionMessage}\");");
             sb.AppendLine($"    return {tempVarName};");

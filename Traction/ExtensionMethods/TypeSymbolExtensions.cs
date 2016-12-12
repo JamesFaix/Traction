@@ -22,20 +22,16 @@ namespace Traction {
             }
         }
 
-        public static string FullName(this INamedTypeSymbol symbol) {
+        public static string FullName(this ITypeSymbol symbol) {
             if (symbol == null) throw new ArgumentNullException(nameof(symbol));
-
-            var result = symbol.FullNamespace() + symbol.Name;
             
-            if (symbol.TypeArguments.Any()) {
-                var args = symbol.TypeArguments
-                    .Select(a => a.FullNamespace() + a.Name)
-                    .ToDelimitedString(", ");
+            return symbol.ToDisplayString(
+                new SymbolDisplayFormat(
+                    SymbolDisplayGlobalNamespaceStyle.Included,
+                    SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+                    SymbolDisplayGenericsOptions.IncludeTypeParameters));
 
-                result += $"<{args}>";
-            }
-
-            return result;
+//            return result;
         }
 
         private static string FullNamespace(this ISymbol symbol) {
@@ -51,6 +47,24 @@ namespace Traction {
 
             return "global::" + result;
         }
+
+        public static bool CanBeNull(this ITypeSymbol type) =>
+            !type.IsValueType || type.IsNullable();
+
+        public static bool IsNullable(this ITypeSymbol type) =>
+            type.FullName().EndsWith("?");
+
+        public static bool IsEquatable(this ITypeSymbol type) =>
+            type.AllInterfaces
+                .Any(i => i.FullName().StartsWith("global::System.IEquatable<"));
+
+        public static bool IsComparable(this ITypeSymbol type) =>
+            type.AllInterfaces
+                .Any(i => i.FullName().StartsWith("global::System.IComparable<"));
+
+        public static bool IsEnumerable(this ITypeSymbol type) =>
+            type.AllInterfaces
+                .Any(i => i.FullName().StartsWith("global::System.Collections.Generic.IEnumerable"));
 
         private static string ToDelimitedString<T>(this IEnumerable<T> sequence, string delimiter) {
             var sb = new StringBuilder();

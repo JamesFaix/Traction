@@ -9,7 +9,7 @@ namespace Traction {
 
         public ContractModule() : base() {
 #if DEBUG_ON_BUILD
-            Debugger.Launch();
+            System.Diagnostics.Debugger.Launch();
 #endif
             AddBeforeRewriterProviders(new RewriterFactoryMethod[] {
                 RewriterFactory.AutoPropertyExpander,

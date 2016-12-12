@@ -25,7 +25,7 @@ namespace Traction {
         }
 
         //Applies to types implementing IEnumerable<T>
-        protected override bool IsValidType(TypeInfo type) => type.IsEnumerable();
+        protected override bool IsValidType(TypeInfo type) => type.Type.IsEnumerable();
 
         protected override Diagnostic InvalidTypeDiagnostic(Location location) => DiagnosticFactory.Create(
             title: $"Incorrect attribute usage",

@@ -20,7 +20,7 @@ namespace Traction {
         }
 
         //Applies to reference and Nullable types
-        protected override bool IsValidType(TypeInfo type) => type.IsNullable();
+        protected override bool IsValidType(TypeInfo type) => type.Type.CanBeNull();
 
         protected override Diagnostic InvalidTypeDiagnostic(Location location) => DiagnosticFactory.Create(
             title: $"Incorrect attribute usage",
