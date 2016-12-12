@@ -25,9 +25,7 @@ namespace Traction {
         }
 
         //Applies to types implementing IEnumerable<T>
-        protected override bool IsValidType(TypeInfo type) =>
-            type.Type.AllInterfaces
-            .Any(i => i.FullName().StartsWith("global::System.Collections.Generic.IEnumerable"));
+        protected override bool IsValidType(TypeInfo type) => type.IsEnumerable();
 
         protected override Diagnostic InvalidTypeDiagnostic(Location location) => DiagnosticFactory.Create(
             title: $"Incorrect attribute usage",

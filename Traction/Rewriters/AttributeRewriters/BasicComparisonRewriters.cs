@@ -26,10 +26,7 @@ namespace Traction {
         protected abstract string OperatorDescription { get; }
 
         //Applies to all types
-        protected sealed override bool IsValidType(TypeInfo type) =>
-            type.Type.IsValueType
-            && type.Type.AllInterfaces
-                .Any(i => i.FullName().StartsWith("global::System.IComparable<"));
+        protected sealed override bool IsValidType(TypeInfo type) => type.Type.IsValueType && type.IsComparable();
 
         protected sealed override Diagnostic InvalidTypeDiagnostic(Location location) => DiagnosticFactory.Create(
             title: $"Incorrect attribute usage",
