@@ -43,5 +43,19 @@
         }
         #endregion
 
+        #region Nullable types
+
+
+
+        public void PreconditionNullableMethod([Positive] int? value) {
+
+        }
+
+        [return: Positive]
+        public int? PostconditionNullableMethod(int? value) {
+            return value;
+        }
+
+        #endregion
     }
 }

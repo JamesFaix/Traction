@@ -87,7 +87,7 @@ namespace Traction.Tests {
             var consumer = new PositiveConsumer();
 
             Assert.Throws<PreconditionException>(() => {
-                consumer.ContractReadWriteProperty = 1;
+                consumer.ContractReadWriteProperty = -1;
             });
         }
         #endregion
