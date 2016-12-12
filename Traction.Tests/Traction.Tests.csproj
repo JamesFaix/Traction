@@ -47,6 +47,8 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\BasicComparisons\NonPositiveTest.cs" />
+    <Compile Include="Attributes\BasicComparisons\NonPositiveNullableTest.cs" />
     <Compile Include="Attributes\NonDefaultGenericTypeTest.cs" />
     <Compile Include="Attributes\NonDefaultNullableTest.cs" />
     <Compile Include="Attributes\NonDefaultReferenceTypeTest.cs" />
@@ -54,10 +56,10 @@
     <Compile Include="Attributes\NonEmptyStringTest.cs" />
     <Compile Include="Attributes\NonNullNullableTest.cs" />
     <Compile Include="Attributes\NonNullTest.cs" />
-    <Compile Include="Attributes\NegativeNullableTest.cs" />
-    <Compile Include="Attributes\PositiveNullableTest.cs" />
-    <Compile Include="Attributes\NegativeTest.cs" />
-    <Compile Include="Attributes\PositiveTest.cs" />
+    <Compile Include="Attributes\BasicComparisons\NegativeNullableTest.cs" />
+    <Compile Include="Attributes\BasicComparisons\PositiveNullableTest.cs" />
+    <Compile Include="Attributes\BasicComparisons\NegativeTest.cs" />
+    <Compile Include="Attributes\BasicComparisons\PositiveTest.cs" />
     <Compile Include="Features\AutoPropertyTest.cs" />
     <Compile Include="Features\ConversionTest.cs" />
     <Compile Include="Features\ExpressionBodiedMemberTest.cs" />

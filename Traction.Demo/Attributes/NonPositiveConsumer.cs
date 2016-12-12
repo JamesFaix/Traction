@@ -35,7 +35,7 @@
 
         [return: NonPositive]
         public int PreAndPostconditionMethod([NonPositive] int value) {
-            return value - 1;
+            return value + 1;
         }
 
         public int MultiplePreconditionsMethod([NonPositive] int value, [NonPositive] double value2) {
