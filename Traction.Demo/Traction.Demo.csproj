@@ -76,6 +76,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\NonPositiveConsumer.cs" />
+    <Compile Include="Attributes\NonNegativeConsumer.cs" />
+    <Compile Include="Attributes\NegativeConsumer.cs" />
     <Compile Include="Attributes\PositiveConsumer.cs" />
     <Compile Include="Attributes\NonDefaultConsumer.cs" />
     <Compile Include="Attributes\NonEmptyConsumer.cs" />

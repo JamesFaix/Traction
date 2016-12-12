@@ -54,7 +54,9 @@
     <Compile Include="Attributes\NonEmptyStringTest.cs" />
     <Compile Include="Attributes\NonNullNullableTest.cs" />
     <Compile Include="Attributes\NonNullTest.cs" />
+    <Compile Include="Attributes\NegativeNullableTest.cs" />
     <Compile Include="Attributes\PositiveNullableTest.cs" />
+    <Compile Include="Attributes\NegativeTest.cs" />
     <Compile Include="Attributes\PositiveTest.cs" />
     <Compile Include="Features\AutoPropertyTest.cs" />
     <Compile Include="Features\ConversionTest.cs" />

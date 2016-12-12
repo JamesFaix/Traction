@@ -17,7 +17,10 @@ namespace Traction {
                 RewriterFactory.NonNull,
                 RewriterFactory.NonDefault,
                 RewriterFactory.NonEmpty,
-                RewriterFactory.Positive
+                RewriterFactory.Positive,
+                RewriterFactory.Negative,
+                RewriterFactory.NonPositive,
+                RewriterFactory.NonNegative
             });
         }
     }
