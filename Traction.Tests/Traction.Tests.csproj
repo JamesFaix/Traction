@@ -47,6 +47,8 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\BasicComparisons\NonNegativeTest.cs" />
+    <Compile Include="Attributes\BasicComparisons\NonNegativeNullableTest.cs" />
     <Compile Include="Attributes\BasicComparisons\NonPositiveTest.cs" />
     <Compile Include="Attributes\BasicComparisons\NonPositiveNullableTest.cs" />
     <Compile Include="Attributes\NonDefaultGenericTypeTest.cs" />

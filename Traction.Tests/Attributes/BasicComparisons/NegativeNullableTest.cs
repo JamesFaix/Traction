@@ -21,6 +21,14 @@ namespace Traction.Tests {
         }
 
         [Test]
+        public void Negative_NullablePreconditionMethod_DoesNotThrowIfNull() {
+            var consumer = new NegativeConsumer();
+
+            Assert.DoesNotThrow(() =>
+                consumer.PreconditionNullableMethod(null));
+        }
+
+        [Test]
         public void Negative_NullablePreconditionMethod_ThrowsIf0() {
             var consumer = new NegativeConsumer();
 
@@ -44,6 +52,14 @@ namespace Traction.Tests {
 
             Assert.DoesNotThrow(() =>
                 consumer.PostconditionNullableMethod(-1));
+        }
+
+        [Test]
+        public void Negative_NullablePostconditionMethod_DoesNotThrowIfNull() {
+            var consumer = new NegativeConsumer();
+
+            Assert.DoesNotThrow(() =>
+                consumer.PostconditionNullableMethod(null));
         }
 
         [Test]
