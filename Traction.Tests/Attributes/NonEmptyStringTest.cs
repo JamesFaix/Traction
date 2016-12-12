@@ -54,6 +54,16 @@ namespace Traction.Tests {
         }
 
         [Test]
+        public void NonEmpty_ContractReadWriteProperty_GetThrowsIfNull() {
+            var consumer = GetConsumer();
+            consumer._readWritePropertyWithContract = null;
+
+            Assert.Throws<PostconditionException>(() => {
+                var x = consumer.ContractReadWriteProperty;
+            });
+        }
+
+        [Test]
         public void NonEmpty_ContractReadWriteProperty_SetDoesNotThrowIfNotEmpty() {
             var consumer = GetConsumer();
 
@@ -68,6 +78,15 @@ namespace Traction.Tests {
 
             Assert.Throws<PreconditionException>(() => {
                 consumer.ContractReadWriteProperty = "";
+            });
+        }
+
+        [Test]
+        public void NonEmpty_ContractReadWriteProperty_SetThrowsIfNull() {
+            var consumer = GetConsumer();
+
+            Assert.Throws<PreconditionException>(() => {
+                consumer.ContractReadWriteProperty = null;
             });
         }
         #endregion
@@ -102,6 +121,14 @@ namespace Traction.Tests {
             Assert.Throws<PreconditionException>(() =>
                 consumer.PreconditionMethod(""));
         }
+
+        [Test]
+        public void NonEmpty_PreconditionMethod_ThrowsIfArgNull() {
+            var consumer = GetConsumer();
+
+            Assert.Throws<PreconditionException>(() =>
+                consumer.PreconditionMethod(null));
+        }
         #endregion
 
         #region PostconditionMethod
@@ -119,6 +146,15 @@ namespace Traction.Tests {
 
             Assert.Throws<PostconditionException>(() =>
                 consumer.PostconditionMethod(""));
+        }
+
+
+        [Test]
+        public void NonEmpty_PostconditionMethod_ThrowsIfResultNull() {
+            var consumer = GetConsumer();
+
+            Assert.Throws<PostconditionException>(() =>
+                consumer.PostconditionMethod(null));
         }
         #endregion
 
@@ -170,14 +206,5 @@ namespace Traction.Tests {
         #endregion
 
         #endregion
-
-
-
-
-
-
-
-
-
     }
 }
