@@ -14,16 +14,15 @@ namespace Traction {
         protected sealed override string ExceptionMessage => $"Value must be {OperatorDescription} default(T).";
 
         protected sealed override ExpressionSyntax GetConditionExpression(string expression, TypeInfo expressionType) {
-            var symbol = expressionType.Type;
-            var typeName = symbol.FullName();
-
+            var symbol = expressionType.Type;            
             string text;
 
             if (symbol.IsNullable()) { //If type is nullable (T?), compare to default(T) instead of default(T?)
-                typeName = (symbol as INamedTypeSymbol).TypeArguments[0].FullName();
-                text = $"{expression}.HasValue && {expression}.Value.CompareTo(default({typeName})) {Operator} 0";
+                var typeName = (symbol as INamedTypeSymbol).TypeArguments[0].FullName();
+                text = $"!{expression}.HasValue || {expression}.Value.CompareTo(default({typeName})) {Operator} 0";
             }
             else {
+                var typeName = symbol.FullName();
                 text = $"{expression}.CompareTo(default({typeName})) {Operator} 0";
             }
 
