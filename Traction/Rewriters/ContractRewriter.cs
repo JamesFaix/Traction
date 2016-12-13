@@ -32,29 +32,120 @@ namespace Traction {
         public sealed override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node) => VisitPropertyImpl(node);
         public sealed override SyntaxNode VisitOperatorDeclaration(OperatorDeclarationSyntax node) => VisitMethodImpl(node);
         public sealed override SyntaxNode VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node) => VisitMethodImpl(node);
+        public sealed override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node) => VisitMethodImpl(node);
 
-        public sealed override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node) {
-            if (node.ReturnType.GetText().ToString() == "void") {
-                context.Diagnostics.Add(DiagnosticFactory.ContractAttributeCannotBeAppliedToMethodReturningVoid(node.GetLocation()));
-                VisitMethodImpl(node); //Visit to check for other errors, but ignore returned value
-                return node; //Return original node
+        private TNode VisitMethodImpl<TNode>(TNode node)
+            where TNode : BaseMethodDeclarationSyntax {
+
+            if (!this.contract.IsOn(node, this.model)) {
+                return node;
+            }
+
+            var diagnostics = GetDiagnostics(node);
+            foreach (var d in diagnostics) {
+                this.context.Diagnostics.Add(d);
+            }
+
+            //If any diagnostics, or if member is non-implemented, do not rewrite
+            if (diagnostics.Any() || node.IsNonImplementedMember()) {
+                return node;
             }
             else {
-                return VisitMethodImpl(node);
+                return TryRewrite(node, VisitMethodImplInner);
             }
         }
 
-        private TNode VisitMethodImpl<TNode>(TNode node)
-            where TNode : BaseMethodDeclarationSyntax =>
-            this.contract.HasParameterOrReturnValueAttribute(node,model)
-                ? TryRewrite(node, VisitMethodImplInner)
-                : node;
+        private PropertyDeclarationSyntax VisitPropertyImpl(PropertyDeclarationSyntax node) {
+            if (!this.contract.IsOn(node, this.model)) {
+                return node;
+            }
 
-        private PropertyDeclarationSyntax VisitPropertyImpl(PropertyDeclarationSyntax node) =>
-            this.contract.HasAttribute(node, model)
-                ? TryRewrite(node, VisitPropertyImplInner)
-                : node;
+            var diagnostics = GetDiagnostics(node);
+            foreach (var d in diagnostics) {
+                this.context.Diagnostics.Add(d);
+            }
 
+            //If any diagnostics, or if member is non-implemented, do not rewrite
+            if (diagnostics.Any() || node.IsNonImplementedMember()) {
+                return node;
+            }
+            else {
+                return TryRewrite(node, VisitPropertyImplInner);
+            }
+        }
+
+        private List<Diagnostic> GetDiagnostics(BaseMethodDeclarationSyntax node) {
+            var hasPrecondition = this.contract.IsOnParameterOf(node, model);
+            var hasPostcondition = this.contract.IsOnReturnValueOf(node, model);
+
+            var result = new List<Diagnostic>();
+
+            //No postconditions on void methods
+            if (hasPostcondition && node.ReturnType().GetText().ToString() == "void") {
+                result.Add(DiagnosticFactory.ContractAttributeCannotBeAppliedToMethodReturningVoid(node.GetLocation()));
+            }
+
+            //No contracts on partial members
+            if ((hasPrecondition || hasPostcondition) && node.IsPartial()) {
+                result.Add(DiagnosticFactory.ContractAttributeCannotBeAppliedToPartialMembers(node.GetLocation()));
+            }
+
+            //No preconditions on inherited methods
+            if (hasPrecondition && node.IsOverride()/*|| node.IsInterfaceImplementation*/) {
+                result.Add(DiagnosticFactory.PreconditionsCannotBeAppliedToInheritedMembers(node.GetLocation()));
+            }
+
+            //No postconditions on invalid return types
+            if (hasPostcondition && !this.contract.IsValidType(node.ReturnTypeInfo(this.model))) {
+                result.Add(this.contract.InvalidTypeDiagnostic(node.GetLocation()));
+            }
+
+            //No preconditions on invalid parameter types
+            if (hasPrecondition) {
+                foreach (var p in node.ParameterList.Parameters) {
+                    if (this.contract.IsOn(p, this.model)
+                    && !this.contract.IsValidType(p.GetTypeInfo(this.model))) {
+                        result.Add(this.contract.InvalidTypeDiagnostic(p.GetLocation()));
+                    }
+                }
+            }
+
+            //No postconditions on iterator blocks
+            if (hasPostcondition && node.IsIteratorBlock()) {
+                result.Add(DiagnosticFactory.PostconditionsCannotBeAppliedToIteratorBlocks(node.GetLocation());
+            }
+
+            return result;
+        }
+
+        private List<Diagnostic> GetDiagnostics(PropertyDeclarationSyntax node) {
+            var hasPrecondition = node.Getter() != null 
+                && this.contract.IsOn(node, model);
+
+            var hasPostcondition = node.Setter() != null
+                && this.contract.IsOn(node, model);
+
+            var result = new List<Diagnostic>();
+
+            //No preconditions on inherited members
+            if (hasPrecondition && node.IsOverride()/*|| node.IsInterfaceImplementation*/) {
+                result.Add(DiagnosticFactory.PreconditionsCannotBeAppliedToInheritedMembers(node.GetLocation()));
+            }
+
+            //No postconditions on invalid return types
+            if ((hasPostcondition || hasPrecondition) 
+                && !this.contract.IsValidType(node.TypeInfo(this.model))) {
+                result.Add(this.contract.InvalidTypeDiagnostic(node.GetLocation()));
+            }
+
+            //No postconditions on iterator blocks
+            if (hasPostcondition && node.IsIteratorBlock()) {
+                result.Add(DiagnosticFactory.PostconditionsCannotBeAppliedToIteratorBlocks(node.GetLocation());
+            }
+
+            return result;
+        }
+        
         private TNode VisitMethodImplInner<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
 
@@ -87,7 +178,7 @@ namespace Traction {
         private IEnumerable<StatementSyntax> GetMethodPreconditions<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
             var preconditionParameters = node.ParameterList.Parameters
-               .Where(p => this.contract.HasAttribute(p, model))
+               .Where(p => this.contract.IsOn(p, model))
                .ToArray();
 
             if (!preconditionParameters.Any()) {
@@ -102,7 +193,7 @@ namespace Traction {
 
         private TNode InsertMethodPostconditions<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
-            if (!this.contract.HasReturnValueAttribute(node, model)) {
+            if (!this.contract.IsOnReturnValueOf(node, model)) {
                 return node;
             }
 
