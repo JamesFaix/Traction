@@ -10,41 +10,41 @@ namespace Traction {
     public abstract class CompileModuleBase : ICompileModule {
 
         protected CompileModuleBase() {
-            beforeRewriterProviders = new List<RewriterFactoryMethod>();
-            afterRewriterProviders = new List<RewriterFactoryMethod>();
+            precompilationRewriterProviders = new List<RewriterFactoryMethod>();
+            postcompilationRewriterProviders = new List<RewriterFactoryMethod>();
         }
 
-        private readonly List<RewriterFactoryMethod> beforeRewriterProviders;
-        private readonly List<RewriterFactoryMethod> afterRewriterProviders;
+        private readonly List<RewriterFactoryMethod> precompilationRewriterProviders;
+        private readonly List<RewriterFactoryMethod> postcompilationRewriterProviders;
 
-        protected void AddBeforeRewriterProvider(RewriterFactoryMethod provider) {
+        protected void AddPrecompilationRewriterProvider(RewriterFactoryMethod provider) {
             if (provider == null) throw new ArgumentNullException(nameof(provider));
-            beforeRewriterProviders.Add(provider);
+            precompilationRewriterProviders.Add(provider);
         }
 
-        protected void AddBeforeRewriterProviders(IEnumerable<RewriterFactoryMethod> providers) {
+        protected void AddPrecompilationRewriterProviders(IEnumerable<RewriterFactoryMethod> providers) {
             if (providers == null) throw new ArgumentNullException(nameof(providers));
-            beforeRewriterProviders.AddRange(providers);
+            precompilationRewriterProviders.AddRange(providers);
         }
 
-        protected void AddAfterRewriterProvider(RewriterFactoryMethod provider) {
+        protected void AddPostcompilationRewriterProvider(RewriterFactoryMethod provider) {
             if (provider == null) throw new ArgumentNullException(nameof(provider));
-            afterRewriterProviders.Add(provider);
+            postcompilationRewriterProviders.Add(provider);
         }
 
-        protected void AddAfterRewriterProvider(IEnumerable<RewriterFactoryMethod> providers) {
+        protected void AddPostcompilationRewriterProvider(IEnumerable<RewriterFactoryMethod> providers) {
             if (providers == null) throw new ArgumentNullException(nameof(providers));
-            afterRewriterProviders.AddRange(providers);
+            postcompilationRewriterProviders.AddRange(providers);
         }
 
         public void BeforeCompile(BeforeCompileContext context) {
             if (context == null) throw new ArgumentNullException(nameof(context));
-            Process(new BeforeCompileContextWrapper(context), beforeRewriterProviders);
+            Process(new BeforeCompileContextWrapper(context), precompilationRewriterProviders);
         }
 
         public void AfterCompile(AfterCompileContext context) {
             if (context == null) throw new ArgumentNullException(nameof(context));
-            Process(new AfterCompileContextWrapper(context), afterRewriterProviders);
+            Process(new AfterCompileContextWrapper(context), postcompilationRewriterProviders);
         }
 
         private void Process(ICompileContext context, IEnumerable<RewriterFactoryMethod> rewriterProviders) {

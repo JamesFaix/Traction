@@ -1,19 +1,15 @@
-﻿using System;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Linq;
 
 namespace Traction {
 
-    abstract class BasicComparisonRewriter<TAttribute> : ContractRewriterBase<TAttribute>
+    public abstract class BasicComparisonContract<TAttribute> : Contract
         where TAttribute : ContractAttribute {
 
-        protected BasicComparisonRewriter(SemanticModel model, ICompileContext context) : base(model, context) { }
+        public sealed override string ExceptionMessage => $"Value must be {OperatorDescription} default(T).";
 
-        protected sealed override string ExceptionMessage => $"Value must be {OperatorDescription} default(T).";
-
-        protected sealed override ExpressionSyntax GetConditionExpression(string expression, TypeInfo expressionType) {
+        public sealed override ExpressionSyntax Condition(string expression, TypeInfo expressionType) {
             var symbol = expressionType.Type;            
             string text;
 
@@ -33,7 +29,7 @@ namespace Traction {
         protected abstract string OperatorDescription { get; }
 
         //Applies to all types
-        protected sealed override bool IsValidType(TypeInfo type) {
+        public sealed override bool IsValidType(TypeInfo type) {
             var symbol = type.Type;
 
             if (symbol.IsNullable()) {
@@ -44,7 +40,7 @@ namespace Traction {
             }
         }
 
-        protected sealed override Diagnostic InvalidTypeDiagnostic(Location location) => DiagnosticFactory.Create(
+        public sealed override Diagnostic InvalidTypeDiagnostic(Location location) => DiagnosticFactory.Create(
             title: $"Incorrect attribute usage",
             message: $"Basic comparison attributes can only be applied to members with value types implementing IComparable<T>, " +
                 "or nullable types whose underlying type implements IComaprable<T>." +
@@ -52,30 +48,22 @@ namespace Traction {
             location: location);
     }
 
-    sealed class PositiveRewriter : BasicComparisonRewriter<PositiveAttribute> {
-        public PositiveRewriter(SemanticModel model, ICompileContext context) : base(model, context) { }
-
+    public sealed class PositiveContract : BasicComparisonContract<PositiveAttribute> {
         protected override string Operator => ">";
         protected override string OperatorDescription => "greater than";
     }
 
-    sealed class NegativeRewriter : BasicComparisonRewriter<NegativeAttribute> {
-        public NegativeRewriter(SemanticModel model, ICompileContext context) : base(model, context) { }
-
+    public sealed class NegativeContract : BasicComparisonContract<NegativeAttribute> {
         protected override string Operator => "<";
         protected override string OperatorDescription => "less than";
     }
 
-    sealed class NonPositiveRewriter : BasicComparisonRewriter<NonPositiveAttribute> {
-        public NonPositiveRewriter(SemanticModel model, ICompileContext context) : base(model, context) { }
-
+    public sealed class NonPositiveContract : BasicComparisonContract<NonPositiveAttribute> {
         protected override string Operator => "<=";
         protected override string OperatorDescription => "less than or equal to";
     }
 
-    sealed class NonNegativeRewriter : BasicComparisonRewriter<NonNegativeAttribute> {
-        public NonNegativeRewriter(SemanticModel model, ICompileContext context) : base(model, context) { }
-
+    public sealed class NonNegativeContract : BasicComparisonContract<NonNegativeAttribute> {
         protected override string Operator => ">=";
         protected override string OperatorDescription => "greater than or equal to";
     }

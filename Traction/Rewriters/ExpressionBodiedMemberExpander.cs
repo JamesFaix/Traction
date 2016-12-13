@@ -10,8 +10,11 @@ namespace Traction {
     /// </summary>
     sealed class ExpressionBodiedMemberExpander : RewriterBase {
 
-        public ExpressionBodiedMemberExpander(SemanticModel model, ICompileContext context)
+        private ExpressionBodiedMemberExpander(SemanticModel model, ICompileContext context)
             : base(model, context) { }
+
+        public static ExpressionBodiedMemberExpander Create(SemanticModel model, ICompileContext context) =>
+            new ExpressionBodiedMemberExpander(model, context);
 
         public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node) {
             if (node == null) throw new ArgumentNullException(nameof(node));

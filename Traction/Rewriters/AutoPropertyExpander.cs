@@ -12,8 +12,11 @@ namespace Traction {
     /// </summary>
     sealed class AutoPropertyExpander : RewriterBase {
 
-        public AutoPropertyExpander(SemanticModel model, ICompileContext context)
+        private AutoPropertyExpander(SemanticModel model, ICompileContext context)
             : base(model, context) { }
+
+        public static AutoPropertyExpander Create(SemanticModel model, ICompileContext context) =>
+            new AutoPropertyExpander(model, context);
 
         private CSharpSyntaxNode originalTypeDeclarationNode;
 
