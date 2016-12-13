@@ -32,49 +32,7 @@ namespace Traction.Tests {
             });
         }
         #endregion
-
-        #region ContractReadonlyProperty
-        [Test]
-        public void NonNull_ContractReadonlyProperty_DoesNotThrowIfNotNull() {
-            var consumer = new NonNullConsumer();
-            consumer._readonlyPropertyWithContract = "test";
-
-            Assert.DoesNotThrow(() => {
-                var x = consumer.ContractReadonlyProperty;
-            });
-        }
-
-        [Test]
-        public void NonNull_ContractReadonlyProperty_ThrowsIfNull() {
-            var consumer = new NonNullConsumer();
-            consumer._readonlyPropertyWithContract = null;
-
-            Assert.Throws<PostconditionException>(() => {
-                var x = consumer.ContractReadonlyProperty;
-            });
-        }
-        #endregion
-
-        #region ContractWriteonlyProperty
-        [Test]
-        public void NonNull_ContractWriteonlyProperty_DoesNotThrowIfNotNull() {
-            var consumer = new NonNullConsumer();
-
-            Assert.DoesNotThrow(() => {
-                consumer.ContractWriteonlyProperty = "test";
-            });
-        }
-
-        [Test]
-        public void NonNull_ContractWriteonlyProperty_ThrowsIfNull() {
-            var consumer = new NonNullConsumer();
-
-            Assert.Throws<PreconditionException>(() => {
-                consumer.ContractWriteonlyProperty = null;
-            });
-        }
-        #endregion
-
+        
         #region ContractReadWriteProperty
         [Test]
         public void NonNull_ContractReadWriteProperty_GetDoesNotThrowIfNotNull() {

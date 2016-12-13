@@ -10,23 +10,11 @@ namespace Traction.Demo {
         #region Properties 
 
         public string _normalProperty;
-        public string _readonlyPropertyWithContract;
-        public string _writeonlyPropertyWithContract;
         public string _readWritePropertyWithContract;
 
         public string NormalReadWriteProperty {
             get { return _normalProperty; }
             set { _normalProperty = value; }
-        }
-
-        [NonNull]
-        public string ContractReadonlyProperty {
-            get { return _readonlyPropertyWithContract; }
-        }
-
-        [NonNull]
-        public string ContractWriteonlyProperty {
-            set { _writeonlyPropertyWithContract = value; }
         }
 
         [NonNull]

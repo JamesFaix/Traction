@@ -12,8 +12,11 @@ namespace Traction {
     /// </summary>
     sealed class AutoPropertyExpander : RewriterBase {
 
-        public AutoPropertyExpander(SemanticModel model, ICompileContext context)
+        private AutoPropertyExpander(SemanticModel model, ICompileContext context)
             : base(model, context) { }
+
+        public static AutoPropertyExpander Create(SemanticModel model, ICompileContext context) =>
+            new AutoPropertyExpander(model, context);
 
         private CSharpSyntaxNode originalTypeDeclarationNode;
 
@@ -77,7 +80,7 @@ namespace Traction {
             var fieldName = IdentifierFactory.CreateUnique(this.usedIdentifiers, $"_{propertyName}");
             this.usedIdentifiers.Add(fieldName);
 
-            var fieldType = propertyType.FullName();
+            var fieldType = propertyType.Type.FullName();
 
             var modifiers = SyntaxFactory.TokenList(
                 SyntaxFactory.ParseToken("private")

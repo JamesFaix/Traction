@@ -7,16 +7,28 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Text;
 
 namespace Traction {
-
+    
     /// <summary>
     /// Base class for contract attribute syntax rewriters.
     /// </summary>
-    /// <typeparam name="TAttribute"></typeparam>
-    abstract class ContractRewriterBase<TAttribute> : RewriterBase
-        where TAttribute : Attribute {
+    internal sealed class ContractRewriter<TAttribute> : RewriterBase
+        where TAttribute : ContractAttribute {
 
-        protected ContractRewriterBase(SemanticModel model, ICompileContext context)
-            : base(model, context) { }
+        private ContractRewriter(SemanticModel model, ICompileContext context, Contract contract)
+            : base(model, context) {
+
+            if (contract == null) throw new ArgumentNullException(nameof(contract));
+            this.contract = contract;
+        }
+
+        public static ContractRewriter<TAttribute> Create(SemanticModel model, ICompileContext context, Contract contract) =>
+            new ContractRewriter<TAttribute>(model, context, contract);
+
+        //Allows partial function application on the factory method
+        public static RewriterFactoryMethod Create(Contract contract) =>
+            (model, context) => Create(model, context, contract);
+
+        private readonly Contract contract;
 
         public sealed override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node) => VisitPropertyImpl(node);
         public sealed override SyntaxNode VisitOperatorDeclaration(OperatorDeclarationSyntax node) => VisitMethodImpl(node);
@@ -123,63 +135,55 @@ namespace Traction {
         }
 
         private StatementSyntax CreatePreconditionIfValidType(TypeInfo parameterType, string identifier, Location location) {
-            if (IsValidType(parameterType)) {
+            if (this.contract.IsValidType(parameterType)) {
                 return CreatePrecondition(parameterType, identifier, location);
             }
             else {
-                context.Diagnostics.Add(InvalidTypeDiagnostic(location));
+                context.Diagnostics.Add(this.contract.InvalidTypeDiagnostic(location));
                 return SyntaxFactory.Block();
             }
         }
 
         private StatementSyntax CreatePostconditionIfValidType(TypeInfo returnType, ReturnStatementSyntax node, Location location) {
-            if (IsValidType(returnType)) {
+            if (this.contract.IsValidType(returnType)) {
                 return CreatePostcondition(returnType, node, location);
             }
             else {
-                context.Diagnostics.Add(InvalidTypeDiagnostic(location));
+                context.Diagnostics.Add(this.contract.InvalidTypeDiagnostic(location));
                 return SyntaxFactory.Block();
             }
         }
 
         private StatementSyntax CreatePrecondition(TypeInfo parameterType, string parameterName, Location location) {
-            var text = GetPreconditionText(parameterName, parameterType.FullName());
+            var text = GetPreconditionText(parameterName, parameterType);
             var statement = SyntaxFactory.ParseStatement(text);
             return SyntaxFactory.Block(statement);
         }
 
-        private StatementSyntax CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location) {           
+        private StatementSyntax CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location) {
             var returnedExpression = node.ChildNodes().FirstOrDefault();
             var tempVariableName = IdentifierFactory.CreatePostconditionLocal(node, model);
-            var text = GetPostconditionText(returnType.FullName(), returnedExpression.ToString(), tempVariableName);
+            var text = GetPostconditionText(returnType, returnedExpression.ToString(), tempVariableName);
             var statement = SyntaxFactory.ParseStatement(text);
             return statement;
         }
 
-        private string GetPreconditionText(string parameterName, string parameterTypeName) {
+        private string GetPreconditionText(string parameterName, TypeInfo parameterType) {
             var sb = new StringBuilder();
-            sb.AppendLine($"if ({GetConditionExpression(parameterName, parameterTypeName)})");
-            sb.AppendLine($"    throw new global::Traction.PreconditionException(\"{ExceptionMessage}\", nameof({parameterName}));");
+            sb.AppendLine($"if (!({this.contract.Condition(parameterName, parameterType)}))");
+            sb.AppendLine($"    throw new global::Traction.PreconditionException(\"{this.contract.ExceptionMessage}\", nameof({parameterName}));");
             return sb.ToString();
         }
 
-        private string GetPostconditionText(string returnTypeName, string returnedExpression, string tempVarName) {
+        private string GetPostconditionText(TypeInfo returnType, string returnedExpression, string tempVarName) {
             var sb = new StringBuilder();
             sb.AppendLine("{");
-            sb.AppendLine($"    {returnTypeName} {tempVarName} = {returnedExpression};");
-            sb.AppendLine($"    if ({GetConditionExpression(tempVarName, returnTypeName)})");
-            sb.AppendLine($"        throw new global::Traction.PostconditionException(\"{ExceptionMessage}\");");
+            sb.AppendLine($"    {returnType.Type.FullName()} {tempVarName} = {returnedExpression};");
+            sb.AppendLine($"    if (!({this.contract.Condition(tempVarName, returnType)}))");
+            sb.AppendLine($"        throw new global::Traction.PostconditionException(\"{this.contract.ExceptionMessage}\");");
             sb.AppendLine($"    return {tempVarName};");
             sb.AppendLine("}");
             return sb.ToString();
         }
-        
-        protected abstract ExpressionSyntax GetConditionExpression(string expression, string expressionType);
-
-        protected abstract string ExceptionMessage { get; }
-
-        protected abstract bool IsValidType(TypeInfo type);
-
-        protected abstract Diagnostic InvalidTypeDiagnostic(Location location);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.CodeAnalysis;
 using static System.AttributeTargets;
 
 namespace Traction {

@@ -32,48 +32,6 @@ namespace Traction.Tests {
         }
         #endregion
 
-        #region ContractReadonlyProperty
-        [Test]
-        public void NonEmpty_ContractReadonlyProperty_DoesNotThrowIfNotEmpty() {
-            var consumer = GetConsumer();
-            consumer._readonlyPropertyWithContract = "test";
-
-            Assert.DoesNotThrow(() => {
-                var x = consumer.ContractReadonlyProperty;
-            });
-        }
-
-        [Test]
-        public void NonEmpty_ContractReadonlyProperty_ThrowsIfEmpty() {
-            var consumer = GetConsumer();
-            consumer._readonlyPropertyWithContract = "";
-
-            Assert.Throws<PostconditionException>(() => {
-                var x = consumer.ContractReadonlyProperty;
-            });
-        }
-        #endregion
-
-        #region ContractWriteonlyProperty
-        [Test]
-        public void NonEmpty_ContractWriteonlyProperty_DoesNotThrowIfNotEmpty() {
-            var consumer = GetConsumer();
-
-            Assert.DoesNotThrow(() => {
-                consumer.ContractWriteonlyProperty = "test";
-            });
-        }
-
-        [Test]
-        public void NonEmpty_ContractWriteonlyProperty_ThrowsIfEmpty() {
-            var consumer = GetConsumer();
-
-            Assert.Throws<PreconditionException>(() => {
-                consumer.ContractWriteonlyProperty = "";
-            });
-        }
-        #endregion
-
         #region ContractReadWriteProperty
         [Test]
         public void NonEmpty_ContractReadWriteProperty_GetDoesNotThrowIfNotEmpty() {
@@ -96,6 +54,16 @@ namespace Traction.Tests {
         }
 
         [Test]
+        public void NonEmpty_ContractReadWriteProperty_GetThrowsIfNull() {
+            var consumer = GetConsumer();
+            consumer._readWritePropertyWithContract = null;
+
+            Assert.Throws<PostconditionException>(() => {
+                var x = consumer.ContractReadWriteProperty;
+            });
+        }
+
+        [Test]
         public void NonEmpty_ContractReadWriteProperty_SetDoesNotThrowIfNotEmpty() {
             var consumer = GetConsumer();
 
@@ -110,6 +78,15 @@ namespace Traction.Tests {
 
             Assert.Throws<PreconditionException>(() => {
                 consumer.ContractReadWriteProperty = "";
+            });
+        }
+
+        [Test]
+        public void NonEmpty_ContractReadWriteProperty_SetThrowsIfNull() {
+            var consumer = GetConsumer();
+
+            Assert.Throws<PreconditionException>(() => {
+                consumer.ContractReadWriteProperty = null;
             });
         }
         #endregion
@@ -144,6 +121,14 @@ namespace Traction.Tests {
             Assert.Throws<PreconditionException>(() =>
                 consumer.PreconditionMethod(""));
         }
+
+        [Test]
+        public void NonEmpty_PreconditionMethod_ThrowsIfArgNull() {
+            var consumer = GetConsumer();
+
+            Assert.Throws<PreconditionException>(() =>
+                consumer.PreconditionMethod(null));
+        }
         #endregion
 
         #region PostconditionMethod
@@ -161,6 +146,15 @@ namespace Traction.Tests {
 
             Assert.Throws<PostconditionException>(() =>
                 consumer.PostconditionMethod(""));
+        }
+
+
+        [Test]
+        public void NonEmpty_PostconditionMethod_ThrowsIfResultNull() {
+            var consumer = GetConsumer();
+
+            Assert.Throws<PostconditionException>(() =>
+                consumer.PostconditionMethod(null));
         }
         #endregion
 
@@ -212,14 +206,5 @@ namespace Traction.Tests {
         #endregion
 
         #endregion
-
-
-
-
-
-
-
-
-
     }
 }
