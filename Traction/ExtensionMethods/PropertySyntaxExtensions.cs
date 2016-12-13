@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis;
 
 namespace Traction {
 
@@ -34,6 +35,13 @@ namespace Traction {
             var getter = node.Getter();
             return getter != null  //Auto-properties must have getter
                 && getter.Body == null;
+        }
+        
+        public static TypeInfo TypeInfo(this PropertyDeclarationSyntax node, SemanticModel model) {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            return model.GetTypeInfo(node.Type);
         }
     }
 }

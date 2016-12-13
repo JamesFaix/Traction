@@ -74,6 +74,7 @@
     <Compile Include="Exceptions\PostconditionException.cs" />
     <Compile Include="ExtensionMethods\AttributeSyntaxExtensions.cs" />
     <Compile Include="ExtensionMethods\BaseMethodDeclarationSyntaxExtensions.cs" />
+    <Compile Include="ExtensionMethods\ParameterSyntaxExtensions.cs" />
     <Compile Include="ExtensionMethods\SyntaxNodeExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeSymbolExtensions.cs" />

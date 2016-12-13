@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Linq;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Traction {
@@ -15,28 +16,33 @@ namespace Traction {
 
         public abstract Diagnostic InvalidTypeDiagnostic(Location location);
 
-        public abstract bool HasAttribute(ParameterSyntax node, SemanticModel model);
+        public abstract bool IsOn(ParameterSyntax node, SemanticModel model);
 
-        public abstract bool HasReturnValueAttribute(BaseMethodDeclarationSyntax node, SemanticModel model);
+        public abstract bool IsOnParameterOf(BaseMethodDeclarationSyntax node, SemanticModel model);
 
-        public abstract bool HasParameterOrReturnValueAttribute(BaseMethodDeclarationSyntax node, SemanticModel model);
+        public abstract bool IsOnReturnValueOf(BaseMethodDeclarationSyntax node, SemanticModel model);
 
-        public abstract bool HasAttribute(PropertyDeclarationSyntax node, SemanticModel model);
+        public abstract bool IsOn(BaseMethodDeclarationSyntax node, SemanticModel model);
+
+        public abstract bool IsOn(PropertyDeclarationSyntax node, SemanticModel model);
     }
 
     public abstract class Contract<TAttribute> : Contract
         where TAttribute : ContractAttribute {
 
-        public override bool HasAttribute(ParameterSyntax node, SemanticModel model) =>
+        public override bool IsOn(ParameterSyntax node, SemanticModel model) =>
             node.HasAttribute<TAttribute>(model);
 
-        public override bool HasReturnValueAttribute(BaseMethodDeclarationSyntax node, SemanticModel model) =>
+        public override bool IsOnParameterOf(BaseMethodDeclarationSyntax node, SemanticModel model) =>
+            node.ParameterList.Parameters.Any(p => IsOn(p, model));
+
+        public override bool IsOnReturnValueOf(BaseMethodDeclarationSyntax node, SemanticModel model) =>
             node.HasAttribute<TAttribute>(model);
 
-        public override bool HasParameterOrReturnValueAttribute(BaseMethodDeclarationSyntax node, SemanticModel model) =>
+        public override bool IsOn(BaseMethodDeclarationSyntax node, SemanticModel model) =>
             node.HasAnyAttribute<TAttribute>(model);
 
-        public override bool HasAttribute(PropertyDeclarationSyntax node, SemanticModel model) =>
+        public override bool IsOn(PropertyDeclarationSyntax node, SemanticModel model) =>
             node.HasAttribute<TAttribute>(model);
     }
 }

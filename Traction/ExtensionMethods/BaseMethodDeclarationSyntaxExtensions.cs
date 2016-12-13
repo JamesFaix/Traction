@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis;
 
 namespace Traction {
 
@@ -25,6 +26,13 @@ namespace Traction {
                 return null;
 
             throw new InvalidOperationException("Invalid method declaration type.");
+        }
+
+        public static TypeInfo ReturnTypeInfo(this BaseMethodDeclarationSyntax node, SemanticModel model) {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            return model.GetTypeInfo(node.ReturnType());
         }
 
         public static TNode WithBody<TNode>(this TNode node, BlockSyntax body)
