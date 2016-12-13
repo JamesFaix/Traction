@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis;
+using System.Linq;
 
 namespace Traction {
 
@@ -43,5 +44,20 @@ namespace Traction {
             return (node as dynamic)
                 .WithBody(body);
         }       
+
+        public static bool IsInterfaceImplementation(this BaseMethodDeclarationSyntax node, SemanticModel model) {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            var methodSymbol = model.GetDeclaredSymbol(node) as IMethodSymbol;
+            
+            return methodSymbol.ContainingType
+                .AllInterfaces
+                .SelectMany(i => i.GetMembers().OfType<IMethodSymbol>())
+                .Any(method => methodSymbol.Equals(
+                                methodSymbol
+                                    .ContainingType
+                                    .FindImplementationForInterfaceMember(method)));
+        }
     }
 }

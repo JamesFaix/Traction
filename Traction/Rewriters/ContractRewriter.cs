@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Text;
 
 namespace Traction {
-    
+
     /// <summary>
     /// Base class for contract attribute syntax rewriters.
     /// </summary>
@@ -91,7 +91,7 @@ namespace Traction {
             }
 
             //No preconditions on inherited methods
-            if (hasPrecondition && node.IsOverride()/*|| node.IsInterfaceImplementation*/) {
+            if (hasPrecondition && (node.IsOverride() || node.IsInterfaceImplementation(this.model))) {
                 result.Add(DiagnosticFactory.PreconditionsCannotBeAppliedToInheritedMembers(node.GetLocation()));
             }
 
@@ -112,14 +112,14 @@ namespace Traction {
 
             //No postconditions on iterator blocks
             if (hasPostcondition && node.IsIteratorBlock()) {
-                result.Add(DiagnosticFactory.PostconditionsCannotBeAppliedToIteratorBlocks(node.GetLocation());
+                result.Add(DiagnosticFactory.PostconditionsCannotBeAppliedToIteratorBlocks(node.GetLocation()));
             }
 
             return result;
         }
 
         private List<Diagnostic> GetDiagnostics(PropertyDeclarationSyntax node) {
-            var hasPrecondition = node.Getter() != null 
+            var hasPrecondition = node.Getter() != null
                 && this.contract.IsOn(node, model);
 
             var hasPostcondition = node.Setter() != null
@@ -128,24 +128,24 @@ namespace Traction {
             var result = new List<Diagnostic>();
 
             //No preconditions on inherited members
-            if (hasPrecondition && node.IsOverride()/*|| node.IsInterfaceImplementation*/) {
+            if (hasPrecondition && (node.IsOverride() || node.IsInterfaceImplementation(this.model))) {
                 result.Add(DiagnosticFactory.PreconditionsCannotBeAppliedToInheritedMembers(node.GetLocation()));
             }
 
             //No postconditions on invalid return types
-            if ((hasPostcondition || hasPrecondition) 
+            if ((hasPostcondition || hasPrecondition)
                 && !this.contract.IsValidType(node.TypeInfo(this.model))) {
                 result.Add(this.contract.InvalidTypeDiagnostic(node.GetLocation()));
             }
 
             //No postconditions on iterator blocks
             if (hasPostcondition && node.IsIteratorBlock()) {
-                result.Add(DiagnosticFactory.PostconditionsCannotBeAppliedToIteratorBlocks(node.GetLocation());
+                result.Add(DiagnosticFactory.PostconditionsCannotBeAppliedToIteratorBlocks(node.GetLocation()));
             }
 
             return result;
         }
-        
+
         private TNode VisitMethodImplInner<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
 

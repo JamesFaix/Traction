@@ -43,5 +43,20 @@ namespace Traction {
 
             return model.GetTypeInfo(node.Type);
         }
+
+        public static bool IsInterfaceImplementation(this PropertyDeclarationSyntax node, SemanticModel model) {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            var propertySymbol = model.GetDeclaredSymbol(node) as IPropertySymbol;
+
+            return propertySymbol.ContainingType
+                .AllInterfaces
+                .SelectMany(i => i.GetMembers().OfType<IPropertySymbol>())
+                .Any(property => propertySymbol.Equals(
+                                propertySymbol
+                                    .ContainingType
+                                    .FindImplementationForInterfaceMember(property)));
+        }
     }
 }
