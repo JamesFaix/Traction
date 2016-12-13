@@ -34,6 +34,5 @@ namespace Traction {
             return getter != null  //Auto-properties must have getter
                 && getter.Body == null;
         }
-        
     }
 }

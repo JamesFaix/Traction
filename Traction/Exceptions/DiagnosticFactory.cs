@@ -23,10 +23,15 @@ namespace Traction {
             message: $"Attributes inheriting {nameof(ContractAttribute)} cannot be applied to partial members.",
             location: location);
 
-        public static Diagnostic PreconditionsCannotBeAddedToInheritedMembers(Location location) => Create(
+        public static Diagnostic PreconditionsCannotBeAppliedToInheritedMembers(Location location) => Create(
           title: $"Invalid contract attribute usage",
-          message: $"Precondition contracts cannot be added to inherited members (overridden virtual members or interface implementations).",
+          message: $"Precondition contracts cannot be applied to inherited members (overridden virtual members or interface implementations).",
           location: location);
+
+        public static Diagnostic PostconditionsCannotBeAppliedToIteratorBlocks(Location location) => Create (
+            title: $"Invalid contract attribute usage",
+            message: $"Postcondition contracts cannot be applied to iterator blocks (members with 'yield' statements).",
+            location: location);
 
         public static Diagnostic Create(string title, string message, Location location) => Diagnostic.Create(
             descriptor: new DiagnosticDescriptor(

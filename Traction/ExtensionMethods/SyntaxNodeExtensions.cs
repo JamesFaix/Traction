@@ -18,8 +18,7 @@ namespace Traction {
                 if (child is ReturnStatementSyntax) {
                     yield return (ReturnStatementSyntax)child;
                 }
-                else if (child is LocalDeclarationStatementSyntax) {
-                    //Skip nested or anonymous function bodies
+                else if (child is AnonymousFunctionExpressionSyntax) { //Don't drill into anonymous functions
                     continue;
                 }
                 else {
@@ -29,6 +28,24 @@ namespace Traction {
                     }
                 }
             }
+        }
+
+        public static bool IsIteratorBlock(this SyntaxNode node) {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+
+            return node
+                .GetYields()
+                .Any();
+        }
+
+        private static IEnumerable<YieldStatementSyntax> GetYields(this SyntaxNode node) {
+            var children = node.ChildNodes();
+            var yields = children.OfType<YieldStatementSyntax>();
+            var nonYields = children.Where(c =>
+                !(c is YieldStatementSyntax) && 
+                !(c is AnonymousFunctionExpressionSyntax)); //Don't drill into anonymous functions
+
+            return yields.Concat(nonYields.SelectMany(c => GetYields(c)));
         }
     }
 }
