@@ -50,10 +50,12 @@ namespace Traction {
             if (model == null) throw new ArgumentNullException(nameof(model));
 
             var methodSymbol = model.GetDeclaredSymbol(node) as IMethodSymbol;
-            
-            return methodSymbol.ContainingType
+
+            var interfaceMethods = methodSymbol.ContainingType
                 .AllInterfaces
-                .SelectMany(i => i.GetMembers().OfType<IMethodSymbol>())
+                .SelectMany(i => i.GetMembers().OfType<IMethodSymbol>());
+
+            return interfaceMethods
                 .Any(method => methodSymbol.Equals(
                                 methodSymbol
                                     .ContainingType
