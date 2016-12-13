@@ -30,6 +30,7 @@ namespace Traction {
         public static bool IsAutoImplentedProperty(this PropertyDeclarationSyntax node) {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
+            if (node.IsAbstract()) return false;
             var getter = node.Getter();
             return getter != null  //Auto-properties must have getter
                 && getter.Body == null;

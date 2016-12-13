@@ -1,8 +1,5 @@
 ﻿using System;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace Traction {
 
