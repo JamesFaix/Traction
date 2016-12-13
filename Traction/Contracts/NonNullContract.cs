@@ -7,7 +7,7 @@ namespace Traction {
     /// <summary>
     /// Contract for <see cref="NonNullAttribute"/>.
     /// </summary>
-    public class NonNullContract : Contract {
+    public class NonNullContract : Contract<NonNullAttribute> {
                 
         public override string ExceptionMessage => "Value cannot be null.";
 

@@ -8,7 +8,7 @@ namespace Traction {
     /// <summary>
     /// Contract for <see cref="NonEmptyAttribute"/>.
     /// </summary>
-    public class NonEmptyContract : Contract {
+    public class NonEmptyContract : Contract<NonEmptyAttribute> {
 
         public override string ExceptionMessage => "Sequence cannot be null or empty.";
 

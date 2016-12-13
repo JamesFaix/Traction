@@ -8,7 +8,7 @@ namespace Traction {
     /// <summary>
     /// Contract for <see cref="NonDefaultAttribute"/>.
     /// </summary>
-   public class NonDefaultContract : Contract {
+   public class NonDefaultContract : Contract<NonDefaultAttribute> {
                 
         public override string ExceptionMessage => "Value cannot be default(T).";
 

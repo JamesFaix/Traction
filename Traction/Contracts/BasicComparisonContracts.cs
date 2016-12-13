@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Traction {
 
-    public abstract class BasicComparisonContract<TAttribute> : Contract
+    public abstract class BasicComparisonContract<TAttribute> : Contract<TAttribute>
         where TAttribute : ContractAttribute {
 
         public sealed override string ExceptionMessage => $"Value must be {OperatorDescription} default(T).";

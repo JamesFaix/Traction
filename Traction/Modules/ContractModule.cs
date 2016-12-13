@@ -17,13 +17,13 @@ namespace Traction {
             AddPrecompilationRewriterProviders(new RewriterFactoryMethod[] {
                 AutoPropertyExpander.Create,
                 ExpressionBodiedMemberExpander.Create,
-                ContractRewriter<NonNullAttribute>.Create(new NonNullContract()),
-                ContractRewriter<NonDefaultAttribute>.Create(new NonDefaultContract()),
-                ContractRewriter<NonEmptyAttribute>.Create(new NonEmptyContract()),
-                ContractRewriter<PositiveAttribute>.Create(new PositiveContract()),
-                ContractRewriter<NegativeAttribute>.Create(new NegativeContract()),
-                ContractRewriter<NonPositiveAttribute>.Create(new NonPositiveContract()),
-                ContractRewriter<NonNegativeAttribute>.Create(new NonNegativeContract())
+                ContractRewriter.Create(new NonNullContract()),
+                ContractRewriter.Create(new NonDefaultContract()),
+                ContractRewriter.Create(new NonEmptyContract()),
+                ContractRewriter.Create(new PositiveContract()),
+                ContractRewriter.Create(new NegativeContract()),
+                ContractRewriter.Create(new NonPositiveContract()),
+                ContractRewriter.Create(new NonNegativeContract())
             });
         }
     }

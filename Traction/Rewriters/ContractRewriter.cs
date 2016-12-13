@@ -11,8 +11,7 @@ namespace Traction {
     /// <summary>
     /// Base class for contract attribute syntax rewriters.
     /// </summary>
-    internal sealed class ContractRewriter<TAttribute> : RewriterBase
-        where TAttribute : ContractAttribute {
+    internal sealed class ContractRewriter : RewriterBase {
 
         private ContractRewriter(SemanticModel model, ICompileContext context, Contract contract)
             : base(model, context) {
@@ -21,8 +20,8 @@ namespace Traction {
             this.contract = contract;
         }
 
-        public static ContractRewriter<TAttribute> Create(SemanticModel model, ICompileContext context, Contract contract) =>
-            new ContractRewriter<TAttribute>(model, context, contract);
+        public static ContractRewriter Create(SemanticModel model, ICompileContext context, Contract contract) =>
+            new ContractRewriter(model, context, contract);
 
         //Allows partial function application on the factory method
         public static RewriterFactoryMethod Create(Contract contract) =>
@@ -47,12 +46,12 @@ namespace Traction {
 
         private TNode VisitMethodImpl<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax =>
-            node.HasAnyAttribute<TAttribute>(model)
+            this.contract.HasParameterOrReturnValueAttribute(node,model)
                 ? TryRewrite(node, VisitMethodImplInner)
                 : node;
 
         private PropertyDeclarationSyntax VisitPropertyImpl(PropertyDeclarationSyntax node) =>
-            node.HasAttribute<TAttribute>(model)
+            this.contract.HasAttribute(node, model)
                 ? TryRewrite(node, VisitPropertyImplInner)
                 : node;
 
@@ -88,7 +87,7 @@ namespace Traction {
         private IEnumerable<StatementSyntax> GetMethodPreconditions<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
             var preconditionParameters = node.ParameterList.Parameters
-               .Where(p => p.HasAttribute<TAttribute>(model))
+               .Where(p => this.contract.HasAttribute(p, model))
                .ToArray();
 
             if (!preconditionParameters.Any()) {
@@ -103,7 +102,7 @@ namespace Traction {
 
         private TNode InsertMethodPostconditions<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
-            if (!node.HasAttribute<TAttribute>(model)) {
+            if (!this.contract.HasReturnValueAttribute(node, model)) {
                 return node;
             }
 
