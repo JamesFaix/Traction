@@ -13,7 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		readme.md = readme.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Traction.Tests", "Traction.Tests\Traction.Tests.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Traction.DemoTests", "Traction.DemoTests\Traction.DemoTests.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Traction.CompileTimeDiagnosticsTests", "Traction.CompileTimeDiagnosticsTests\Traction.CompileTimeDiagnosticsTests.csproj", "{8FBEEBD9-441B-460E-AB90-78C9316265AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +42,12 @@ Global
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.DebugOnBuild|Any CPU.Build.0 = DebugOnBuild|Any CPU
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FBEEBD9-441B-460E-AB90-78C9316265AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FBEEBD9-441B-460E-AB90-78C9316265AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FBEEBD9-441B-460E-AB90-78C9316265AF}.DebugOnBuild|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FBEEBD9-441B-460E-AB90-78C9316265AF}.DebugOnBuild|Any CPU.Build.0 = Debug|Any CPU
+		{8FBEEBD9-441B-460E-AB90-78C9316265AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FBEEBD9-441B-460E-AB90-78C9316265AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
