@@ -188,7 +188,7 @@ namespace Traction {
             var location = node.GetLocation();
 
             return preconditionParameters
-                .Select(p => CreatePreconditionIfValidType(model.GetTypeInfo(p.Type), p.Identifier.ValueText, location));
+                .Select(p => CreatePrecondition(model.GetTypeInfo(p.Type), p.Identifier.ValueText, location));
         }
 
         private TNode InsertMethodPostconditions<TNode>(TNode node)
@@ -204,14 +204,14 @@ namespace Traction {
             var returnStatements = node.GetAllReturnStatements();
 
             return node.ReplaceNodes(returnStatements,
-                (oldNode, newNode) => CreatePostconditionIfValidType(returnType, newNode, location));
+                (oldNode, newNode) => CreatePostcondition(returnType, newNode, location));
         }
 
         private AccessorDeclarationSyntax InsertPropertyPrecondition(TypeInfo type, AccessorDeclarationSyntax node, Location location) {
             if (node == null) return null;
 
             return node.WithBody(
-                SyntaxFactory.Block(CreatePreconditionIfValidType(type, "value", location))
+                SyntaxFactory.Block(CreatePrecondition(type, "value", location))
                     .AddStatements(node.Body.Statements.ToArray()));
         }
 
@@ -221,28 +221,28 @@ namespace Traction {
             var returnStatements = node.GetAllReturnStatements();
 
             return node.ReplaceNodes(returnStatements,
-                (oldNode, newNode) => CreatePostconditionIfValidType(type, newNode, location));
+                (oldNode, newNode) => CreatePostcondition(type, newNode, location));
         }
 
-        private StatementSyntax CreatePreconditionIfValidType(TypeInfo parameterType, string identifier, Location location) {
-            if (this.contract.IsValidType(parameterType)) {
-                return CreatePrecondition(parameterType, identifier, location);
-            }
-            else {
-                context.Diagnostics.Add(this.contract.InvalidTypeDiagnostic(location));
-                return SyntaxFactory.Block();
-            }
-        }
+        //private StatementSyntax CreatePreconditionIfValidType(TypeInfo parameterType, string identifier, Location location) {
+        //    if (this.contract.IsValidType(parameterType)) {
+        //        return CreatePrecondition(parameterType, identifier, location);
+        //    }
+        //    else {
+        //        context.Diagnostics.Add(this.contract.InvalidTypeDiagnostic(location));
+        //        return SyntaxFactory.Block();
+        //    }
+        //}
 
-        private StatementSyntax CreatePostconditionIfValidType(TypeInfo returnType, ReturnStatementSyntax node, Location location) {
-            if (this.contract.IsValidType(returnType)) {
-                return CreatePostcondition(returnType, node, location);
-            }
-            else {
-                context.Diagnostics.Add(this.contract.InvalidTypeDiagnostic(location));
-                return SyntaxFactory.Block();
-            }
-        }
+        //private StatementSyntax CreatePostconditionIfValidType(TypeInfo returnType, ReturnStatementSyntax node, Location location) {
+        //    if (this.contract.IsValidType(returnType)) {
+        //        return CreatePostcondition(returnType, node, location);
+        //    }
+        //    else {
+        //        context.Diagnostics.Add(this.contract.InvalidTypeDiagnostic(location));
+        //        return SyntaxFactory.Block();
+        //    }
+        //}
 
         private StatementSyntax CreatePrecondition(TypeInfo parameterType, string parameterName, Location location) {
             var text = GetPreconditionText(parameterName, parameterType);
