@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Traction.Demo;
 
-namespace Traction.Tests {
+namespace Traction.DemoTests {
 
     /// <summary>
     /// Tests for basic NonDefault property and method use cases for reference types.

@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using Traction.Demo;
 
-namespace Traction.Tests {
+namespace Traction.DemoTests {
 
     /// <summary>
     /// Test for contracts being applied uniformly on readonly, writeonly, and read/write properties.

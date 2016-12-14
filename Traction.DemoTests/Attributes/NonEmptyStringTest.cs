@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Traction.Demo;
 
-namespace Traction.Tests {
+namespace Traction.DemoTests {
 
     [TestFixture]
     public class NonEmptyStringTest {

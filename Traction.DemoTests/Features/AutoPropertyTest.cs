@@ -2,7 +2,7 @@
 using Traction.Demo;
 using NUnit.Framework;
 
-namespace Traction.Tests {
+namespace Traction.DemoTests {
 
     /// <summary>
     /// Test for contracts being applied to auto-properties.

@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using Traction.Demo;
 
-namespace Traction.Tests {
+namespace Traction.DemoTests {
 
     /// <summary>
     /// Test for postconditions being applied to members with multiple return statements or nested methods.

@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Traction.Demo;
 
-namespace Traction.Tests {
+namespace Traction.DemoTests {
 
     /// <summary>
     /// Tests for contracts being applied to operators.
