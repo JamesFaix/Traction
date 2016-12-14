@@ -14,7 +14,12 @@ namespace Traction {
 
         public abstract bool IsValidType(TypeInfo type);
 
-        public abstract Diagnostic InvalidTypeDiagnostic(Location location);
+        public Diagnostic InvalidTypeDiagnostic(Location location) => DiagnosticFactory.Create(
+            title: $"Invalid contract attribute usage",
+            message: InvalidTypeDiagnosticMessage,
+            location: location);
+
+        protected abstract string InvalidTypeDiagnosticMessage { get; }
 
         public abstract bool IsOn(ParameterSyntax node, SemanticModel model);
 

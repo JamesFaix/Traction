@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Collections;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -24,9 +25,7 @@ namespace Traction {
         //Applies to types implementing IEnumerable<T>
         public override bool IsValidType(TypeInfo type) => type.Type.IsEnumerable();
 
-        public override Diagnostic InvalidTypeDiagnostic(Location location) => DiagnosticFactory.Create(
-            title: $"Incorrect attribute usage",
-            message: $"{nameof(NonEmptyAttribute)} can only be applied to members with types implementing IEnumerable<T>.",
-            location: location);
+        protected override string InvalidTypeDiagnosticMessage =>
+            $"{nameof(NonEmptyAttribute)} can only be applied to members with types implementing {nameof(IEnumerable)}<T>.";
     }
 }

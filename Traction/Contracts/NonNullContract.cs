@@ -17,11 +17,9 @@ namespace Traction {
         }
 
         //Applies to reference and Nullable types
-        public override bool IsValidType(TypeInfo type) => type.Type.CanBeNull();
+        public override bool IsValidType(TypeInfo type) => type.Type.IsReferenceType;
 
-        public override Diagnostic InvalidTypeDiagnostic(Location location) => DiagnosticFactory.Create(
-            title: $"Incorrect attribute usage",
-            message: $"{nameof(NonNullAttribute)} can only be applied to members with reference or nullable types.",
-            location: location);
+        protected override string InvalidTypeDiagnosticMessage =>
+            $"{nameof(NonNullAttribute)} can only be applied to members with reference types.";
     }
 }

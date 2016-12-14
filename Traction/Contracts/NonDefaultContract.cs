@@ -26,8 +26,11 @@ namespace Traction {
         //Applies to all types
         public override bool IsValidType(TypeInfo type) => true;
 
-        public override Diagnostic InvalidTypeDiagnostic(Location location) {
-            throw new InvalidOperationException($"{nameof(NonDefaultContract)} should never throw an invalid type diagnostic.");
+        protected override string InvalidTypeDiagnosticMessage {
+            get {
+                throw new InvalidOperationException
+                    ($"{nameof(NonDefaultContract)} should never throw an invalid type diagnostic.");
+            }
         }
     }
 }
