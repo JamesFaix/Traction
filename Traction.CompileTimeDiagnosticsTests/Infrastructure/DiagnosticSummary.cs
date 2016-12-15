@@ -2,6 +2,6 @@
 
     public struct DiagnosticSummary {
         public int Count;
-        public string FirstMessage;
+        public string FirstTitle;
     }
 }

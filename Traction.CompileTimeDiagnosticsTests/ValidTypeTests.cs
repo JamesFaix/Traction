@@ -20,7 +20,7 @@ namespace Traction.DiagnosticsTests {
             //Assert
             return new DiagnosticSummary {
                 Count = context.Diagnostics.Count(),
-                FirstMessage = context.Diagnostics.FirstOrDefault()
+                FirstTitle = context.Diagnostics.FirstOrDefault()
                                     ?.Descriptor.Title.ToString()
             };
         }
@@ -31,7 +31,7 @@ namespace Traction.DiagnosticsTests {
                         MemberFactory.MethodWithPrecondition(typeName, attributeName))))
                 .Returns(new DiagnosticSummary {
                     Count = shouldHaveDiagnostic ? 1 : 0,
-                    FirstMessage = shouldHaveDiagnostic ? "Traction: Invalid contract attribute usage" : null
+                    FirstTitle = shouldHaveDiagnostic ? "Traction: Invalid contract attribute usage" : null
                 })
                 .SetName($"{attributeName}_CanOnlyBePlacedOnParametersWithValidTypes" +
                     $"_{typeName}{(shouldHaveDiagnostic ? "Fails" : "Passes")}");
@@ -43,7 +43,7 @@ namespace Traction.DiagnosticsTests {
                          MemberFactory.MethodWithPostcondition(typeName, attributeName))))
                  .Returns(new DiagnosticSummary {
                      Count = shouldHaveDiagnostic ? 1 : 0,
-                     FirstMessage = shouldHaveDiagnostic ? "Traction: Invalid contract attribute usage" : null
+                     FirstTitle = shouldHaveDiagnostic ? "Traction: Invalid contract attribute usage" : null
                  })
                  .SetName($"{attributeName}_CanOnlyBePlacedOnReturnValuesWithValidTypes" +
                      $"_{typeName}{(shouldHaveDiagnostic ? "Fails" : "Passes")}");
