@@ -82,7 +82,7 @@ namespace Traction {
 
             //No postconditions on void methods
             if (hasPostcondition && node.ReturnType().GetText().ToString().Trim() == "void") {
-                result.Add(DiagnosticFactory.ContractAttributeCannotBeAppliedToMethodReturningVoid(node.GetLocation()));
+                result.Add(DiagnosticFactory.PostconditionsCannotBeAppliedToMethodReturningVoid(node.GetLocation()));
             }
 
             //No contracts on partial members
