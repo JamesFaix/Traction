@@ -8,7 +8,7 @@ namespace Traction {
     /// <summary>
     /// Contract for <see cref="NonDefaultAttribute"/>.
     /// </summary>
-   public class NonDefaultContract : Contract {
+   public class NonDefaultContract : Contract<NonDefaultAttribute> {
                 
         public override string ExceptionMessage => "Value cannot be default(T).";
 
@@ -26,8 +26,11 @@ namespace Traction {
         //Applies to all types
         public override bool IsValidType(TypeInfo type) => true;
 
-        public override Diagnostic InvalidTypeDiagnostic(Location location) {
-            throw new InvalidOperationException($"{nameof(NonDefaultContract)} should never throw an invalid type diagnostic.");
+        protected override string InvalidTypeDiagnosticMessage {
+            get {
+                throw new InvalidOperationException
+                    ($"{nameof(NonDefaultContract)} should never throw an invalid type diagnostic.");
+            }
         }
     }
 }

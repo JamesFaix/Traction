@@ -1,5 +1,7 @@
 ﻿using System;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis;
+using System.Linq;
 
 namespace Traction {
 
@@ -27,6 +29,13 @@ namespace Traction {
             throw new InvalidOperationException("Invalid method declaration type.");
         }
 
+        public static TypeInfo ReturnTypeInfo(this BaseMethodDeclarationSyntax node, SemanticModel model) {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            return model.GetTypeInfo(node.ReturnType());
+        }
+
         public static TNode WithBody<TNode>(this TNode node, BlockSyntax body)
             where TNode : BaseMethodDeclarationSyntax {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -34,6 +43,23 @@ namespace Traction {
 
             return (node as dynamic)
                 .WithBody(body);
+        }       
+
+        public static bool IsInterfaceImplementation(this BaseMethodDeclarationSyntax node, SemanticModel model) {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            var methodSymbol = model.GetDeclaredSymbol(node) as IMethodSymbol;
+
+            var interfaceMethods = methodSymbol.ContainingType
+                .AllInterfaces
+                .SelectMany(i => i.GetMembers().OfType<IMethodSymbol>());
+
+            return interfaceMethods
+                .Any(method => methodSymbol.Equals(
+                                methodSymbol
+                                    .ContainingType
+                                    .FindImplementationForInterfaceMember(method)));
         }
     }
 }

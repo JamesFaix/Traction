@@ -48,7 +48,8 @@ namespace Traction {
         private TNode ExpandAutoProperties<TNode>(TNode typeDeclaration)
             where TNode : CSharpSyntaxNode {
 
-            var propertiesToExpand = typeDeclaration.DescendantNodes()
+            var propertiesToExpand = typeDeclaration
+                .DescendantNodes()
                 .OfType<PropertyDeclarationSyntax>()
                 .Where(prop => prop.HasAttributeExtending<ContractAttribute>(model)
                     && prop.IsAutoImplentedProperty())

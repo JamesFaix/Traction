@@ -1,10 +1,11 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Traction {
 
-    public abstract class BasicComparisonContract<TAttribute> : Contract
+    public abstract class BasicComparisonContract<TAttribute> : Contract<TAttribute>
         where TAttribute : ContractAttribute {
 
         public sealed override string ExceptionMessage => $"Value must be {OperatorDescription} default(T).";
@@ -40,12 +41,10 @@ namespace Traction {
             }
         }
 
-        public sealed override Diagnostic InvalidTypeDiagnostic(Location location) => DiagnosticFactory.Create(
-            title: $"Incorrect attribute usage",
-            message: $"Basic comparison attributes can only be applied to members with value types implementing IComparable<T>, " +
-                "or nullable types whose underlying type implements IComaprable<T>." +
-                "(Since the default value of all reference types is null, a comparison with default(T) would just be a null check.)",
-            location: location);
+        protected sealed override string InvalidTypeDiagnosticMessage =>
+            $"{nameof(BasicComparisonContract<TAttribute>)} can only be applied to members with value types implementing {nameof(IComparable)}<T>, " +
+                $"or nullable types whose underlying type implements {nameof(IComparable)}<T>." +
+                "(Since the default value of all reference types is null, a comparison with default(T) would just be a null check.)";
     }
 
     public sealed class PositiveContract : BasicComparisonContract<PositiveAttribute> {
