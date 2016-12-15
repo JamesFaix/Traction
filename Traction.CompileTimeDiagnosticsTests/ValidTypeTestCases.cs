@@ -4,31 +4,13 @@ using Microsoft.CodeAnalysis;
 using NUnit.Framework;
 
 namespace Traction.DiagnosticsTests {
-
-    [TestFixture]
-    public class ValidTypeTests {
-
-        [Test, TestCaseSource(nameof(AllCases))]
-        public DiagnosticSummary ValidTypeTest(CompilationGenerator generator) {
-            //Arrange
-            var context = ContextFactory.Before(generator);
-            var module = new ContractModule();
-
-            //Act
-            module.BeforeCompile(context);
-
-            //Assert
-            return new DiagnosticSummary {
-                Count = context.Diagnostics.Count(),
-                FirstTitle = context.Diagnostics.FirstOrDefault()
-                                    ?.Descriptor.Title.ToString()
-            };
-        }
-
+    
+    internal static class ValidTypeTestCases {
+        
         private static TestCaseData PreconditionCase(string typeName, string attributeName, bool shouldHaveDiagnostic) {
-            return new TestCaseData((CompilationGenerator)(() =>
-                    CompilationFactory.SingleClassCompilation(
-                        MemberFactory.MethodWithPrecondition(typeName, attributeName))))
+            return new TestCaseData(CompilationFactory.CompileClassFromText(
+                    SourceCodeFactory.ClassWithMethods(
+                        SourceCodeFactory.PreconditionMethod(typeName, attributeName))))
                 .Returns(new DiagnosticSummary {
                     Count = shouldHaveDiagnostic ? 1 : 0,
                     FirstTitle = shouldHaveDiagnostic ? "Traction: Invalid contract attribute usage" : null
@@ -38,9 +20,9 @@ namespace Traction.DiagnosticsTests {
         }
 
         private static TestCaseData PostconditionCase(string typeName, string attributeName, bool shouldHaveDiagnostic) {
-            return new TestCaseData((CompilationGenerator)(() =>
-                     CompilationFactory.SingleClassCompilation(
-                         MemberFactory.MethodWithPostcondition(typeName, attributeName))))
+            return new TestCaseData(CompilationFactory.CompileClassFromText(
+                    SourceCodeFactory.ClassWithMethods(
+                        SourceCodeFactory.PostconditionMethod(typeName, attributeName))))
                  .Returns(new DiagnosticSummary {
                      Count = shouldHaveDiagnostic ? 1 : 0,
                      FirstTitle = shouldHaveDiagnostic ? "Traction: Invalid contract attribute usage" : null
@@ -49,7 +31,7 @@ namespace Traction.DiagnosticsTests {
                      $"_{typeName}{(shouldHaveDiagnostic ? "Fails" : "Passes")}");
         }
 
-        private static IEnumerable<TestCaseData> AllCases =>
+        public static IEnumerable<TestCaseData> AllCases =>
             NonNullCases
             .Concat(NonDefaultCases)
             .Concat(NonEmptyCases)

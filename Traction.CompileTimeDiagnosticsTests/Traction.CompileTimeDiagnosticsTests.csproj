@@ -62,16 +62,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DiagnosticSummaryTest.cs" />
     <Compile Include="Infrastructure\CompilationFactory.cs" />
-    <Compile Include="Infrastructure\ContextFactory.cs" />
-    <Compile Include="Infrastructure\Delegates.cs" />
     <Compile Include="Infrastructure\DiagnosticSummary.cs" />
-    <Compile Include="Infrastructure\MemberFactory.cs" />
-    <Compile Include="IteratorBlockPostconditionTests.cs" />
+    <Compile Include="Infrastructure\SourceCodeFactory.cs" />
+    <Compile Include="IteratorBlockPostconditionTestCases.cs" />
     <Compile Include="LiskovSubstitutionTests.cs" />
     <Compile Include="PartialMemberTests.cs" />
-    <Compile Include="PostconditionVoidTests.cs" />
-    <Compile Include="ValidTypeTests.cs" />
+    <Compile Include="PostconditionVoidTestCases.cs" />
+    <Compile Include="ValidTypeTestCases.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
