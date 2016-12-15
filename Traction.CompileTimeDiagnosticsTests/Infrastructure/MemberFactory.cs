@@ -7,7 +7,7 @@ namespace Traction.DiagnosticsTests {
     //Make sure there are spaces before the member name, parameter names, and parameter types.
     static class MemberFactory {
 
-        public static MemberDeclarationSyntax MethodWithPrecondition(string typeName, string attributeName) {
+        public static MethodDeclarationSyntax MethodWithPrecondition(string typeName, string attributeName) {
             if (typeName == null) throw new ArgumentNullException(nameof(typeName));
             if (attributeName == null) throw new ArgumentNullException(nameof(attributeName));
 
@@ -19,7 +19,7 @@ namespace Traction.DiagnosticsTests {
                                 .AddAttributes(Attribute(ParseName(attributeName)))));
         }
 
-        public static MemberDeclarationSyntax MethodWithPostcondition(string typeName, string attributeName) {
+        public static MethodDeclarationSyntax MethodWithPostcondition(string typeName, string attributeName) {
             if (typeName == null) throw new ArgumentNullException(nameof(typeName));
             if (attributeName == null) throw new ArgumentNullException(nameof(attributeName));
 

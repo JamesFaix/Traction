@@ -67,9 +67,10 @@
     <Compile Include="Infrastructure\Delegates.cs" />
     <Compile Include="Infrastructure\DiagnosticSummary.cs" />
     <Compile Include="Infrastructure\MemberFactory.cs" />
+    <Compile Include="IteratorBlockPostconditionTests.cs" />
     <Compile Include="LiskovSubstitutionTests.cs" />
     <Compile Include="PartialMemberTests.cs" />
-    <Compile Include="PostconditionRestrictionTests.cs" />
+    <Compile Include="PostconditionVoidTests.cs" />
     <Compile Include="ValidTypeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

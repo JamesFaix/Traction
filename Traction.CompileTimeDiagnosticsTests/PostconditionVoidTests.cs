@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System.Diagnostics.Contracts;
 using NUnit.Framework;
 
 namespace Traction.DiagnosticsTests {
 
     [TestFixture]
-    public class PostconditionRestrictionTests {
+    public class PostconditionVoidTests {
         
-        //Postconditions on iterator block
-
         [Test, TestCaseSource(nameof(VoidCases))]
         public DiagnosticSummary VoidPostconditionsTest(CompilationGenerator generator) {
             //Arrange
