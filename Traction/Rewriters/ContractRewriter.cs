@@ -81,8 +81,8 @@ namespace Traction {
             var result = new List<Diagnostic>();
 
             //No postconditions on void methods
-            if (hasPostcondition && node.ReturnType().GetText().ToString() == "void") {
-                result.Add(DiagnosticFactory.ContractAttributeCannotBeAppliedToMethodReturningVoid(node.GetLocation()));
+            if (hasPostcondition && node.ReturnType().GetText().ToString().Trim() == "void") {
+                result.Add(DiagnosticFactory.PostconditionsCannotBeAppliedToMethodReturningVoid(node.GetLocation()));
             }
 
             //No contracts on partial members

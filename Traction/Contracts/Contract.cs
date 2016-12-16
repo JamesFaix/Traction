@@ -15,6 +15,7 @@ namespace Traction {
         public abstract bool IsValidType(TypeInfo type);
 
         public Diagnostic InvalidTypeDiagnostic(Location location) => DiagnosticFactory.Create(
+            id: "TR0006",
             title: $"Invalid contract attribute usage",
             message: InvalidTypeDiagnosticMessage,
             location: location);
