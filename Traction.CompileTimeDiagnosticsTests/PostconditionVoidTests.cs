@@ -10,7 +10,7 @@ namespace Traction.DiagnosticsTests {
     public class PostconditionVoidTests {
 
         [Test, TestCaseSource(nameof(AllCases))]
-        public void DiagnosticSummaryTest(CSharpCompilation compilation, bool isValid) {
+        public void Test(CSharpCompilation compilation, bool isValid) {
             //Arrange/Act
             var diagnostics = TestHelper.GetDiagnostics(compilation);
 

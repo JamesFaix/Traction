@@ -10,7 +10,7 @@ namespace Traction.DiagnosticsTests {
     public class PartialMemberTests {
 
         [Test, TestCaseSource(nameof(AllCases))]
-        public void DiagnosticSummaryTest(CSharpCompilation compilation, bool isValid) {
+        public void Test(CSharpCompilation compilation, bool isValid) {
             //Arrange/Act
             var diagnostics = TestHelper.GetDiagnostics(compilation);
 
@@ -38,7 +38,7 @@ namespace Traction.DiagnosticsTests {
             return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
                         SourceCodeFactory.ClassWithMembers(new[] { "partial" },
-                            $"[return: {attributeName}] partial void TestMethod();")),
+                            $"[return: {attributeName}] partial int TestMethod();")),
                     isValid)
                  .SetName($"ContractCannotBePlacedOnPartialMembers_{attributeName}_Postcondition");
         }
