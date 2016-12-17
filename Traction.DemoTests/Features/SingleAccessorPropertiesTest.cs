@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System;
+using System.Collections.Generic;
+using NUnit.Framework;
 using Traction.Demo;
 
 namespace Traction.DemoTests {
@@ -13,107 +15,62 @@ namespace Traction.DemoTests {
 
         private SingleAccessorPropertyConsumer GetConsumer() => new SingleAccessorPropertyConsumer();
 
-        #region NormalProperty
-        [Test]
-        public void NonNull_NormalProperty_GetDoesNotThrow() {
+        [Test, TestCaseSource(nameof(AllCases))]
+        public void Test(Action<SingleAccessorPropertyConsumer> action, Type exceptionType) {
             var consumer = GetConsumer();
-            consumer._normalPropertyField = null;
-
-            Assert.DoesNotThrow(() => {
-                var x = consumer.NormalReadWrite;
-            });
+            CustomAssert.Throws(exceptionType, () => action(consumer));
         }
 
-        [Test]
-        public void NonNull_NormalProperty_SetDoesNotThrow() {
-            var consumer = GetConsumer();
+        private static IEnumerable<TestCaseData> AllCases {
+            get {
+                Action<SingleAccessorPropertyConsumer> action;
 
-            Assert.DoesNotThrow(() => {
-                consumer.NormalReadWrite = null;
-            });
+                action = consumer => { var x = consumer.NormalReadWrite; };
+                yield return new TestCaseData(action, null)
+                    .SetName($"SingleAccessor_NormalReadWrite_GetDoesNotThrow");
+
+                action = consumer => { consumer.NormalReadWrite = null; };
+                yield return new TestCaseData(action, null)
+                    .SetName($"SingleAccessor_NormalReadWrite_SetDoesNotThrow");
+
+                action = consumer => {
+                    consumer._contractReadonlyProeprtyField = "test";
+                    var x = consumer.ContractReadonly;
+                };
+                yield return new TestCaseData(action, null)
+                    .SetName($"SingleAccessor_ContractReadonly_DoesNotThrowIfContractMet");
+
+                action = consumer => { var x = consumer.ContractReadonly; };
+                yield return new TestCaseData(action, typeof(PostconditionException))
+                    .SetName($"SingleAccessor_ContractReadonly_ThrowsIfContractBroken");
+
+                action = consumer => { consumer.ContractWriteonly = "test"; };
+                yield return new TestCaseData(action, null)
+                    .SetName($"SingleAccessor_ContractWriteonly_DoesNotThrowIfContractMet");
+
+                action = consumer => { consumer.ContractWriteonly = null; };
+                yield return new TestCaseData(action, typeof(PreconditionException))
+                    .SetName($"SingleAccessor_ContractWriteonly_ThrowsIfContractBroken");
+
+                action = consumer => {
+                    consumer._contractReadWritePropertyField = "test";
+                    var x = consumer.ContractReadWrite;
+                };
+                yield return new TestCaseData(action, null)
+                    .SetName($"SingleAccessor_ContractReadWrite_GetDoesNotThrowIfContractMet");
+
+                action = consumer => { var x = consumer.ContractReadWrite; };
+                yield return new TestCaseData(action, typeof(PostconditionException))
+                    .SetName($"SingleAccessor_ContractReadWrite_GetThrowsIfContractBroken");
+
+                action = consumer => { consumer.ContractReadWrite = "test"; };
+                yield return new TestCaseData(action, null)
+                    .SetName($"SingleAccessor_ContractReadWrite_SetDoesNotThrowIfContractMet");
+
+                action = consumer => { consumer.ContractReadWrite = null; };
+                yield return new TestCaseData(action, typeof(PreconditionException))
+                    .SetName($"SingleAccessor_ContractReadWrite_SetThrowsIfContractBroken");
+            }
         }
-        #endregion
-
-        #region ContractReadonlyProperty
-        [Test]
-        public void NonNull_ContractReadonlyProperty_DoesNotThrowIfContractMet() {
-            var consumer = GetConsumer();
-            consumer._contractReadonlyProeprtyField = "test";
-
-            Assert.DoesNotThrow(() => {
-                var x = consumer.ContractReadonly;
-            });
-        }
-
-        [Test]
-        public void NonNull_ContractReadonlyProperty_ThrowsIfContractBroken() {
-            var consumer = GetConsumer();
-            consumer._contractReadonlyProeprtyField = null;
-
-            Assert.Throws<PostconditionException>(() => {
-                var x = consumer.ContractReadonly;
-            });
-        }
-        #endregion
-
-        #region ContractWriteonlyProperty
-        [Test]
-        public void NonNull_ContractWriteonlyProperty_DoesNotThrowIfContractMet() {
-            var consumer = GetConsumer();
-
-            Assert.DoesNotThrow(() => {
-                consumer.ContractWriteonly = "test";
-            });
-        }
-
-        [Test]
-        public void NonNull_ContractWriteonlyProperty_ThrowsIfContractBroken() {
-            var consumer = GetConsumer();
-
-            Assert.Throws<PreconditionException>(() => {
-                consumer.ContractWriteonly = null;
-            });
-        }
-        #endregion
-
-        #region ContractReadWriteProperty
-        [Test]
-        public void NonNull_ContractReadWriteProperty_GetDoesNotThrowIfContractMet() {
-            var consumer = GetConsumer();
-            consumer._contractReadWritePropertyField = "test";
-
-            Assert.DoesNotThrow(() => {
-                var x = consumer.ContractReadWrite;
-            });
-        }
-
-        [Test]
-        public void NonNull_ContractReadWriteProperty_GetThrowsIfContractBroken() {
-            var consumer = GetConsumer();
-            consumer._contractReadWritePropertyField = null;
-
-            Assert.Throws<PostconditionException>(() => {
-                var x = consumer.ContractReadWrite;
-            });
-        }
-
-        [Test]
-        public void NonNull_ContractReadWriteProperty_SetDoesNotThrowIfContractMet() {
-            var consumer = GetConsumer();
-
-            Assert.DoesNotThrow(() => {
-                consumer.ContractReadWrite = "test";
-            });
-        }
-
-        [Test]
-        public void NonNull_ContractReadWriteProperty_SetThrowsIfContractBroken() {
-            var consumer = GetConsumer();
-
-            Assert.Throws<PreconditionException>(() => {
-                consumer.ContractReadWrite = null;
-            });
-        }
-        #endregion
     }
 }

@@ -61,6 +61,7 @@
     <Compile Include="Attributes\BasicComparisons\PositiveNullableTest.cs" />
     <Compile Include="Attributes\BasicComparisons\NegativeTest.cs" />
     <Compile Include="Attributes\BasicComparisons\PositiveTest.cs" />
+    <Compile Include="CustomAssert.cs" />
     <Compile Include="Features\DerivedClassTest.cs" />
     <Compile Include="Features\AutoPropertyTest.cs" />
     <Compile Include="Features\ConversionTest.cs" />

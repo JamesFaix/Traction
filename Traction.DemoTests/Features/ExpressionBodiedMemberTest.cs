@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System;
+using System.Collections.Generic;
+using NUnit.Framework;
 using Traction.Demo;
 
 namespace Traction.DemoTests {
@@ -13,47 +15,32 @@ namespace Traction.DemoTests {
 
         private ExpressionBodiedMemberConsumer GetConsumer() => new ExpressionBodiedMemberConsumer();
 
-        #region NormalProperty
-        [Test]
-        public void ExpressionBodiedMember_NormalProperty_DoesNotThrow() {
+        [Test, TestCaseSource(nameof(AllCases))]
+        public void Test(Action<ExpressionBodiedMemberConsumer> action, Type exceptionType) {
             var consumer = GetConsumer();
-
-            Assert.DoesNotThrow(() => {
-                var x = consumer.NormalProperty;
-            });
-        }
-        #endregion
-
-        #region ContractProperty
-        [Test]
-        public void ExpressionBodiedMember_ContractProperty_ThrowsIfContractBroken() {
-            var consumer = GetConsumer();
-
-            Assert.Throws<PostconditionException>(() => {
-                var x = consumer.ContractProperty;
-            });
-        }
-        #endregion
-
-        #region NormalMethod
-        [Test]
-        public void ExpressionBodiedMember_NormalMethod_DoesNotThrow() {
-            var consumer = GetConsumer();
-
-            Assert.DoesNotThrow(() =>
-                consumer.NormalMethod());
+            CustomAssert.Throws(exceptionType, () => action(consumer));
         }
 
-        #endregion
+        private static IEnumerable<TestCaseData> AllCases {
+            get {
+                Action<ExpressionBodiedMemberConsumer> action;
 
-        #region PostconditionMethod
-        [Test]
-        public void ExpressionBodiedMember_PostconditionMethod_ThrowsIfContractBroken() {
-            var consumer = GetConsumer();
+                action = consumer => { var x = consumer.NormalProperty; };
+                yield return new TestCaseData(action, null)
+                    .SetName($"ExpressionBodiedMember_NormalProperty_DoesNotThrow");
 
-            Assert.Throws<PostconditionException>(() =>
-                consumer.PostconditionMethod());
+                action = consumer => { var x = consumer.ContractProperty; };
+                yield return new TestCaseData(action, typeof(PostconditionException))
+                    .SetName($"ExpressionBodiedMember_ContractProperty_ThrowsIfContractBroken");
+
+                action = consumer => { consumer.NormalMethod(); };
+                yield return new TestCaseData(action, null)
+                    .SetName($"ExpressionBodiedMember_NormalMethod_DoesNotThrow");
+
+                action = consumer => { consumer.PostconditionMethod(); };
+                yield return new TestCaseData(action, typeof(PostconditionException))
+                    .SetName($"ExpressionBodiedMember_PostconditionMethod_ThrowsIfContractBroken");
+            }
         }
-        #endregion
     }
 }
