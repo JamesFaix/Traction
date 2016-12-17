@@ -56,6 +56,54 @@ namespace Traction {
 
         #endregion
 
+        #region HasOrInheritsAttribute
+
+        public static bool HasOrInheritsAttribute<TAttribute>(this BaseMethodDeclarationSyntax node, SemanticModel model)
+           where TAttribute : Attribute {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            var symbol = typeof(TAttribute).GetTypeSymbol(model);
+
+            var attributeTypeSymbols = model
+                .GetDeclaredSymbol(node)
+                .AllAncestorAttributes()
+                .Select(a => a.AttributeClass);
+
+            return attributeTypeSymbols.Any(t => t.Equals(symbol));
+        }
+
+        public static bool HasOrInheritsAttribute<TAttribute>(this ParameterSyntax node, SemanticModel model)
+            where TAttribute : Attribute {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            var symbol = typeof(TAttribute).GetTypeSymbol(model);
+
+            var attributeTypeSymbols = model
+                .GetDeclaredSymbol(node)
+                .AllAncestorAttributes()
+                .Select(a => a.AttributeClass);
+
+            return attributeTypeSymbols.Any(t => t.Equals(symbol));
+        }
+
+        public static bool HasOrInheritsAttribute<TAttribute>(this PropertyDeclarationSyntax node, SemanticModel model)
+            where TAttribute : Attribute {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            var symbol = typeof(TAttribute).GetTypeSymbol(model);
+
+            var attributeTypeSymbols = model
+                .GetDeclaredSymbol(node)
+                .AllAncestorAttributes()
+                .Select(a => a.AttributeClass);
+
+            return attributeTypeSymbols.Any(t => t.Equals(symbol));
+        }
+        #endregion
+
         #region HasAttributeExtenging
 
         public static bool HasAttributeExtending<TAttribute>(this BaseMethodDeclarationSyntax node, SemanticModel model)
@@ -81,17 +129,17 @@ namespace Traction {
 
         #endregion
 
-        public static bool HasAnyAttribute<TAttribute>(this BaseMethodDeclarationSyntax node, SemanticModel model)
-           where TAttribute : Attribute {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (model == null) throw new ArgumentNullException(nameof(model));
+        //public static bool HasAnyAttribute<TAttribute>(this BaseMethodDeclarationSyntax node, SemanticModel model)
+        //   where TAttribute : Attribute {
+        //    if (node == null) throw new ArgumentNullException(nameof(node));
+        //    if (model == null) throw new ArgumentNullException(nameof(model));
 
-            var paramAttributes = node.ParameterList.Parameters
-                .SelectMany(p => p.AllAttributes());
-            var allAttributes = paramAttributes.Concat(node.AllAttributes());
+        //    var paramAttributes = node.ParameterList.Parameters
+        //        .SelectMany(p => p.AllAttributes());
+        //    var allAttributes = paramAttributes.Concat(node.AllAttributes());
             
-            return HasAttributeImpl<TAttribute>(allAttributes, model);
-        }
+        //    return HasAttributeImpl<TAttribute>(allAttributes, model);
+        //}
 
         public static bool HasAnyAttributeExtending<TAttribute>(this BaseMethodDeclarationSyntax node, SemanticModel model)
            where TAttribute : Attribute {
@@ -102,6 +150,26 @@ namespace Traction {
         }
         
         private static bool HasAttributeImpl<TAttribute>(IEnumerable<AttributeSyntax> attributes, SemanticModel model)
+            where TAttribute : Attribute {
+
+            var symbol = typeof(TAttribute).GetTypeSymbol(model);
+
+            IEnumerable<ITypeSymbol> attributeTypes = new ITypeSymbol[0];
+
+            try {
+                attributeTypes = attributes
+                    .Select(a => model.GetTypeInfo(a).Type)
+                    .ToArray();
+            }
+            catch (Exception e) {
+                Console.WriteLine($"Traction : error : {e.Message} @{e.StackTrace}");
+                return false;
+            }
+
+            return attributeTypes.Any(t => t.Equals(symbol));
+        }
+
+        private static bool HasOrInheritsAttributeImpl<TAttribute>(IEnumerable<AttributeSyntax> attributes, SemanticModel model)
             where TAttribute : Attribute {
 
             var symbol = typeof(TAttribute).GetTypeSymbol(model);

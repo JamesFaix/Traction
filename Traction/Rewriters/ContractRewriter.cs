@@ -18,6 +18,7 @@ namespace Traction {
 
             if (contract == null) throw new ArgumentNullException(nameof(contract));
             this.contract = contract;
+            this.diagnosticChecker = new DiagnosticChecker(model, contract);
         }
 
         public static ContractRewriter Create(SemanticModel model, ICompileContext context, Contract contract) =>
@@ -28,6 +29,7 @@ namespace Traction {
             (model, context) => Create(model, context, contract);
 
         private readonly Contract contract;
+        private readonly DiagnosticChecker diagnosticChecker;
 
         public sealed override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node) => VisitPropertyImpl(node);
         public sealed override SyntaxNode VisitOperatorDeclaration(OperatorDeclarationSyntax node) => VisitMethodImpl(node);
@@ -37,11 +39,11 @@ namespace Traction {
         private TNode VisitMethodImpl<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
 
-            if (!this.contract.IsOn(node, this.model)) {
+            if (!this.contract.IsDeclaredOrInheritedOn(node, this.model)) {
                 return node;
             }
 
-            var diagnostics = GetDiagnostics(node);
+            var diagnostics = this.diagnosticChecker.GetDiagnostics(node);
             foreach (var d in diagnostics) {
                 this.context.Diagnostics.Add(d);
             }
@@ -56,11 +58,11 @@ namespace Traction {
         }
 
         private PropertyDeclarationSyntax VisitPropertyImpl(PropertyDeclarationSyntax node) {
-            if (!this.contract.IsOn(node, this.model)) {
+            if (!this.contract.IsDeclaredOn(node, this.model)) {
                 return node;
             }
 
-            var diagnostics = GetDiagnostics(node);
+            var diagnostics = this.diagnosticChecker.GetDiagnostics(node);
             foreach (var d in diagnostics) {
                 this.context.Diagnostics.Add(d);
             }
@@ -73,79 +75,7 @@ namespace Traction {
                 return TryRewrite(node, VisitPropertyImplInner);
             }
         }
-
-        private List<Diagnostic> GetDiagnostics(BaseMethodDeclarationSyntax node) {
-            var hasPrecondition = this.contract.IsOnParameterOf(node, model);
-            var hasPostcondition = this.contract.IsOnReturnValueOf(node, model);
-
-            var result = new List<Diagnostic>();
-
-            //No postconditions on void methods
-            if (hasPostcondition && node.ReturnType().GetText().ToString().Trim() == "void") {
-                result.Add(DiagnosticFactory.PostconditionsCannotBeAppliedToMethodReturningVoid(node.GetLocation()));
-            }
-
-            //No contracts on partial members
-            if ((hasPrecondition || hasPostcondition) && node.IsPartial()) {
-                result.Add(DiagnosticFactory.ContractAttributeCannotBeAppliedToPartialMembers(node.GetLocation()));
-            }
-
-            //No preconditions on inherited methods
-            if (hasPrecondition && (node.IsOverride() || node.IsInterfaceImplementation(this.model))) {
-                result.Add(DiagnosticFactory.PreconditionsCannotBeAppliedToInheritedMembers(node.GetLocation()));
-            }
-
-            //No postconditions on invalid return types
-            if (hasPostcondition && !this.contract.IsValidType(node.ReturnTypeInfo(this.model))) {
-                result.Add(this.contract.InvalidTypeDiagnostic(node.GetLocation()));
-            }
-
-            //No preconditions on invalid parameter types
-            if (hasPrecondition) {
-                foreach (var p in node.ParameterList.Parameters) {
-                    if (this.contract.IsOn(p, this.model)
-                    && !this.contract.IsValidType(p.GetTypeInfo(this.model))) {
-                        result.Add(this.contract.InvalidTypeDiagnostic(p.GetLocation()));
-                    }
-                }
-            }
-
-            //No postconditions on iterator blocks
-            if (hasPostcondition && node.IsIteratorBlock()) {
-                result.Add(DiagnosticFactory.PostconditionsCannotBeAppliedToIteratorBlocks(node.GetLocation()));
-            }
-
-            return result;
-        }
-
-        private List<Diagnostic> GetDiagnostics(PropertyDeclarationSyntax node) {
-            var hasPrecondition = node.Getter() != null
-                && this.contract.IsOn(node, model);
-
-            var hasPostcondition = node.Setter() != null
-                && this.contract.IsOn(node, model);
-
-            var result = new List<Diagnostic>();
-
-            //No preconditions on inherited members
-            if (hasPrecondition && (node.IsOverride() || node.IsInterfaceImplementation(this.model))) {
-                result.Add(DiagnosticFactory.PreconditionsCannotBeAppliedToInheritedMembers(node.GetLocation()));
-            }
-
-            //No postconditions on invalid return types
-            if ((hasPostcondition || hasPrecondition)
-                && !this.contract.IsValidType(node.TypeInfo(this.model))) {
-                result.Add(this.contract.InvalidTypeDiagnostic(node.GetLocation()));
-            }
-
-            //No postconditions on iterator blocks
-            if (hasPostcondition && node.IsIteratorBlock()) {
-                result.Add(DiagnosticFactory.PostconditionsCannotBeAppliedToIteratorBlocks(node.GetLocation()));
-            }
-
-            return result;
-        }
-
+        
         private TNode VisitMethodImplInner<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
 
@@ -178,7 +108,7 @@ namespace Traction {
         private IEnumerable<StatementSyntax> GetMethodPreconditions<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
             var preconditionParameters = node.ParameterList.Parameters
-               .Where(p => this.contract.IsOn(p, model))
+               .Where(p => this.contract.IsDeclaredOn(p, model))
                .ToArray();
 
             if (!preconditionParameters.Any()) {
@@ -193,7 +123,7 @@ namespace Traction {
 
         private TNode InsertMethodPostconditions<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
-            if (!this.contract.IsOnReturnValueOf(node, model)) {
+            if (!this.contract.IsDeclaredOnReturnValueOf(node, model)) {
                 return node;
             }
 
@@ -209,7 +139,6 @@ namespace Traction {
 
         private AccessorDeclarationSyntax InsertPropertyPrecondition(TypeInfo type, AccessorDeclarationSyntax node, Location location) {
             if (node == null) return null;
-
             return node.WithBody(
                 SyntaxFactory.Block(CreatePrecondition(type, "value", location))
                     .AddStatements(node.Body.Statements.ToArray()));
@@ -217,32 +146,10 @@ namespace Traction {
 
         private AccessorDeclarationSyntax InsertPropertyPostcondition(TypeInfo type, AccessorDeclarationSyntax node, Location location) {
             if (node == null) return null;
-
             var returnStatements = node.GetAllReturnStatements();
-
             return node.ReplaceNodes(returnStatements,
                 (oldNode, newNode) => CreatePostcondition(type, newNode, location));
         }
-
-        //private StatementSyntax CreatePreconditionIfValidType(TypeInfo parameterType, string identifier, Location location) {
-        //    if (this.contract.IsValidType(parameterType)) {
-        //        return CreatePrecondition(parameterType, identifier, location);
-        //    }
-        //    else {
-        //        context.Diagnostics.Add(this.contract.InvalidTypeDiagnostic(location));
-        //        return SyntaxFactory.Block();
-        //    }
-        //}
-
-        //private StatementSyntax CreatePostconditionIfValidType(TypeInfo returnType, ReturnStatementSyntax node, Location location) {
-        //    if (this.contract.IsValidType(returnType)) {
-        //        return CreatePostcondition(returnType, node, location);
-        //    }
-        //    else {
-        //        context.Diagnostics.Add(this.contract.InvalidTypeDiagnostic(location));
-        //        return SyntaxFactory.Block();
-        //    }
-        //}
 
         private StatementSyntax CreatePrecondition(TypeInfo parameterType, string parameterName, Location location) {
             var text = GetPreconditionText(parameterName, parameterType);

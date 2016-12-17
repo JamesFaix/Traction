@@ -70,11 +70,13 @@
     <Compile Include="Attributes\NonEmptyAttribute.cs" />
     <Compile Include="Attributes\NonNullAttribute.cs" />
     <Compile Include="Contracts\Contract.cs" />
+    <Compile Include="Exceptions\DiagnosticChecker.cs" />
     <Compile Include="Exceptions\PreconditionException.cs" />
     <Compile Include="Exceptions\PostconditionException.cs" />
     <Compile Include="ExtensionMethods\AttributeSyntaxExtensions.cs" />
     <Compile Include="ExtensionMethods\BaseMethodDeclarationSyntaxExtensions.cs" />
     <Compile Include="ExtensionMethods\ParameterSyntaxExtensions.cs" />
+    <Compile Include="ExtensionMethods\SymbolExtensions.cs" />
     <Compile Include="ExtensionMethods\SyntaxNodeExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeSymbolExtensions.cs" />
@@ -100,7 +102,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Modules\ModuleDiagram.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
