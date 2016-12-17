@@ -83,9 +83,11 @@
     <Compile Include="Attributes\NonNullConsumer.cs" />
     <Compile Include="Attributes\NonPositiveConsumer.cs" />
     <Compile Include="Attributes\PositiveConsumer.cs" />
+    <Compile Include="Features\DerivedClassDemo.cs" />
     <Compile Include="Features\AutoPropertyConsumer.cs" />
     <Compile Include="Features\ConversionConsumer.cs" />
     <Compile Include="Features\ExpressionBodiedMemberConsumer.cs" />
+    <Compile Include="Features\InterfaceDemo.cs" />
     <Compile Include="Features\MultipleReturnsConsumer.cs" />
     <Compile Include="Features\OperatorConsumer.cs" />
     <Compile Include="Features\SingleAccessorPropertyConsumer.cs" />
