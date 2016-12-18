@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
 using Traction.Demo;
 
@@ -14,91 +15,53 @@ namespace Traction.DemoTests {
     [TestFixture]
     public class ConversionTest {
 
-        private ConversionConsumer GetConsumer() => new ConversionConsumer();
+        private ConversionDemo GetDemo() => new ConversionDemo();
 
-        #region NormalConversion (int)
-        [Test]
-        public void Conversion_Normal_DoesNotThrow() {
-            ConversionConsumer consumer = null;
-
-            Assert.DoesNotThrow(() => {
-                var x = (int)consumer;
-            });
-        }
-        #endregion
-
-        #region Precondition conversion (long)
-        [Test]
-        public void Conversion_Precondition_DoesNotThrowIfContractMet() {
-            var consumer = GetConsumer();
-
-            Assert.DoesNotThrow(() => {
-                var x = (long)consumer;
-            });
+        [Test, TestCaseSource(nameof(AllCases))]
+        public void Test(Action<ConversionDemo> action, Type exceptionType) {
+            var demo = GetDemo();
+            CustomAssert.Throws(exceptionType, () => action(demo));
         }
 
-        [Test]
-        public void Conversion_Precondition_ThrowsIfContractBroken() {
-            ConversionConsumer consumer = null;
+        private static IEnumerable<TestCaseData> AllCases {
+            get {
+                Action<ConversionDemo> action;
 
-            Assert.Throws<PreconditionException>(() => {
-                var x = (long)consumer;
-            });
+                action = demo => { var x = (int)demo; };
+                yield return new TestCaseData(action, null)
+                    .SetName($"Conversion_Normal_DoesNotThrow");
+
+                action = demo => { var x = (long)demo; };
+                yield return new TestCaseData(action, null)
+                    .SetName($"Conversion_Precondition_DoesNotThrowIfContractMet");
+
+                action = demo => { var x = (long)(null as ConversionDemo); };
+                yield return new TestCaseData(action, typeof(PreconditionException))
+                    .SetName($"Conversion_Precondition_ThrowsIfContractBroken");
+
+                action = demo => { var x = (string)demo; };
+                yield return new TestCaseData(action, null)
+                    .SetName($"Conversion_Postcondition_DoesNotThrowIfContractMet");
+
+                action = demo => { var x = (string)(null as ConversionDemo); };
+                yield return new TestCaseData(action, typeof(PostconditionException))
+                    .SetName($"Conversion_Postcondition_ThrowsIfContractBroken");
+
+                action = demo => {
+                    demo.testField = "test";
+                    var x = (ArrayList)demo;
+                };
+                yield return new TestCaseData(action, null)
+                    .SetName($"Conversion_PreAndPostcondition_DoesNotThrowIfContractMet");
+
+                action = demo => { var x = (ArrayList)(null as ConversionDemo); };
+                yield return new TestCaseData(action, typeof(PreconditionException))
+                    .SetName($"Conversion_PreAndPostcondition_ThrowsIfPreconditionBroken");
+
+                action = demo => { var x = (ArrayList)demo; };
+                yield return new TestCaseData(action, typeof(PostconditionException))
+                    .SetName($"Conversion_PreAndPostcondition_ThrowsIfPostconditionBroken");
+            }
         }
-        #endregion
-
-        #region Postcondition conversion (string)
-        // returns null if arg is null
-
-        [Test]
-        public void Conversion_Postcondition_DoesNotThrowIfContractMet() {
-            var consumer = GetConsumer();
-
-            Assert.DoesNotThrow(() => {
-                var x = (string)consumer;
-            });
-        }
-
-        [Test]
-        public void Conversion_Postcondition_ThrowsIfContractBroken() {
-            ConversionConsumer consumer = null;
-
-            Assert.Throws<PostconditionException>(() => {
-                var x = (string)consumer;
-            });
-        }
-        #endregion
-
-        #region Pre and Postcondition conversion (ArrayList)
-        //returns null if argument's _returnValue1 field is null
-
-        [Test]
-        public void Conversion_PreAndPostcondition_DoesNotThrowIfContractMet() {
-            var consumer = GetConsumer();
-            consumer.testField = "test";
-
-            Assert.DoesNotThrow(() => {
-                var x = (ArrayList)consumer;
-            });
-        }
-
-        [Test]
-        public void Conversion_PreAndPostcondition_ThrowsIfPreconditionBroken() {
-            ConversionConsumer consumer = null;
-
-            Assert.Throws<PreconditionException>(() => {
-                var x = (ArrayList)consumer;
-            });
-        }
-
-        [Test]
-        public void Conversion_PreAndPostcondition_ThrowsIfPostconditionBroken() {
-            var consumer = GetConsumer();
-
-            Assert.Throws<PostconditionException>(() => {
-                var x = (ArrayList)consumer;
-            });
-        }
-        #endregion
     }
 }

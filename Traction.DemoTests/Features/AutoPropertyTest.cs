@@ -1,6 +1,7 @@
 ﻿using System;
-using Traction.Demo;
+using System.Collections.Generic;
 using NUnit.Framework;
+using Traction.Demo;
 
 namespace Traction.DemoTests {
 
@@ -12,87 +13,42 @@ namespace Traction.DemoTests {
     [TestFixture]
     public class AutoPropertyTest {
 
-        private AutoPropertyConsumer GetConsumer() => new AutoPropertyConsumer();
+        private AutoPropertyDemo GetDemo() => new AutoPropertyDemo();
 
-        #region NormalReadonly
-        [Test]
-        public void AutoProperty_NormalReadonly_DoesNotThrow() {
-            var consumer = GetConsumer();
-
-            Assert.DoesNotThrow(() => {
-                var x = consumer.NormalReadonly;
-            });
-        }
-        #endregion
-
-        #region ContractReadonly
-        [Test]
-        public void AutoProperty_ContractReadonly_ThrowsIfContractBroken() {
-            var consumer = GetConsumer();
-
-            Assert.Throws<PostconditionException>(() => {
-                var x = consumer.ContractReadonly;
-            });
-        }
-        #endregion
-
-        #region NormalReadWrite
-        [Test]
-        public void AutoProperty_NormalReadWrite_GetDoesNotThrow() {
-            var consumer = GetConsumer();
-
-            Assert.DoesNotThrow(() => {
-                var x = consumer.NormalReadWrite;
-            });
+        [Test, TestCaseSource(nameof(AllCases))]
+        public void Test(Action<AutoPropertyDemo> action, Type exceptionType) {
+            var demo = GetDemo();
+            CustomAssert.Throws(exceptionType, () => action(demo));
         }
 
-        [Test]
-        public void AutoProperty_NormalReadWrite_SetDoesNotThrow() {
-            var consumer = GetConsumer();
+        private static IEnumerable<TestCaseData> AllCases {
+            get {
+                Action<AutoPropertyDemo> action;
 
-            Assert.DoesNotThrow(() => {
-                consumer.NormalReadWrite = null;
-            });
-        }
-        #endregion
+                action = demo => { var x = demo.NormalReadonly; };
+                yield return new TestCaseData(action, null)
+                    .SetName($"AutoProperty_NormalReadonly_DoesNotThrow");
 
-        #region ContractReadWrite
-        [Test]
-        public void AutoProperty_ContractReadWrite_GetDoesNotThrowIfContractMet() {
-            var consumer = GetConsumer();
-            consumer.ContractReadWrite = "test";
+                action = demo => { var x = demo.ContractReadonly; };
+                yield return new TestCaseData(action, typeof(PostconditionException))
+                    .SetName($"AutoProperty_ContractReadonly_ThrowsIfContractBroken");
+                
+                action = demo => { var x = demo.NormalReadWrite; };
+                yield return new TestCaseData(action, null)
+                    .SetName($"AutoProperty_NormalReadWrite_GetDoesNotThrow");
 
-            Assert.DoesNotThrow(() => {
-                var x = consumer.ContractReadWrite;
-            });
-        }
+                action = demo => { demo.NormalReadWrite = null; };
+                yield return new TestCaseData(action, null)
+                    .SetName($"AutoProperty_NormalReadWrite_SetDoesNotThrow");
 
-        [Test]
-        public void AutoProperty_ContractReadWrite_GetThrowsIfContractBroken() {
-            var consumer = GetConsumer();
+                action = demo => { var x = demo.ContractReadWrite; };
+                yield return new TestCaseData(action, typeof(PostconditionException))
+                    .SetName($"AutoProperty_ContractReadWrite_GetThrowsIfContractBroken");
 
-            Assert.Throws<PostconditionException>(() => {
-                var x = consumer.ContractReadWrite;
-            });
-        }
-
-        [Test]
-        public void AutoProperty_ContractReadWrite_SetDoesNotThrowIfContractMet() {
-            var consumer = GetConsumer();
-
-            Assert.DoesNotThrow(() => {
-                consumer.ContractReadWrite = "test";
-            });
-        }
-
-        [Test]
-        public void AutoProperty_ContractReadWrite_SetThrowsIfContractBroken() {
-            var consumer = GetConsumer();
-
-            Assert.Throws<PreconditionException>(() => {
-                consumer.ContractReadWrite = null;
-            });
-        }
-        #endregion        
+                action = demo => { demo.ContractReadWrite = null; };
+                yield return new TestCaseData(action, typeof(PreconditionException))
+                    .SetName($"AutoProperty_ContractReadWrite_SetThrowsIfContractBroken");
+            }
+        }    
     }
 }

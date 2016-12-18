@@ -13,7 +13,7 @@ namespace Traction {
     sealed class AutoPropertyExpander : RewriterBase {
 
         private AutoPropertyExpander(SemanticModel model, ICompileContext context)
-            : base(model, context) { }
+            : base(model, context, "Expanded automatically implemented property.") { }
 
         public static AutoPropertyExpander Create(SemanticModel model, ICompileContext context) =>
             new AutoPropertyExpander(model, context);
@@ -42,7 +42,9 @@ namespace Traction {
 
             this.originalTypeDeclarationNode = node;
             this.usedIdentifiers = IdentifierFactory.GetUsedIdentifiers(node, model).ToList();
-            return TryRewrite(node, ExpandAutoProperties);
+            return nodeRewriter
+                .Try(node, ExpandAutoProperties)
+                .Result;
         }
 
         private TNode ExpandAutoProperties<TNode>(TNode typeDeclaration)
@@ -51,7 +53,7 @@ namespace Traction {
             var propertiesToExpand = typeDeclaration
                 .DescendantNodes()
                 .OfType<PropertyDeclarationSyntax>()
-                .Where(prop => prop.HasAttributeExtending<ContractAttribute>(model)
+                .Where(prop => prop.HasAttributeExtending<PropertyDeclarationSyntax, ContractAttribute>(model)
                     && prop.IsAutoImplentedProperty())
                 .Select(prop => new {
                     Name = prop.Identifier.ValueText,
@@ -126,6 +128,6 @@ namespace Traction {
                             .AddRange(accessors))));
 
             return result;
-        }        
+        }
     }
 }

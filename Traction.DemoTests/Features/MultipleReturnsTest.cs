@@ -11,35 +11,35 @@ namespace Traction.DemoTests {
     [TestFixture]
     public class MultipleReturnsTest {
 
-        private MultipleReturnsConsumer GetConsumer() => new MultipleReturnsConsumer();
+        private MultipleReturnsDemo GetDemo() => new MultipleReturnsDemo();
         
         #region ContractProperty
         [Test]
         public void MultipleReturns_ContractProperty_DoesNotThrowIfContractMet() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
             //This property internally toggles between returning two fields from two return statements.
-            consumer._returnValue1 = "test1";
-            consumer._returnValue2 = "test2";
+            demo._returnValue1 = "test1";
+            demo._returnValue2 = "test2";
 
             Assert.DoesNotThrow(() => {
                 //Getting value twice will hit check return statements.
-                var x = consumer.ContractProperty;
-                var y = consumer.ContractProperty;
+                var x = demo.ContractProperty;
+                var y = demo.ContractProperty;
                 Assert.AreNotEqual(x, y);
             });
         }
 
         [Test]
         public void MultipleReturns_ContractProperty_ThrowsIfContractBroken() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
             //This property internally toggles between returning two fields from two return statements.
-            consumer._returnValue1 = null;
-            consumer._returnValue2 = null;
+            demo._returnValue1 = null;
+            demo._returnValue2 = null;
 
             //Getting value twice will hit check return statements.
             for (var i = 0; i <= 1; i++) {
                 Assert.Throws<PostconditionException>(() => {
-                    var x = consumer.ContractProperty;
+                    var x = demo.ContractProperty;
                 });
             }
         }
@@ -49,29 +49,29 @@ namespace Traction.DemoTests {
         #region PostconditionMethod
         [Test]
         public void MultipleReturns_PostconditionMethod_DoesNotThrowIfContractMet() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
             //This method internally toggles between returning two fields from two return statements.
-            consumer._returnValue1 = "test1";
-            consumer._returnValue2 = "test2";
+            demo._returnValue1 = "test1";
+            demo._returnValue2 = "test2";
 
             Assert.DoesNotThrow(() => {
                 //Getting value twice will hit check return statements.
-                consumer.PostconditionMethod();
-                consumer.PostconditionMethod();
+                demo.PostconditionMethod();
+                demo.PostconditionMethod();
             });
         }
 
         [Test]
         public void MultipleReturns_PostconditionMethod_ThrowsIfContractBroken() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
             //This method internally toggles between returning two fields from two return statements.
-            consumer._returnValue1 = null;
-            consumer._returnValue2 = null;
+            demo._returnValue1 = null;
+            demo._returnValue2 = null;
 
             //Getting value twice will hit check return statements.
             for (var i = 0; i <= 1; i++) {
                 Assert.Throws<PostconditionException>(() => {
-                    consumer.PostconditionMethod();
+                    demo.PostconditionMethod();
                 });
             }
         }
@@ -81,10 +81,10 @@ namespace Traction.DemoTests {
 
         [Test]
         public void MultipleReturns_PostconditionMethodWithStatementLambda_DoesNotThrow() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() => {
-                var x = consumer.PostconditionMethodWithStatementLambda();
+                var x = demo.PostconditionMethodWithStatementLambda();
             });
         }
 

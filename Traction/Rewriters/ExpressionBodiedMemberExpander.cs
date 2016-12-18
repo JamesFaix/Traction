@@ -11,7 +11,7 @@ namespace Traction {
     sealed class ExpressionBodiedMemberExpander : RewriterBase {
 
         private ExpressionBodiedMemberExpander(SemanticModel model, ICompileContext context)
-            : base(model, context) { }
+            : base(model, context, "Expanded expression-bodied member.") { }
 
         public static ExpressionBodiedMemberExpander Create(SemanticModel model, ICompileContext context) =>
             new ExpressionBodiedMemberExpander(model, context);
@@ -23,10 +23,10 @@ namespace Traction {
             var expr = node.ExpressionBody.Expression;
             var statement = SyntaxFactory.ReturnStatement(expr);
 
-            return TryRewrite(node, 
-                n => n
-                    .WithExpressionBody(null)
-                    .WithBody(SyntaxFactory.Block(statement)));
+            return nodeRewriter
+                .Try(node, n => n.WithExpressionBody(null)
+                                 .WithBody(SyntaxFactory.Block(statement)))
+                .Result;
         }
 
         public override SyntaxNode VisitOperatorDeclaration(OperatorDeclarationSyntax node) {
@@ -36,10 +36,10 @@ namespace Traction {
             var expr = node.ExpressionBody.Expression;
             var statement = SyntaxFactory.ReturnStatement(expr);
 
-            return TryRewrite(node,
-                n => n
-                    .WithExpressionBody(null)
-                    .WithBody(SyntaxFactory.Block(statement)));
+            return nodeRewriter
+                .Try(node, n => n.WithExpressionBody(null)
+                                 .WithBody(SyntaxFactory.Block(statement)))
+                .Result;
         }
 
         public override SyntaxNode VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node) {
@@ -49,10 +49,10 @@ namespace Traction {
             var expr = node.ExpressionBody.Expression;
             var statement = SyntaxFactory.ReturnStatement(expr);
 
-            return TryRewrite(node,
-                n => n
-                    .WithExpressionBody(null)
-                    .WithBody(SyntaxFactory.Block(statement)));
+            return nodeRewriter
+                .Try(node, n => n.WithExpressionBody(null)
+                                 .WithBody(SyntaxFactory.Block(statement)))
+                .Result;
         }
 
         public override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node) {
@@ -63,17 +63,17 @@ namespace Traction {
             var statement = SyntaxFactory.ReturnStatement(expr);
 
             var getter = SyntaxFactory.AccessorDeclaration(
-                SyntaxKind.GetAccessorDeclaration, 
+                SyntaxKind.GetAccessorDeclaration,
                 SyntaxFactory.Block(statement));
 
             var accessors = SyntaxFactory.AccessorList(
                 SyntaxFactory.List<AccessorDeclarationSyntax>()
                 .Add(getter));
 
-            return TryRewrite(node,
-                n => n
-                    .WithExpressionBody(null)
-                    .WithAccessorList(accessors));
+            return nodeRewriter
+                .Try(node, n => n.WithExpressionBody(null)
+                                 .WithAccessorList(accessors))
+                .Result;
         }
     }
 }

@@ -3,7 +3,7 @@
     /// <summary>
     /// Class to demonstrate contracts being applied uniformly on readonly, writeonly, and read/write properties.
     /// </summary>
-    public class SingleAccessorPropertyConsumer {
+    public class SingleAccessorPropertyDemo {
 
         public string _normalPropertyField;
         public string _contractReadonlyProeprtyField;

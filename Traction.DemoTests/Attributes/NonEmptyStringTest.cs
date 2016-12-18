@@ -7,27 +7,27 @@ namespace Traction.DemoTests {
     [TestFixture]
     public class NonEmptyStringTest {
 
-        private NonEmptyConsumer GetConsumer() => new NonEmptyConsumer();
+        private NonEmptyConsumer GetDemo() => new NonEmptyConsumer();
 
         #region Properties
 
         #region NormalProperty
         [Test]
         public void NonEmpty_NormalProperty_GetDoesNotThrow() {
-            var consumer = GetConsumer();
-            consumer._normalProperty = "";
+            var demo = GetDemo();
+            demo._normalProperty = "";
 
             Assert.DoesNotThrow(() => {
-                var x = consumer.NormalReadWriteProperty;
+                var x = demo.NormalReadWriteProperty;
             });
         }
 
         [Test]
         public void NonEmpty_NormalProperty_SetDoesNotThrow() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() => {
-                consumer.NormalReadWriteProperty = "";
+                demo.NormalReadWriteProperty = "";
             });
         }
         #endregion
@@ -35,58 +35,58 @@ namespace Traction.DemoTests {
         #region ContractReadWriteProperty
         [Test]
         public void NonEmpty_ContractReadWriteProperty_GetDoesNotThrowIfNotEmpty() {
-            var consumer = GetConsumer();
-            consumer._readWritePropertyWithContract = "test";
+            var demo = GetDemo();
+            demo._readWritePropertyWithContract = "test";
 
             Assert.DoesNotThrow(() => {
-                var x = consumer.ContractReadWriteProperty;
+                var x = demo.ContractReadWriteProperty;
             });
         }
 
         [Test]
         public void NonEmpty_ContractReadWriteProperty_GetThrowsIfEmpty() {
-            var consumer = GetConsumer();
-            consumer._readWritePropertyWithContract = "";
+            var demo = GetDemo();
+            demo._readWritePropertyWithContract = "";
 
             Assert.Throws<PostconditionException>(() => {
-                var x = consumer.ContractReadWriteProperty;
+                var x = demo.ContractReadWriteProperty;
             });
         }
 
         [Test]
         public void NonEmpty_ContractReadWriteProperty_GetThrowsIfNull() {
-            var consumer = GetConsumer();
-            consumer._readWritePropertyWithContract = null;
+            var demo = GetDemo();
+            demo._readWritePropertyWithContract = null;
 
             Assert.Throws<PostconditionException>(() => {
-                var x = consumer.ContractReadWriteProperty;
+                var x = demo.ContractReadWriteProperty;
             });
         }
 
         [Test]
         public void NonEmpty_ContractReadWriteProperty_SetDoesNotThrowIfNotEmpty() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() => {
-                consumer.ContractReadWriteProperty = "test";
+                demo.ContractReadWriteProperty = "test";
             });
         }
 
         [Test]
         public void NonEmpty_ContractReadWriteProperty_SetThrowsIfEmpty() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PreconditionException>(() => {
-                consumer.ContractReadWriteProperty = "";
+                demo.ContractReadWriteProperty = "";
             });
         }
 
         [Test]
         public void NonEmpty_ContractReadWriteProperty_SetThrowsIfNull() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PreconditionException>(() => {
-                consumer.ContractReadWriteProperty = null;
+                demo.ContractReadWriteProperty = null;
             });
         }
         #endregion
@@ -98,110 +98,110 @@ namespace Traction.DemoTests {
         #region NormalMethod
         [Test]
         public void NonEmpty_NormalMethod_DoesNotThrow() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() =>
-                consumer.NormalMethod());
+                demo.NormalMethod());
         }
         #endregion
 
         #region PreconditionMethod
         [Test]
         public void NonEmpty_PreconditionMethod_DoesNotThrowIfArgNotEmpty() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() =>
-                consumer.PreconditionMethod("test"));
+                demo.PreconditionMethod("test"));
         }
 
         [Test]
         public void NonEmpty_PreconditionMethod_ThrowsIfArgEmpty() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PreconditionException>(() =>
-                consumer.PreconditionMethod(""));
+                demo.PreconditionMethod(""));
         }
 
         [Test]
         public void NonEmpty_PreconditionMethod_ThrowsIfArgNull() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PreconditionException>(() =>
-                consumer.PreconditionMethod(null));
+                demo.PreconditionMethod(null));
         }
         #endregion
 
         #region PostconditionMethod
         [Test]
         public void NonEmpty_PostconditionMethod_DoesNotThrowIfResultNotEmpty() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() =>
-                consumer.PostconditionMethod("test"));
+                demo.PostconditionMethod("test"));
         }
 
         [Test]
         public void NonEmpty_PostconditionMethod_ThrowsIfResultEmpty() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PostconditionException>(() =>
-                consumer.PostconditionMethod(""));
+                demo.PostconditionMethod(""));
         }
 
 
         [Test]
         public void NonEmpty_PostconditionMethod_ThrowsIfResultNull() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PostconditionException>(() =>
-                consumer.PostconditionMethod(null));
+                demo.PostconditionMethod(null));
         }
         #endregion
 
         #region PreAndPostconditionMethod
         [Test]
         public void NonEmpty_PreAndPostconditionMethod_DoesNotThrowIfArgAndResultNotEmpty() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() =>
-                consumer.PreAndPostconditionMethod("test"));
+                demo.PreAndPostconditionMethod("test"));
         }
 
         [Test]
         public void NonEmpty_PreAndPostconditionMethod_ThrowsIfArgEmpty() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PreconditionException>(() =>
-                consumer.PreAndPostconditionMethod(""));
+                demo.PreAndPostconditionMethod(""));
         }
 
         [Test]
         public void NonEmpty_PreAndPostconditionMethod_ThrowsIfResultEmpty() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PostconditionException>(() =>
-                consumer.PreAndPostconditionMethod("a"));
+                demo.PreAndPostconditionMethod("a"));
         }
         #endregion
 
         #region MultiplePreconditionsMethod
         [Test]
         public void NonEmpty_MultiplePreconditionsMethod_DoesNotThrowIfNoArgsEmpty() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() =>
-                consumer.MultiplePreconditionsMethod("test", "testing"));
+                demo.MultiplePreconditionsMethod("test", "testing"));
         }
 
         [Test]
         public void NonEmpty_MultiplePreconditionsMethod_ThrowsIfAnyArgEmpty() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PreconditionException>(() =>
-                consumer.MultiplePreconditionsMethod("test", ""));
+                demo.MultiplePreconditionsMethod("test", ""));
 
             Assert.Throws<PreconditionException>(() =>
-                consumer.MultiplePreconditionsMethod("", "test"));
+                demo.MultiplePreconditionsMethod("", "test"));
         }
         #endregion
 

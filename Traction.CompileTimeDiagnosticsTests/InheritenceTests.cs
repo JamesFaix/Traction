@@ -15,7 +15,7 @@ namespace Traction.DiagnosticsTests {
             var diagnostics = TestHelper.GetDiagnostics(compilation);
 
             //Assert
-            Assert.IsFalse(diagnostics.Any());
+            Assert.IsTrue(diagnostics.All(d => d.Id == "TR0000"));
         }
 
         private static IEnumerable<TestCaseData> AbstractMemberCases {
@@ -57,7 +57,7 @@ namespace Traction.DiagnosticsTests {
 
             //Assert
             if (isValid) {
-                Assert.IsFalse(diagnostics.Any());
+                Assert.IsTrue(diagnostics.All(d => d.Id == "TR0000"));
             }
             else {
                 Assert.IsTrue(diagnostics.Any(d => d.Id == "TR0004"));

@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;CONFIRM_REWRITES</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -70,11 +70,13 @@
     <Compile Include="Attributes\NonEmptyAttribute.cs" />
     <Compile Include="Attributes\NonNullAttribute.cs" />
     <Compile Include="Contracts\Contract.cs" />
+    <Compile Include="Exceptions\DiagnosticChecker.cs" />
     <Compile Include="Exceptions\PreconditionException.cs" />
     <Compile Include="Exceptions\PostconditionException.cs" />
     <Compile Include="ExtensionMethods\AttributeSyntaxExtensions.cs" />
     <Compile Include="ExtensionMethods\BaseMethodDeclarationSyntaxExtensions.cs" />
     <Compile Include="ExtensionMethods\ParameterSyntaxExtensions.cs" />
+    <Compile Include="ExtensionMethods\MemberSymbolExtensions.cs" />
     <Compile Include="ExtensionMethods\SyntaxNodeExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeSymbolExtensions.cs" />
@@ -85,6 +87,7 @@
     <Compile Include="Contracts\NonDefaultContract.cs" />
     <Compile Include="Contracts\NonEmptyContract.cs" />
     <Compile Include="Rewriters\AutoPropertyExpander.cs" />
+    <Compile Include="Rewriters\NodeRewriteAttempt.cs" />
     <Compile Include="Rewriters\ExpressionBodiedMemberExpander.cs" />
     <Compile Include="Rewriters\IdentifierFactory.cs" />
     <Compile Include="Modules\CompileModuleBase.cs" />
@@ -96,11 +99,12 @@
     <Compile Include="Contracts\NonNullContract.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ExtensionMethods\PropertySyntaxExtensions.cs" />
+    <Compile Include="Rewriters\NodeRewriter.cs" />
+    <Compile Include="Rewriters\NodeRewriteStatus.cs" />
     <Compile Include="Rewriters\RewriterBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Modules\ModuleDiagram.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

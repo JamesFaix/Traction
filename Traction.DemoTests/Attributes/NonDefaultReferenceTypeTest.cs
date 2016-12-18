@@ -10,27 +10,27 @@ namespace Traction.DemoTests {
     [TestFixture]
     public class NonDefaultReferenceTypeTest {
 
-        private NonDefaultConsumer GetConsumer() => new NonDefaultConsumer();
+        private NonDefaultConsumer GetDemo() => new NonDefaultConsumer();
 
         #region Properties
 
         #region NormalProperty
         [Test]
         public void NonDefault_NormalReferenceTypeProperty_GetDoesNotThrow() {
-            var consumer = GetConsumer();
-            consumer._normalReferenceTypeProperty = null;
+            var demo = GetDemo();
+            demo._normalReferenceTypeProperty = null;
 
             Assert.DoesNotThrow(() => {
-                var x = consumer.NormalReadWriteReferenceTypeProperty;
+                var x = demo.NormalReadWriteReferenceTypeProperty;
             });
         }
 
         [Test]
         public void NonDefault_NormalReferenceTypeProperty_SetDoesNotThrow() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() => {
-                consumer.NormalReadWriteReferenceTypeProperty = null;
+                demo.NormalReadWriteReferenceTypeProperty = null;
             });
         }
         #endregion
@@ -38,39 +38,39 @@ namespace Traction.DemoTests {
         #region ContractReadWriteProperty
         [Test]
         public void NonDefault_ContractReadWriteReferenceTypeProperty_GetDoesNotThrowIfNotDefault() {
-            var consumer = GetConsumer();
-            consumer._contractReadWriteReferenceTypeProperty = "test";
+            var demo = GetDemo();
+            demo._contractReadWriteReferenceTypeProperty = "test";
 
             Assert.DoesNotThrow(() => {
-                var x = consumer.ContractReadWriteReferenceTypeProperty;
+                var x = demo.ContractReadWriteReferenceTypeProperty;
             });
         }
 
         [Test]
         public void NonDefault_ContractReadWriteReferenceTypeProperty_GetThrowsIfDefault() {
-            var consumer = GetConsumer();
-            consumer._contractReadWriteReferenceTypeProperty = null;
+            var demo = GetDemo();
+            demo._contractReadWriteReferenceTypeProperty = null;
 
             Assert.Throws<PostconditionException>(() => {
-                var x = consumer.ContractReadWriteReferenceTypeProperty;
+                var x = demo.ContractReadWriteReferenceTypeProperty;
             });
         }
 
         [Test]
         public void NonDefault_ContractReadWriteReferenceTypeProperty_SetDoesNotThrowIfNotDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() => {
-                consumer.ContractReadWriteReferenceTypeProperty = "test";
+                demo.ContractReadWriteReferenceTypeProperty = "test";
             });
         }
 
         [Test]
         public void NonDefault_ContractReadWriteReferenceTypeProperty_SetThrowsIfDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PreconditionException>(() => {
-                consumer.ContractReadWriteReferenceTypeProperty = null;
+                demo.ContractReadWriteReferenceTypeProperty = null;
             });
         }
         #endregion
@@ -82,72 +82,72 @@ namespace Traction.DemoTests {
         #region NormalMethod
         [Test]
         public void NonDefault_NormalMethod_DoesNotThrow() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() =>
-                consumer.NormalMethod());
+                demo.NormalMethod());
         }
         #endregion
 
         #region PreconditionMethod
         [Test]
         public void NonDefault_PreconditionReferenceTypeMethod_DoesNotThrowIfArgNotDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() =>
-                consumer.PreconditionReferenceTypeMethod("test"));
+                demo.PreconditionReferenceTypeMethod("test"));
         }
 
         [Test]
         public void NonDefault_PreconditionReferenceTypeMethod_ThrowsIfArgDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PreconditionException>(() =>
-                consumer.PreconditionReferenceTypeMethod(null));
+                demo.PreconditionReferenceTypeMethod(null));
         }
         #endregion
 
         #region PostconditionMethod
         [Test]
         public void NonDefault_PostconditionReferenceTypeMethod_DoesNotThrowIfResultNotDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() =>
-                consumer.PostconditionReferenceTypeMethod("test"));
+                demo.PostconditionReferenceTypeMethod("test"));
         }
 
         [Test]
         public void NonDefault_PostconditionReferenceTypeMethod_ThrowsIfResultDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PostconditionException>(() =>
-                consumer.PostconditionReferenceTypeMethod(null));
+                demo.PostconditionReferenceTypeMethod(null));
         }
         #endregion
 
         #region PreAndPostconditionMethod
         [Test]
         public void NonDefault_PreAndPostconditioReferenceTypenMethod_DoesNotThrowIfArgAndResultNotDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() =>
-                consumer.PreAndPostconditionReferenceTypeMethod("test"));
+                demo.PreAndPostconditionReferenceTypeMethod("test"));
         }
 
         [Test]
         public void NonDefault_PreAndPostconditionReferenceTypeMethod_ThrowsIfArgDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PreconditionException>(() =>
-                consumer.PreAndPostconditionReferenceTypeMethod(null));
+                demo.PreAndPostconditionReferenceTypeMethod(null));
         }
 
         [Test]
         public void NonDefault_PreAndPostconditionReferenceTypeMethod_ThrowsIfResultDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PostconditionException>(() =>
-                consumer.PreAndPostconditionReferenceTypeMethod(""));
+                demo.PreAndPostconditionReferenceTypeMethod(""));
         }
         #endregion
         

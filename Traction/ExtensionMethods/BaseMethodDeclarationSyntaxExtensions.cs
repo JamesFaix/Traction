@@ -61,5 +61,12 @@ namespace Traction {
                                     .ContainingType
                                     .FindImplementationForInterfaceMember(method)));
         }
+
+        public static bool IsOverrideOrInterface(this BaseMethodDeclarationSyntax node, SemanticModel model) {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            return node.IsOverride() || node.IsInterfaceImplementation(model);
+        }
     }
 }
