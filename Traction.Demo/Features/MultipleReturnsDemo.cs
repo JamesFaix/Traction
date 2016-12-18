@@ -7,7 +7,7 @@ namespace Traction.Demo {
     /// Correct multiple-return-statement behavior for any attribute can be assumed 
     /// if that attribute can be applied to normal methods/properties, and this class works correctly.
     /// </summary>
-    public class MultipleReturnsConsumer {
+    public class MultipleReturnsDemo {
 
         public string _returnValue1;
         public string _returnValue2;

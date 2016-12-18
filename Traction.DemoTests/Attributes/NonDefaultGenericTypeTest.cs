@@ -7,38 +7,38 @@ namespace Traction.DemoTests {
     [TestFixture]
     public class NonDefaultGenericTypeTest {
 
-        private NonDefaultConsumer GetConsumer() => new NonDefaultConsumer();
+        private NonDefaultConsumer GetDemo() => new NonDefaultConsumer();
 
         [Test]
         public void NonDefault_PreconditionGenericMethod_DoesNotThrowIfNotDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
             Func<int> function = () => 1;
 
             Assert.DoesNotThrow(() =>
-                consumer.PreconditionGenericMethod(function));
+                demo.PreconditionGenericMethod(function));
         }
 
         [Test]
         public void NonDefault_PreconditionGenericMethod_ThrowsIfDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
             Assert.Throws<PreconditionException>(() =>
-                consumer.PreconditionGenericMethod(null));
+                demo.PreconditionGenericMethod(null));
         }
 
         [Test]
         public void NonDefault_PostconditionGenericMethod_DoesNotThrowIfNotDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
             Func<int> function = () => 1;
 
             Assert.DoesNotThrow(() =>
-                consumer.PostconditionGenericMethod(function));
+                demo.PostconditionGenericMethod(function));
         }
 
         [Test]
         public void NonDefault_PostconditionGenericMethod_ThrowsIfDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
             Assert.Throws<PostconditionException>(() =>
-                consumer.PostconditionGenericMethod(null));
+                demo.PostconditionGenericMethod(null));
         }
     }
 }

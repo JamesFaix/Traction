@@ -7,52 +7,52 @@ namespace Traction.DemoTests {
     [TestFixture]
     public class NonDefaultNullableTest {
 
-        private NonDefaultConsumer GetConsumer() => new NonDefaultConsumer();
+        private NonDefaultConsumer GetDemo() => new NonDefaultConsumer();
 
         [Test]
         public void NonDefault_PreconditionNullableMethod_DoesNotThrowIfNotDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() =>
-                consumer.PreconditionNullableMethod(123));
+                demo.PreconditionNullableMethod(123));
         }
 
         [Test]
         public void NonDefault_PreconditionNullableMethod_DoesNotThrowIfNull() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() =>
-                consumer.PreconditionNullableMethod(null));
+                demo.PreconditionNullableMethod(null));
         }
 
         [Test]
         public void NonDefault_PreconditionNullableMethod_ThrowsIfDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
             Assert.Throws<PreconditionException>(() =>
-                consumer.PreconditionNullableMethod(0));
+                demo.PreconditionNullableMethod(0));
         }
 
         [Test]
         public void NonDefault_PostconditionNullableMethod_DoesNotThrowIfNotDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() =>
-                consumer.PostconditionNullableMethod(123));
+                demo.PostconditionNullableMethod(123));
         }
 
         [Test]
         public void NonDefault_PostconditionNullableMethod_DoesNotThrowIfNull() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() =>
-                consumer.PostconditionNullableMethod(null));
+                demo.PostconditionNullableMethod(null));
         }
 
         [Test]
         public void NonDefault_PostconditionNullableMethod_ThrowsIfDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
             Assert.Throws<PostconditionException>(() =>
-                consumer.PostconditionNullableMethod(0));
+                demo.PostconditionNullableMethod(0));
         }
     }
 }

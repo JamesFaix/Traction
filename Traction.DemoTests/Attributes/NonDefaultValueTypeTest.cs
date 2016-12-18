@@ -7,27 +7,27 @@ namespace Traction.DemoTests {
     [TestFixture]
     public class NonDefaultValueTypeTest {
 
-        private NonDefaultConsumer GetConsumer() => new NonDefaultConsumer();
+        private NonDefaultConsumer GetDemo() => new NonDefaultConsumer();
 
         #region Properties
 
         #region NormalProperty
         [Test]
         public void NonDefault_NormalValueTypeProperty_GetDoesNotThrow() {
-            var consumer = GetConsumer();
-            consumer._normalValueTypeProperty = 0;
+            var demo = GetDemo();
+            demo._normalValueTypeProperty = 0;
 
             Assert.DoesNotThrow(() => {
-                var x = consumer.NormalReadWriteValueTypeProperty;
+                var x = demo.NormalReadWriteValueTypeProperty;
             });
         }
 
         [Test]
         public void NonDefault_NormalValueTypeProperty_SetDoesNotThrow() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() => {
-                consumer.NormalReadWriteValueTypeProperty = 0;
+                demo.NormalReadWriteValueTypeProperty = 0;
             });
         }
         #endregion
@@ -35,39 +35,39 @@ namespace Traction.DemoTests {
         #region ContractReadWriteProperty
         [Test]
         public void NonDefault_ContractReadWriteValueTypeProperty_GetDoesNotThrowIfNotDefault() {
-            var consumer = GetConsumer();
-            consumer._contractReadWriteValueTypeProperty = 1;
+            var demo = GetDemo();
+            demo._contractReadWriteValueTypeProperty = 1;
 
             Assert.DoesNotThrow(() => {
-                var x = consumer.ContractReadWriteValueTypeProperty;
+                var x = demo.ContractReadWriteValueTypeProperty;
             });
         }
 
         [Test]
         public void NonDefault_ContractReadWriteValueTypeProperty_GetThrowsIfDefault() {
-            var consumer = GetConsumer();
-            consumer._contractReadWriteValueTypeProperty = 0;
+            var demo = GetDemo();
+            demo._contractReadWriteValueTypeProperty = 0;
 
             Assert.Throws<PostconditionException>(() => {
-                var x = consumer.ContractReadWriteValueTypeProperty;
+                var x = demo.ContractReadWriteValueTypeProperty;
             });
         }
 
         [Test]
         public void NonDefault_ContractReadWriteValueTypeProperty_SetDoesNotThrowIfNotDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() => {
-                consumer.ContractReadWriteValueTypeProperty = 1;
+                demo.ContractReadWriteValueTypeProperty = 1;
             });
         }
 
         [Test]
         public void NonDefault_ContractReadWriteValueTypeProperty_SetThrowsIfDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PreconditionException>(() => {
-                consumer.ContractReadWriteValueTypeProperty = 0;
+                demo.ContractReadWriteValueTypeProperty = 0;
             });
         }
         #endregion
@@ -79,72 +79,72 @@ namespace Traction.DemoTests {
         #region NormalMethod
         [Test]
         public void NonDefault_NormalMethod_DoesNotThrow() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() =>
-                consumer.NormalMethod());
+                demo.NormalMethod());
         }
         #endregion
 
         #region PreconditionMethod
         [Test]
         public void NonDefault_PreconditionValueTypeMethod_DoesNotThrowIfArgNotDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() =>
-                consumer.PreconditionValueTypeMethod(1));
+                demo.PreconditionValueTypeMethod(1));
         }
 
         [Test]
         public void NonDefault_PreconditionValueTypeMethod_ThrowsIfArgDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PreconditionException>(() =>
-                consumer.PreconditionValueTypeMethod(0));
+                demo.PreconditionValueTypeMethod(0));
         }
         #endregion
 
         #region PostconditionMethod
         [Test]
         public void NonDefault_PostconditionValueTypeMethod_DoesNotThrowIfResultNotDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() =>
-                consumer.PostconditionValueTypeMethod(1));
+                demo.PostconditionValueTypeMethod(1));
         }
 
         [Test]
         public void NonDefault_PostconditionValueTypeMethod_ThrowsIfResultDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PostconditionException>(() =>
-                consumer.PostconditionValueTypeMethod(0));
+                demo.PostconditionValueTypeMethod(0));
         }
         #endregion
 
         #region PreAndPostconditionMethod
         [Test]
         public void NonDefault_PreAndPostconditioValueTypenMethod_DoesNotThrowIfArgAndResultNotDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.DoesNotThrow(() =>
-                consumer.PreAndPostconditionValueTypeMethod(100));
+                demo.PreAndPostconditionValueTypeMethod(100));
         }
 
         [Test]
         public void NonDefault_PreAndPostconditionValueTypeMethod_ThrowsIfArgDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PreconditionException>(() =>
-                consumer.PreAndPostconditionValueTypeMethod(0));
+                demo.PreAndPostconditionValueTypeMethod(0));
         }
 
         [Test]
         public void NonDefault_PreAndPostconditionValueTypeMethod_ThrowsIfResultDefault() {
-            var consumer = GetConsumer();
+            var demo = GetDemo();
 
             Assert.Throws<PostconditionException>(() =>
-                consumer.PreAndPostconditionValueTypeMethod(1));
+                demo.PreAndPostconditionValueTypeMethod(1));
         }
         #endregion
 

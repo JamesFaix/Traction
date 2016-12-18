@@ -84,14 +84,13 @@
     <Compile Include="Attributes\NonPositiveConsumer.cs" />
     <Compile Include="Attributes\PositiveConsumer.cs" />
     <Compile Include="Features\DerivedClassDemo.cs" />
-    <Compile Include="Features\AutoPropertyConsumer.cs" />
-    <Compile Include="Features\ConversionConsumer.cs" />
-    <Compile Include="Features\ExpressionBodiedMemberConsumer.cs" />
+    <Compile Include="Features\AutoPropertyDemo.cs" />
+    <Compile Include="Features\ConversionDemo.cs" />
+    <Compile Include="Features\ExpressionBodyDemo.cs" />
     <Compile Include="Features\InterfaceDemo.cs" />
-    <Compile Include="Features\MultipleReturnsConsumer.cs" />
-    <Compile Include="Features\OperatorConsumer.cs" />
-    <Compile Include="Features\SingleAccessorPropertyConsumer.cs" />
-    <Compile Include="Features\InterfaceConsumer.cs" />
+    <Compile Include="Features\MultipleReturnsDemo.cs" />
+    <Compile Include="Features\OperatorDemo.cs" />
+    <Compile Include="Features\SingleAccessorPropertyDemo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

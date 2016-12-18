@@ -13,61 +13,61 @@ namespace Traction.DemoTests {
     [TestFixture]
     public class SingleAccessorPropertiesTest {
 
-        private SingleAccessorPropertyConsumer GetConsumer() => new SingleAccessorPropertyConsumer();
+        private SingleAccessorPropertyDemo GetDemo() => new SingleAccessorPropertyDemo();
 
         [Test, TestCaseSource(nameof(AllCases))]
-        public void Test(Action<SingleAccessorPropertyConsumer> action, Type exceptionType) {
-            var consumer = GetConsumer();
-            CustomAssert.Throws(exceptionType, () => action(consumer));
+        public void Test(Action<SingleAccessorPropertyDemo> action, Type exceptionType) {
+            var demo = GetDemo();
+            CustomAssert.Throws(exceptionType, () => action(demo));
         }
 
         private static IEnumerable<TestCaseData> AllCases {
             get {
-                Action<SingleAccessorPropertyConsumer> action;
+                Action<SingleAccessorPropertyDemo> action;
 
-                action = consumer => { var x = consumer.NormalReadWrite; };
+                action = demo => { var x = demo.NormalReadWrite; };
                 yield return new TestCaseData(action, null)
                     .SetName($"SingleAccessor_NormalReadWrite_GetDoesNotThrow");
 
-                action = consumer => { consumer.NormalReadWrite = null; };
+                action = demo => { demo.NormalReadWrite = null; };
                 yield return new TestCaseData(action, null)
                     .SetName($"SingleAccessor_NormalReadWrite_SetDoesNotThrow");
 
-                action = consumer => {
-                    consumer._contractReadonlyProeprtyField = "test";
-                    var x = consumer.ContractReadonly;
+                action = demo => {
+                    demo._contractReadonlyProeprtyField = "test";
+                    var x = demo.ContractReadonly;
                 };
                 yield return new TestCaseData(action, null)
                     .SetName($"SingleAccessor_ContractReadonly_DoesNotThrowIfContractMet");
 
-                action = consumer => { var x = consumer.ContractReadonly; };
+                action = demo => { var x = demo.ContractReadonly; };
                 yield return new TestCaseData(action, typeof(PostconditionException))
                     .SetName($"SingleAccessor_ContractReadonly_ThrowsIfContractBroken");
 
-                action = consumer => { consumer.ContractWriteonly = "test"; };
+                action = demo => { demo.ContractWriteonly = "test"; };
                 yield return new TestCaseData(action, null)
                     .SetName($"SingleAccessor_ContractWriteonly_DoesNotThrowIfContractMet");
 
-                action = consumer => { consumer.ContractWriteonly = null; };
+                action = demo => { demo.ContractWriteonly = null; };
                 yield return new TestCaseData(action, typeof(PreconditionException))
                     .SetName($"SingleAccessor_ContractWriteonly_ThrowsIfContractBroken");
 
-                action = consumer => {
-                    consumer._contractReadWritePropertyField = "test";
-                    var x = consumer.ContractReadWrite;
+                action = demo => {
+                    demo._contractReadWritePropertyField = "test";
+                    var x = demo.ContractReadWrite;
                 };
                 yield return new TestCaseData(action, null)
                     .SetName($"SingleAccessor_ContractReadWrite_GetDoesNotThrowIfContractMet");
 
-                action = consumer => { var x = consumer.ContractReadWrite; };
+                action = demo => { var x = demo.ContractReadWrite; };
                 yield return new TestCaseData(action, typeof(PostconditionException))
                     .SetName($"SingleAccessor_ContractReadWrite_GetThrowsIfContractBroken");
 
-                action = consumer => { consumer.ContractReadWrite = "test"; };
+                action = demo => { demo.ContractReadWrite = "test"; };
                 yield return new TestCaseData(action, null)
                     .SetName($"SingleAccessor_ContractReadWrite_SetDoesNotThrowIfContractMet");
 
-                action = consumer => { consumer.ContractReadWrite = null; };
+                action = demo => { demo.ContractReadWrite = null; };
                 yield return new TestCaseData(action, typeof(PreconditionException))
                     .SetName($"SingleAccessor_ContractReadWrite_SetThrowsIfContractBroken");
             }

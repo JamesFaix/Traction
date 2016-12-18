@@ -14,18 +14,18 @@ namespace Traction.DemoTests {
     [TestFixture]
     public class OperatorTest {
 
-        private OperatorConsumer GetConsumer() => new OperatorConsumer();
+        private OperatorDemo GetDemo() => new OperatorDemo();
 
         [Test, TestCaseSource(nameof(AllCases))]
-        public void Test(Action<OperatorConsumer, OperatorConsumer> action, Type exceptionType) {
-            var consumer1 = GetConsumer();
-            var consumer2 = GetConsumer();
+        public void Test(Action<OperatorDemo, OperatorDemo> action, Type exceptionType) {
+            var consumer1 = GetDemo();
+            var consumer2 = GetDemo();
             CustomAssert.Throws(exceptionType, () => action(consumer1, consumer2));
         }
 
         private static IEnumerable<TestCaseData> AllCases {
             get {
-                Action<OperatorConsumer, OperatorConsumer> action;
+                Action<OperatorDemo, OperatorDemo> action;
 
                 action = (consumer1, consumer2) => { var x = consumer1 + consumer2; };
                 yield return new TestCaseData(action, null)
@@ -35,7 +35,7 @@ namespace Traction.DemoTests {
                 yield return new TestCaseData(action, null)
                     .SetName($"Operator_Precondition_DoesNotThrowIfContractMet");
 
-                action = (consumer1, consumer2) => { var x = (null as OperatorConsumer) - consumer2; };
+                action = (consumer1, consumer2) => { var x = (null as OperatorDemo) - consumer2; };
                 yield return new TestCaseData(action, typeof(PreconditionException))
                     .SetName($"Operator_Precondition_ThrowsIfContractBroken");
 
@@ -43,7 +43,7 @@ namespace Traction.DemoTests {
                 yield return new TestCaseData(action, null)
                     .SetName($"Operator_Postcondition_DoesNotThrowIfContractMet");
 
-                action = (consumer1, consumer2) => { var x = consumer1 * (null as OperatorConsumer); };
+                action = (consumer1, consumer2) => { var x = consumer1 * (null as OperatorDemo); };
                 yield return new TestCaseData(action, typeof(PostconditionException))
                     .SetName($"Operator_Postcondition_ThrowsIfContractBroken");
 
@@ -51,7 +51,7 @@ namespace Traction.DemoTests {
                 yield return new TestCaseData(action, null)
                     .SetName($"Operator_PreAndPost_DoesNotThrowContractMet");
 
-                action = (consumer1, consumer2) => { var x = (null as OperatorConsumer) / consumer2; };
+                action = (consumer1, consumer2) => { var x = (null as OperatorDemo) / consumer2; };
                 yield return new TestCaseData(action, typeof(PreconditionException))
                     .SetName($"Operator_PreAndPost_ThrowsIfPreconditionBroken");
 

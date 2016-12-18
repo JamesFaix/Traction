@@ -15,50 +15,50 @@ namespace Traction.DemoTests {
     [TestFixture]
     public class ConversionTest {
 
-        private ConversionConsumer GetConsumer() => new ConversionConsumer();
+        private ConversionDemo GetDemo() => new ConversionDemo();
 
         [Test, TestCaseSource(nameof(AllCases))]
-        public void Test(Action<ConversionConsumer> action, Type exceptionType) {
-            var consumer = GetConsumer();
-            CustomAssert.Throws(exceptionType, () => action(consumer));
+        public void Test(Action<ConversionDemo> action, Type exceptionType) {
+            var demo = GetDemo();
+            CustomAssert.Throws(exceptionType, () => action(demo));
         }
 
         private static IEnumerable<TestCaseData> AllCases {
             get {
-                Action<ConversionConsumer> action;
+                Action<ConversionDemo> action;
 
-                action = consumer => { var x = (int)consumer; };
+                action = demo => { var x = (int)demo; };
                 yield return new TestCaseData(action, null)
                     .SetName($"Conversion_Normal_DoesNotThrow");
 
-                action = consumer => { var x = (long)consumer; };
+                action = demo => { var x = (long)demo; };
                 yield return new TestCaseData(action, null)
                     .SetName($"Conversion_Precondition_DoesNotThrowIfContractMet");
 
-                action = consumer => { var x = (long)(null as ConversionConsumer); };
+                action = demo => { var x = (long)(null as ConversionDemo); };
                 yield return new TestCaseData(action, typeof(PreconditionException))
                     .SetName($"Conversion_Precondition_ThrowsIfContractBroken");
 
-                action = consumer => { var x = (string)consumer; };
+                action = demo => { var x = (string)demo; };
                 yield return new TestCaseData(action, null)
                     .SetName($"Conversion_Postcondition_DoesNotThrowIfContractMet");
 
-                action = consumer => { var x = (string)(null as ConversionConsumer); };
+                action = demo => { var x = (string)(null as ConversionDemo); };
                 yield return new TestCaseData(action, typeof(PostconditionException))
                     .SetName($"Conversion_Postcondition_ThrowsIfContractBroken");
 
-                action = consumer => {
-                    consumer.testField = "test";
-                    var x = (ArrayList)consumer;
+                action = demo => {
+                    demo.testField = "test";
+                    var x = (ArrayList)demo;
                 };
                 yield return new TestCaseData(action, null)
                     .SetName($"Conversion_PreAndPostcondition_DoesNotThrowIfContractMet");
 
-                action = consumer => { var x = (ArrayList)(null as ConversionConsumer); };
+                action = demo => { var x = (ArrayList)(null as ConversionDemo); };
                 yield return new TestCaseData(action, typeof(PreconditionException))
                     .SetName($"Conversion_PreAndPostcondition_ThrowsIfPreconditionBroken");
 
-                action = consumer => { var x = (ArrayList)consumer; };
+                action = demo => { var x = (ArrayList)demo; };
                 yield return new TestCaseData(action, typeof(PostconditionException))
                     .SetName($"Conversion_PreAndPostcondition_ThrowsIfPostconditionBroken");
             }

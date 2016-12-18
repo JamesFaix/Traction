@@ -13,31 +13,31 @@ namespace Traction.DemoTests {
     [TestFixture]
     public class ExpressionBodiedMemberTest {
 
-        private ExpressionBodiedMemberConsumer GetConsumer() => new ExpressionBodiedMemberConsumer();
+        private ExpressionBodyDemo GetDemo() => new ExpressionBodyDemo();
 
         [Test, TestCaseSource(nameof(AllCases))]
-        public void Test(Action<ExpressionBodiedMemberConsumer> action, Type exceptionType) {
-            var consumer = GetConsumer();
-            CustomAssert.Throws(exceptionType, () => action(consumer));
+        public void Test(Action<ExpressionBodyDemo> action, Type exceptionType) {
+            var demo = GetDemo();
+            CustomAssert.Throws(exceptionType, () => action(demo));
         }
 
         private static IEnumerable<TestCaseData> AllCases {
             get {
-                Action<ExpressionBodiedMemberConsumer> action;
+                Action<ExpressionBodyDemo> action;
 
-                action = consumer => { var x = consumer.NormalProperty; };
+                action = demo => { var x = demo.NormalProperty; };
                 yield return new TestCaseData(action, null)
                     .SetName($"ExpressionBodiedMember_NormalProperty_DoesNotThrow");
 
-                action = consumer => { var x = consumer.ContractProperty; };
+                action = demo => { var x = demo.ContractProperty; };
                 yield return new TestCaseData(action, typeof(PostconditionException))
                     .SetName($"ExpressionBodiedMember_ContractProperty_ThrowsIfContractBroken");
 
-                action = consumer => { consumer.NormalMethod(); };
+                action = demo => { demo.NormalMethod(); };
                 yield return new TestCaseData(action, null)
                     .SetName($"ExpressionBodiedMember_NormalMethod_DoesNotThrow");
 
-                action = consumer => { consumer.PostconditionMethod(); };
+                action = demo => { demo.PostconditionMethod(); };
                 yield return new TestCaseData(action, typeof(PostconditionException))
                     .SetName($"ExpressionBodiedMember_PostconditionMethod_ThrowsIfContractBroken");
             }

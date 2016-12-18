@@ -15,20 +15,20 @@ namespace Traction.DemoTests {
         #region NormalProperty
         [Test]
         public void NonNull_NormalProperty_GetDoesNotThrow() {
-            var consumer = new NonNullConsumer();
-            consumer._normalProperty = null;
+            var demo = new NonNullConsumer();
+            demo._normalProperty = null;
 
             Assert.DoesNotThrow(() => {
-                var x = consumer.NormalReadWriteProperty;
+                var x = demo.NormalReadWriteProperty;
             });
         }
 
         [Test]
         public void NonNull_NormalProperty_SetDoesNotThrow() {
-            var consumer = new NonNullConsumer();
+            var demo = new NonNullConsumer();
 
             Assert.DoesNotThrow(() => {
-                consumer.NormalReadWriteProperty = null;
+                demo.NormalReadWriteProperty = null;
             });
         }
         #endregion
@@ -36,39 +36,39 @@ namespace Traction.DemoTests {
         #region ContractReadWriteProperty
         [Test]
         public void NonNull_ContractReadWriteProperty_GetDoesNotThrowIfNotNull() {
-            var consumer = new NonNullConsumer();
-            consumer._readWritePropertyWithContract = "test";
+            var demo = new NonNullConsumer();
+            demo._readWritePropertyWithContract = "test";
 
             Assert.DoesNotThrow(() => {
-                var x = consumer.ContractReadWriteProperty;
+                var x = demo.ContractReadWriteProperty;
             });
         }
 
         [Test]
         public void NonNull_ContractReadWriteProperty_GetThrowsIfNull() {
-            var consumer = new NonNullConsumer();
-            consumer._readWritePropertyWithContract = null;
+            var demo = new NonNullConsumer();
+            demo._readWritePropertyWithContract = null;
 
             Assert.Throws<PostconditionException>(() => {
-                var x = consumer.ContractReadWriteProperty;
+                var x = demo.ContractReadWriteProperty;
             });
         }
 
         [Test]
         public void NonNull_ContractReadWriteProperty_SetDoesNotThrowIfNotNull() {
-            var consumer = new NonNullConsumer();
+            var demo = new NonNullConsumer();
 
             Assert.DoesNotThrow(() => {
-                consumer.ContractReadWriteProperty = "test";
+                demo.ContractReadWriteProperty = "test";
             });
         }
 
         [Test]
         public void NonNull_ContractReadWriteProperty_SetThrowsIfNull() {
-            var consumer = new NonNullConsumer();
+            var demo = new NonNullConsumer();
 
             Assert.Throws<PreconditionException>(() => {
-                consumer.ContractReadWriteProperty = null;
+                demo.ContractReadWriteProperty = null;
             });
         }
         #endregion
@@ -80,95 +80,95 @@ namespace Traction.DemoTests {
         #region NormalMethod
         [Test]
         public void NonNull_NormalMethod_DoesNotThrow() {
-            var consumer = new NonNullConsumer();
+            var demo = new NonNullConsumer();
 
             Assert.DoesNotThrow(() =>
-                consumer.NormalMethod());
+                demo.NormalMethod());
         }
         #endregion
 
         #region PreconditionMethod
         [Test]
         public void NonNull_PreconditionMethod_DoesNotThrowIfArgNotNull() {
-            var consumer = new NonNullConsumer();
+            var demo = new NonNullConsumer();
 
             Assert.DoesNotThrow(() =>
-                consumer.PreconditionMethod("test"));
+                demo.PreconditionMethod("test"));
         }
 
         [Test]
         public void NonNull_PreconditionMethod_ThrowsIfArgNull() {
-            var consumer = new NonNullConsumer();
+            var demo = new NonNullConsumer();
 
             Assert.Throws<PreconditionException>(() =>
-                consumer.PreconditionMethod(null));
+                demo.PreconditionMethod(null));
         }
         #endregion
 
         #region PostconditionMethod
         [Test]
         public void NonNull_PostconditionMethod_DoesNotThrowIfResultNotNull() {
-            var consumer = new NonNullConsumer();
+            var demo = new NonNullConsumer();
 
             Assert.DoesNotThrow(() =>
-                consumer.PostconditionMethod("test"));
+                demo.PostconditionMethod("test"));
         }
 
         [Test]
         public void NonNull_PostconditionMethod_ThrowsIfResultNull() {
-            var consumer = new NonNullConsumer();
+            var demo = new NonNullConsumer();
 
             Assert.Throws<PostconditionException>(() =>
-                consumer.PostconditionMethod(null));
+                demo.PostconditionMethod(null));
         }
         #endregion
 
         #region PreAndPostconditionMethod
         [Test]
         public void NonNull_PreAndPostconditionMethod_DoesNotThrowIfArgAndResultNotNull() {
-            var consumer = new NonNullConsumer();
+            var demo = new NonNullConsumer();
             Func<string> textGenerator = () => "test";
 
             Assert.DoesNotThrow(() =>
-                consumer.PreAndPostconditionMethod(textGenerator));
+                demo.PreAndPostconditionMethod(textGenerator));
         }
 
         [Test]
         public void NonNull_PreAndPostconditionMethod_ThrowsIfArgNull() {
-            var consumer = new NonNullConsumer();
+            var demo = new NonNullConsumer();
 
             Assert.Throws<PreconditionException>(() =>
-                consumer.PreAndPostconditionMethod(null));
+                demo.PreAndPostconditionMethod(null));
         }
 
         [Test]
         public void NonNull_PreAndPostconditionMethod_ThrowsIfResultNull() {
-            var consumer = new NonNullConsumer();
+            var demo = new NonNullConsumer();
             Func<string> textGenerator = () => null;
 
             Assert.Throws<PostconditionException>(() =>
-                consumer.PreAndPostconditionMethod(textGenerator));
+                demo.PreAndPostconditionMethod(textGenerator));
         }
         #endregion
 
         #region MultiplePreconditionsMethod
         [Test]
         public void NonNull_MultiplePreconditionsMethod_DoesNotThrowIfNoArgsNull() {
-            var consumer = new NonNullConsumer();
+            var demo = new NonNullConsumer();
 
             Assert.DoesNotThrow(() =>
-                consumer.MultiplePreconditionsMethod("test", "testing"));
+                demo.MultiplePreconditionsMethod("test", "testing"));
         }
 
         [Test]
         public void NonNull_MultiplePreconditionsMethod_ThrowsIfAnyArgNull() {
-            var consumer = new NonNullConsumer();
+            var demo = new NonNullConsumer();
 
             Assert.Throws<PreconditionException>(() =>
-                consumer.MultiplePreconditionsMethod("test", null));
+                demo.MultiplePreconditionsMethod("test", null));
 
             Assert.Throws<PreconditionException>(() =>
-                consumer.MultiplePreconditionsMethod(null, "test"));
+                demo.MultiplePreconditionsMethod(null, "test"));
         }
         #endregion
         

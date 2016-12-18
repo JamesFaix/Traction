@@ -13,39 +13,39 @@ namespace Traction.DemoTests {
     [TestFixture]
     public class AutoPropertyTest {
 
-        private AutoPropertyConsumer GetConsumer() => new AutoPropertyConsumer();
+        private AutoPropertyDemo GetDemo() => new AutoPropertyDemo();
 
         [Test, TestCaseSource(nameof(AllCases))]
-        public void Test(Action<AutoPropertyConsumer> action, Type exceptionType) {
-            var consumer = GetConsumer();
-            CustomAssert.Throws(exceptionType, () => action(consumer));
+        public void Test(Action<AutoPropertyDemo> action, Type exceptionType) {
+            var demo = GetDemo();
+            CustomAssert.Throws(exceptionType, () => action(demo));
         }
 
         private static IEnumerable<TestCaseData> AllCases {
             get {
-                Action<AutoPropertyConsumer> action;
+                Action<AutoPropertyDemo> action;
 
-                action = consumer => { var x = consumer.NormalReadonly; };
+                action = demo => { var x = demo.NormalReadonly; };
                 yield return new TestCaseData(action, null)
                     .SetName($"AutoProperty_NormalReadonly_DoesNotThrow");
 
-                action = consumer => { var x = consumer.ContractReadonly; };
+                action = demo => { var x = demo.ContractReadonly; };
                 yield return new TestCaseData(action, typeof(PostconditionException))
                     .SetName($"AutoProperty_ContractReadonly_ThrowsIfContractBroken");
                 
-                action = consumer => { var x = consumer.NormalReadWrite; };
+                action = demo => { var x = demo.NormalReadWrite; };
                 yield return new TestCaseData(action, null)
                     .SetName($"AutoProperty_NormalReadWrite_GetDoesNotThrow");
 
-                action = consumer => { consumer.NormalReadWrite = null; };
+                action = demo => { demo.NormalReadWrite = null; };
                 yield return new TestCaseData(action, null)
                     .SetName($"AutoProperty_NormalReadWrite_SetDoesNotThrow");
 
-                action = consumer => { var x = consumer.ContractReadWrite; };
+                action = demo => { var x = demo.ContractReadWrite; };
                 yield return new TestCaseData(action, typeof(PostconditionException))
                     .SetName($"AutoProperty_ContractReadWrite_GetThrowsIfContractBroken");
 
-                action = consumer => { consumer.ContractReadWrite = null; };
+                action = demo => { demo.ContractReadWrite = null; };
                 yield return new TestCaseData(action, typeof(PreconditionException))
                     .SetName($"AutoProperty_ContractReadWrite_SetThrowsIfContractBroken");
             }
