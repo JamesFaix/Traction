@@ -18,7 +18,7 @@ namespace Traction {
                 isEnabledByDefault: true),
             location: location);
 
-        public static Diagnostic SyntaxRewriteFailed(Location location, Exception exception) => Create(
+        public static Diagnostic RewriteFailed(Location location, Exception exception) => Create(
             id: "TR0001",
             title: "Syntax rewrite failed",
             message: $"Syntax rewrite failed. Exception: {exception.GetType()}; {exception.Message}; {exception.StackTrace}",

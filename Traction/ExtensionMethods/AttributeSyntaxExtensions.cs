@@ -67,7 +67,7 @@ namespace Traction {
 
             var attributeTypeSymbols = model
                 .GetDeclaredSymbol(node)
-                .AllAncestorAttributes()
+                .AncestorAttributes()
                 .Select(a => a.AttributeClass);
 
             return attributeTypeSymbols.Any(t => t.Equals(symbol));
@@ -82,7 +82,7 @@ namespace Traction {
 
             var attributeTypeSymbols = model
                 .GetDeclaredSymbol(node)
-                .AllAncestorAttributes()
+                .AncestorAttributes()
                 .Select(a => a.AttributeClass);
 
             return attributeTypeSymbols.Any(t => t.Equals(symbol));
@@ -97,7 +97,7 @@ namespace Traction {
 
             var attributeTypeSymbols = model
                 .GetDeclaredSymbol(node)
-                .AllAncestorAttributes()
+                .AncestorAttributes()
                 .Select(a => a.AttributeClass);
 
             return attributeTypeSymbols.Any(t => t.Equals(symbol));

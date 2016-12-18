@@ -7,118 +7,93 @@ namespace Traction {
 
     static class SymbolExtensions {
 
-        public static IEnumerable<IMethodSymbol> InterfaceImplementations(this IMethodSymbol symbol) {
-            if (symbol == null) throw new ArgumentNullException(nameof(symbol));
+        public static IEnumerable<TSymbol> InterfaceImplementations<TSymbol>(this TSymbol @this)
+            where TSymbol : ISymbol {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            var interfaceMethods = symbol.ContainingType
+            var interfaceMembers = @this.ContainingType
                    .AllInterfaces
-                   .SelectMany(i => i.GetMembers().OfType<IMethodSymbol>());
+                   .SelectMany(i => i.GetMembers().OfType<TSymbol>());
 
-            return interfaceMethods
-                .Where(method => symbol.Equals(
-                    symbol.ContainingType.FindImplementationForInterfaceMember(method)));
+            return interfaceMembers
+                .Where(m => @this.Equals(
+                    @this.ContainingType.FindImplementationForInterfaceMember(m)));
         }
 
-        public static IEnumerable<IPropertySymbol> InterfaceImplementations(this IPropertySymbol symbol) {
-            if (symbol == null) throw new ArgumentNullException(nameof(symbol));
+        public static TSymbol OverriddenSymbol<TSymbol>(this TSymbol @this)
+            where TSymbol : class, ISymbol {
 
-            var interfaceMethods = symbol.ContainingType
-                   .AllInterfaces
-                   .SelectMany(i => i.GetMembers().OfType<IPropertySymbol>());
+            var type = typeof(TSymbol);
 
-            return interfaceMethods
-                .Where(method => symbol.Equals(
-                    symbol.ContainingType.FindImplementationForInterfaceMember(method)));
-        }
-
-        public static IEnumerable<IMethodSymbol> AllAncestorSymbols(this IMethodSymbol symbol) {
-            if (symbol == null) throw new ArgumentNullException(nameof(symbol));
-
-            var result = new List<IMethodSymbol>();
-
-            //Add ultimate base class implementation
-            if (symbol.IsOverride) {
-                result.AddRange(AllAncestorSymbols(symbol.OverriddenMethod));
+            if (type == typeof(IPropertySymbol)) {
+                var property = @this as IPropertySymbol;
+                if (!property.IsOverride) return null;
+                return property.OverriddenProperty as TSymbol;
             }
+            else if (type == typeof(IMethodSymbol)) {
+                var method = @this as IMethodSymbol;
+                if (!method.IsOverride) return null;
+                return method.OverriddenMethod as TSymbol;
+            }
+            else if (type == typeof(IParameterSymbol)) {
+                var method = @this.ContainingSymbol as IMethodSymbol;
+                if (!method.IsOverride) return null;
 
-            //Add any interface definitions
-            result.AddRange(symbol.InterfaceImplementations());
-
-            result.Add(symbol);
-
-            return result;
-        }
-
-        public static IEnumerable<IParameterSymbol> AllAncestorSymbols(this IParameterSymbol symbol) {
-            if (symbol == null) throw new ArgumentNullException(nameof(symbol));
-
-            var result = new List<IParameterSymbol>();
-
-            var method = symbol.ContainingSymbol as IMethodSymbol;
-
-            //Add ultimate base class implementation
-            if (method.IsOverride) {
                 var ancestorMethod = method.OverriddenMethod;
-
-                var ancestorParam = ancestorMethod
+                return ancestorMethod
                     .Parameters
-                    .Single(p => p.Name == symbol.Name);
+                    .Single(p => p.Name == @this.Name) as TSymbol;
+            }
+            else {
+                throw new NotSupportedException("Unsupported symbol type.");
+            }
+        }
 
-                result.AddRange(AllAncestorSymbols(ancestorParam));
+        public static IEnumerable<TSymbol> AncestorSymbols<TSymbol>(this TSymbol @this)
+            where TSymbol : class, ISymbol {
+
+            var result = new List<TSymbol>();
+
+            var overridden = @this.OverriddenSymbol();
+            if (overridden != null) {
+                result.AddRange(AncestorSymbols(overridden));
             }
 
-            //Add any interface definitions
-            foreach (var m in method.InterfaceImplementations()) {
-                result.Add(m.Parameters.Single(p => p.Name == symbol.Name));
+            var type = typeof(TSymbol);
+
+            if (type == typeof(IPropertySymbol)
+            || type == typeof(IMethodSymbol)) {
+                result.AddRange(@this.InterfaceImplementations());
+            }
+            else if (type == typeof(IParameterSymbol)) {
+                var method = @this.ContainingSymbol as IMethodSymbol;
+                foreach (var m in method.InterfaceImplementations()) {
+                    result.Add(m.Parameters.Single(p => p.Name == @this.Name) as TSymbol);
+                }
+            }
+            else {
+                throw new NotSupportedException("Unsupported symbol type.");
             }
 
-            result.Add(symbol);
-
+            result.Add(@this);
             return result;
         }
 
-        public static IEnumerable<IPropertySymbol> AllAncestorSymbols(this IPropertySymbol symbol) {
-            if (symbol == null) throw new ArgumentNullException(nameof(symbol));
+        public static IEnumerable<AttributeData> AncestorAttributes<TSymbol>(this TSymbol @this)
+            where TSymbol : class, ISymbol {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            var result = new List<IPropertySymbol>();
+            var symbols = @this.AncestorSymbols();
 
-            //Add ultimate base class implementation
-            if (symbol.IsOverride) {
-                result.AddRange(AllAncestorSymbols(symbol.OverriddenProperty));
+            var result = symbols.SelectMany(s => s.GetAttributes());
+
+            if (typeof(TSymbol) == typeof(IMethodSymbol)) {
+                result = result.Concat(
+                    symbols.OfType<IMethodSymbol>()
+                           .SelectMany(s => s.GetReturnTypeAttributes()));
             }
 
-            //Add any interface definitions
-            result.AddRange(symbol.InterfaceImplementations());
-            
-            result.Add(symbol);
-
             return result;
-        }
-
-        public static IEnumerable<AttributeData> AllAncestorAttributes(this IMethodSymbol symbol) {
-            if (symbol == null) throw new ArgumentNullException(nameof(symbol));
-
-            var symbols = symbol.AllAncestorSymbols();
-            
-            return symbols.SelectMany(s => 
-                s.GetAttributes()
-                .Concat(s.GetReturnTypeAttributes()));
-        }
-
-        public static IEnumerable<AttributeData> AllAncestorAttributes(this IParameterSymbol symbol) {
-            if (symbol == null) throw new ArgumentNullException(nameof(symbol));
-
-            return symbol
-                .AllAncestorSymbols()
-                .SelectMany(s => s.GetAttributes());
-        }
-
-        public static IEnumerable<AttributeData> AllAncestorAttributes(this IPropertySymbol symbol) {
-            if (symbol == null) throw new ArgumentNullException(nameof(symbol));
-
-            return symbol
-                .AllAncestorSymbols()
-                .SelectMany(s => s.GetAttributes());
         }
     }
 }

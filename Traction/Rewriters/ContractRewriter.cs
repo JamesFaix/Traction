@@ -60,7 +60,7 @@ namespace Traction {
         }
 
         private PropertyDeclarationSyntax VisitPropertyImpl(PropertyDeclarationSyntax node) {
-            if (!this.contract.IsDeclaredOn(node, this.model)) {
+            if (!this.contract.IsDeclaredOrInheritedOn(node, this.model)) {
                 return node;
             }
 

@@ -55,7 +55,7 @@ namespace Traction {
                 }
             }
             catch (Exception e) {
-                var diagnostic = DiagnosticFactory.SyntaxRewriteFailed(
+                var diagnostic = DiagnosticFactory.RewriteFailed(
                     location: oldNode.GetLocation(),
                     exception: e);
                 this.context.Diagnostics.Add(diagnostic);
