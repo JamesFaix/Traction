@@ -38,7 +38,6 @@ namespace Traction {
 
         private TNode VisitMethodImpl<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
-
             if (!this.contract.IsDeclaredOrInheritedOn(node, this.model)) {
                 return node;
             }
@@ -112,7 +111,7 @@ namespace Traction {
         private IEnumerable<StatementSyntax> GetMethodPreconditions<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
             var preconditionParameters = node.ParameterList.Parameters
-               .Where(p => this.contract.IsDeclaredOn(p, model))
+               .Where(p => this.contract.IsDeclaredOrInheritedOn(p, model))
                .ToArray();
 
             if (!preconditionParameters.Any()) {
@@ -127,7 +126,7 @@ namespace Traction {
 
         private TNode InsertMethodPostconditions<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
-            if (!this.contract.IsDeclaredOnReturnValueOf(node, model)) {
+            if (!this.contract.IsDeclaredOrInheritedOnReturnValueOf(node, model)) {
                 return node;
             }
 

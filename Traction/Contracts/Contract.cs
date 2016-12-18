@@ -21,7 +21,9 @@ namespace Traction {
             location: location);
 
         protected abstract string InvalidTypeDiagnosticMessage { get; }
-        
+
+        public override string ToString() => this.GetType().ToString();
+
         public abstract bool IsDeclaredOn(BaseMethodDeclarationSyntax node, SemanticModel model);
 
         public abstract bool IsDeclaredOn(PropertyDeclarationSyntax node, SemanticModel model);
@@ -60,7 +62,7 @@ namespace Traction {
 
         public override bool IsDeclaredOn(BaseMethodDeclarationSyntax node, SemanticModel model) =>
             IsDeclaredOnReturnValueOf(node, model) || IsDeclaredOnParameterOf(node, model);
-
+        
 
         public override bool IsDeclaredOrInheritedOn(ParameterSyntax node, SemanticModel model) =>
            node.HasOrInheritsAttribute<ParameterSyntax, IParameterSymbol, TAttribute>(model);
