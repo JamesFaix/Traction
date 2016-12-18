@@ -12,7 +12,8 @@
     }
 
     public class ImplicitInterfaceDemo : IDemo {
-        public void PreconditionMethod(string text) {
+        //Virtual so another demo can override it for multi-layer inheritance tests
+        public virtual void PreconditionMethod(string text) {
 
         }
 

@@ -88,6 +88,7 @@
     <Compile Include="Features\ConversionDemo.cs" />
     <Compile Include="Features\ExpressionBodyDemo.cs" />
     <Compile Include="Features\InterfaceDemo.cs" />
+    <Compile Include="Features\MultiLayerInheritanceDemo.cs" />
     <Compile Include="Features\MultipleReturnsDemo.cs" />
     <Compile Include="Features\OperatorDemo.cs" />
     <Compile Include="Features\SingleAccessorPropertyDemo.cs" />

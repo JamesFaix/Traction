@@ -7,10 +7,7 @@ namespace Traction.DemoTests {
 
     [TestFixture]
     class InterfaceTest {
-
-        private IDemo GetImplicitDemo() => new ImplicitInterfaceDemo();
-        private IDemo GetExplicitDemo() => new ExplicitInterfaceDemo();
-
+        
         [Test, TestCaseSource(nameof(AllCases))]
         public void Test(IDemo demo, Action<IDemo> action, Type exceptionType) {
             CustomAssert.Throws(exceptionType, () => action(demo));

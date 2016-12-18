@@ -68,6 +68,7 @@
     <Compile Include="Features\ConversionTest.cs" />
     <Compile Include="Features\ExpressionBodiedMemberTest.cs" />
     <Compile Include="Features\InterfaceTest.cs" />
+    <Compile Include="Features\MultiLayerInheritanceTest.cs" />
     <Compile Include="Features\MultipleReturnsTest.cs" />
     <Compile Include="Features\OperatorTest.cs" />
     <Compile Include="Features\SingleAccessorPropertiesTest.cs" />
