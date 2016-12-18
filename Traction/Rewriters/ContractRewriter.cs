@@ -14,7 +14,7 @@ namespace Traction {
     internal sealed class ContractRewriter : RewriterBase {
 
         private ContractRewriter(SemanticModel model, ICompileContext context, Contract contract)
-            : base(model, context) {
+            : base(model, context, $"Applied {contract.GetType()}.") {
 
             if (contract == null) throw new ArgumentNullException(nameof(contract));
             this.contract = contract;
@@ -53,7 +53,9 @@ namespace Traction {
                 return node;
             }
             else {
-                return TryRewrite(node, VisitMethodImplInner);
+                return nodeRewriter
+                    .Try(node, VisitMethodImplInner)
+                    .Result;
             }
         }
 
@@ -72,10 +74,12 @@ namespace Traction {
                 return node;
             }
             else {
-                return TryRewrite(node, VisitPropertyImplInner);
+                return nodeRewriter
+                    .Try(node, VisitPropertyImplInner)
+                    .Result;
             }
         }
-        
+
         private TNode VisitMethodImplInner<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
 
@@ -182,7 +186,5 @@ namespace Traction {
             sb.AppendLine("}");
             return sb.ToString();
         }
-
-        protected override string RewriteConfirmationMessage => $"Applied {contract.GetType()}.";
     }
 }
