@@ -126,6 +126,8 @@ namespace Traction {
                             .AddRange(accessors))));
 
             return result;
-        }        
+        }
+
+        protected override string RewriteConfirmationMessage => "Expanded automatically implemented property.";
     }
 }

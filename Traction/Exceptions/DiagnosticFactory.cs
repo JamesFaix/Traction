@@ -8,6 +8,16 @@ namespace Traction {
     /// </summary>
     static class DiagnosticFactory {
 
+        public static Diagnostic RewriteConfirmation(Location location, string message) => Diagnostic.Create(
+            descriptor: new DiagnosticDescriptor(
+                id: "TR0000",
+                title: "Traction: Rewrite confirmation",
+                messageFormat: message,
+                category: "Traction",
+                defaultSeverity: DiagnosticSeverity.Info,
+                isEnabledByDefault: true),
+            location: location);
+
         public static Diagnostic SyntaxRewriteFailed(Location location, Exception exception) => Create(
             id: "TR0001",
             title: "Syntax rewrite failed",

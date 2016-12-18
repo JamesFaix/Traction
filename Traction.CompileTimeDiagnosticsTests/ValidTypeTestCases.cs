@@ -16,10 +16,9 @@ namespace Traction.DiagnosticsTests {
 
             //Assert
             if (isValid) {
-                Assert.IsFalse(diagnostics.Any());
+                Assert.IsTrue(diagnostics.All(d => d.Id == "TR0000"));
             }
             else {
-                Assert.AreEqual(1, diagnostics.Count());
                 Assert.IsTrue(diagnostics.Any(d => d.Id == "TR0006"));
             }
         }

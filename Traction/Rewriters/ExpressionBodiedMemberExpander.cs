@@ -75,5 +75,7 @@ namespace Traction {
                     .WithExpressionBody(null)
                     .WithAccessorList(accessors));
         }
+
+        protected override string RewriteConfirmationMessage => "Expanded expression-bodied member.";
     }
 }

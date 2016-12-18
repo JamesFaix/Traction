@@ -182,5 +182,7 @@ namespace Traction {
             sb.AppendLine("}");
             return sb.ToString();
         }
+
+        protected override string RewriteConfirmationMessage => $"Applied {contract.GetType()}.";
     }
 }

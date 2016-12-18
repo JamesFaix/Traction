@@ -28,7 +28,16 @@ namespace Traction {
             where TNode : SyntaxNode {
 
             try {
-                return rewrite(node);
+                var result = rewrite(node);
+
+#if CONFIRM_REWRITES
+                context.Diagnostics.Add(
+                    DiagnosticFactory.RewriteConfirmation(
+                        node.GetLocation(), 
+                        RewriteConfirmationMessage));
+#endif
+
+                return result;
             }
             catch (Exception e) {
                 context.Diagnostics.Add(
@@ -38,5 +47,7 @@ namespace Traction {
                 return node;
             }
         }
+
+        protected abstract string RewriteConfirmationMessage { get; }
     }
 }
