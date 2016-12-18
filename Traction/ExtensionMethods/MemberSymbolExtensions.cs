@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Traction {
 
-    static class SymbolExtensions {
+    static class MemberSymbolExtensions {
 
         public static IEnumerable<TSymbol> InterfaceImplementations<TSymbol>(this TSymbol @this)
             where TSymbol : ISymbol {
@@ -45,7 +45,7 @@ namespace Traction {
                     .Single(p => p.Name == @this.Name) as TSymbol;
             }
             else {
-                throw new NotSupportedException("Unsupported symbol type.");
+                throw new NotSupportedException($"Unsupported symbol type. ({type})");
             }
         }
 
@@ -72,7 +72,7 @@ namespace Traction {
                 }
             }
             else {
-                throw new NotSupportedException("Unsupported symbol type.");
+                throw new NotSupportedException($"Unsupported symbol type. ({type})");
             }
 
             result.Add(@this);

@@ -53,7 +53,7 @@ namespace Traction {
             var propertiesToExpand = typeDeclaration
                 .DescendantNodes()
                 .OfType<PropertyDeclarationSyntax>()
-                .Where(prop => prop.HasAttributeExtending<ContractAttribute>(model)
+                .Where(prop => prop.HasAttributeExtending<PropertyDeclarationSyntax, ContractAttribute>(model)
                     && prop.IsAutoImplentedProperty())
                 .Select(prop => new {
                     Name = prop.Identifier.ValueText,

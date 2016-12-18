@@ -47,32 +47,32 @@ namespace Traction {
         where TAttribute : ContractAttribute {
 
         public override bool IsDeclaredOn(ParameterSyntax node, SemanticModel model) =>
-            node.HasAttribute<TAttribute>(model);        
+            node.HasAttribute<ParameterSyntax, TAttribute>(model);        
 
         public override bool IsDeclaredOn(PropertyDeclarationSyntax node, SemanticModel model) =>
-            node.HasAttribute<TAttribute>(model);
+            node.HasAttribute<PropertyDeclarationSyntax, TAttribute>(model);
 
         public override bool IsDeclaredOnParameterOf(BaseMethodDeclarationSyntax node, SemanticModel model) =>
             node.ParameterList.Parameters.Any(p => IsDeclaredOn(p, model));
 
         public override bool IsDeclaredOnReturnValueOf(BaseMethodDeclarationSyntax node, SemanticModel model) =>
-            node.HasAttribute<TAttribute>(model);
+            node.HasAttribute<BaseMethodDeclarationSyntax, TAttribute>(model);
 
         public override bool IsDeclaredOn(BaseMethodDeclarationSyntax node, SemanticModel model) =>
             IsDeclaredOnReturnValueOf(node, model) || IsDeclaredOnParameterOf(node, model);
 
 
         public override bool IsDeclaredOrInheritedOn(ParameterSyntax node, SemanticModel model) =>
-           node.HasOrInheritsAttribute<TAttribute>(model);
+           node.HasOrInheritsAttribute<ParameterSyntax, IParameterSymbol, TAttribute>(model);
         
         public override bool IsDeclaredOrInheritedOn(PropertyDeclarationSyntax node, SemanticModel model) =>
-            node.HasOrInheritsAttribute<TAttribute>(model);
+            node.HasOrInheritsAttribute<PropertyDeclarationSyntax, IPropertySymbol, TAttribute>(model);
 
         public override bool IsDeclaredOrInheritedOnParameterOf(BaseMethodDeclarationSyntax node, SemanticModel model) =>
             node.ParameterList.Parameters.Any(p => IsDeclaredOrInheritedOn(p, model));
 
         public override bool IsDeclaredOrInheritedOnReturnValueOf(BaseMethodDeclarationSyntax node, SemanticModel model) =>
-            node.HasOrInheritsAttribute<TAttribute>(model);
+            node.HasOrInheritsAttribute<BaseMethodDeclarationSyntax, IMethodSymbol, TAttribute>(model);
 
         public override bool IsDeclaredOrInheritedOn(BaseMethodDeclarationSyntax node, SemanticModel model) =>
             IsDeclaredOrInheritedOnReturnValueOf(node, model) || IsDeclaredOrInheritedOnParameterOf(node, model);
