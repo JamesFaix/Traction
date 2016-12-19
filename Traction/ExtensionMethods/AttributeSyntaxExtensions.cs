@@ -32,7 +32,22 @@ namespace Traction {
             where TAttribute : Attribute {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
-            return HasAttributeImpl<TAttribute>(@this.AllAttributes(), model);
+           
+            var symbol = typeof(TAttribute).GetTypeSymbol(model);
+
+            IEnumerable<ITypeSymbol> attributeTypes = new ITypeSymbol[0];
+
+            try {
+                attributeTypes = @this.AllAttributes()
+                    .Select(a => model.GetTypeInfo(a).Type)
+                    .ToArray();
+            }
+            catch (Exception e) {
+                Console.WriteLine($"Traction : error : {e.Message} @{e.StackTrace}");
+                return false;
+            }
+
+            return attributeTypes.Any(t => t.Equals(symbol));
         }
 
         public static bool HasOrInheritsAttribute<TNode, TSymbol, TAttribute>(this TNode @this, SemanticModel model)
@@ -57,58 +72,13 @@ namespace Traction {
             where TAttribute : Attribute {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
-            return HasAttributeExtendingImpl<TAttribute>(@this.AllAttributes(), model);
-        }
-        
-        private static bool HasAttributeImpl<TAttribute>(IEnumerable<AttributeSyntax> attributes, SemanticModel model)
-            where TAttribute : Attribute {
 
             var symbol = typeof(TAttribute).GetTypeSymbol(model);
 
             IEnumerable<ITypeSymbol> attributeTypes = new ITypeSymbol[0];
 
             try {
-                attributeTypes = attributes
-                    .Select(a => model.GetTypeInfo(a).Type)
-                    .ToArray();
-            }
-            catch (Exception e) {
-                Console.WriteLine($"Traction : error : {e.Message} @{e.StackTrace}");
-                return false;
-            }
-
-            return attributeTypes.Any(t => t.Equals(symbol));
-        }
-
-        private static bool HasOrInheritsAttributeImpl<TAttribute>(IEnumerable<AttributeSyntax> attributes, SemanticModel model)
-            where TAttribute : Attribute {
-
-            var symbol = typeof(TAttribute).GetTypeSymbol(model);
-
-            IEnumerable<ITypeSymbol> attributeTypes = new ITypeSymbol[0];
-
-            try {
-                attributeTypes = attributes
-                    .Select(a => model.GetTypeInfo(a).Type)
-                    .ToArray();
-            }
-            catch (Exception e) {
-                Console.WriteLine($"Traction : error : {e.Message} @{e.StackTrace}");
-                return false;
-            }
-
-            return attributeTypes.Any(t => t.Equals(symbol));
-        }
-
-        private static bool HasAttributeExtendingImpl<TAttribute>(IEnumerable<AttributeSyntax> attributes, SemanticModel model)
-            where TAttribute : Attribute {
-
-            var symbol = typeof(TAttribute).GetTypeSymbol(model);
-
-            IEnumerable<ITypeSymbol> attributeTypes = new ITypeSymbol[0];
-
-            try {
-                attributeTypes = attributes
+                attributeTypes = @this.AllAttributes()
                     .Select(a => model.GetTypeInfo(a).Type)
                     .ToArray();
             }
@@ -119,5 +89,14 @@ namespace Traction {
 
             return attributeTypes.Any(t => t.Ancestors().Contains(symbol));
         }
+        
+        public static bool Extends<TAttribute> (this AttributeSyntax @this, SemanticModel model)
+            where TAttribute: Attribute {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            var symbol = typeof(TAttribute).GetTypeSymbol(model);
+            return symbol.Equals(model.GetTypeInfo(@this));            
+        }     
     }
 }
