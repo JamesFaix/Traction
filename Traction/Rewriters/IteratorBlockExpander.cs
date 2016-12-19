@@ -18,7 +18,8 @@ namespace Traction {
 
         protected override bool MemberFilter(BaseMethodDeclarationSyntax member) =>
             member.IsIteratorBlock() &&
-            member.HasAttributeExtending<BaseMethodDeclarationSyntax, ContractAttribute>(model);
+            member.ParameterList.Parameters
+                .Any(p => p.HasAttributeExtending<ParameterSyntax, ContractAttribute>(model));
 
         protected override SyntaxList<SyntaxNode> ExpandMember(BaseMethodDeclarationSyntax node, ISymbol symbol) {
 

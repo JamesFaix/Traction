@@ -17,6 +17,7 @@ namespace Traction {
             AddPrecompilationRewriterProviders(new RewriterFactoryMethod[] {
                 AutoPropertyExpander.Create,
                 ExpressionBodiedMemberExpander.Create,
+                IteratorBlockExpander.Create,
                 ContractRewriter.Create(new NonNullContract()),
                 ContractRewriter.Create(new NonDefaultContract()),
                 ContractRewriter.Create(new NonEmptyContract()),

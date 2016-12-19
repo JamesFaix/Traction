@@ -68,6 +68,7 @@
     <Compile Include="Infrastructure\SourceCodeFactory.cs" />
     <Compile Include="Infrastructure\TestHelper.cs" />
     <Compile Include="IteratorBlockPostconditionTests.cs" />
+    <Compile Include="IteratorBlockPreconditionTests.cs" />
     <Compile Include="PartialMemberTests.cs" />
     <Compile Include="PostconditionVoidTests.cs" />
     <Compile Include="ValidTypeTestCases.cs" />
