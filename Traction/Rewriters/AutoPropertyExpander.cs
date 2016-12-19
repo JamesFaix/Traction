@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -10,38 +9,19 @@ namespace Traction {
     /// <summary>
     /// Rewrites automatically implemented properties as normal properties with backing fields.
     /// </summary>
-    sealed class AutoPropertyExpander : ConcreteTypeRewriter {
+    sealed class AutoPropertyExpander : ConcreteTypeMemberExpander<PropertyDeclarationSyntax> {
 
         private AutoPropertyExpander(SemanticModel model, ICompileContext context)
             : base(model, context, "Expanded automatically implemented property.") { }
 
         public static AutoPropertyExpander Create(SemanticModel model, ICompileContext context) =>
             new AutoPropertyExpander(model, context);
-        
-        protected override TNode ExpandTypeMembers<TNode>(TNode typeDeclaration) {
-            var propertiesToExpand = typeDeclaration
-                .DescendantNodes()
-                .OfType<PropertyDeclarationSyntax>()
-                .Where(prop => prop.HasAttributeExtending<PropertyDeclarationSyntax, ContractAttribute>(model)
-                    && prop.IsAutoImplentedProperty())
-                .Select(prop => new {
-                    Name = prop.Identifier.ValueText,
-                    Type = model.GetTypeInfo(prop.Type)
-                });
 
-            foreach (var prop in propertiesToExpand) {
-                var oldProperty = typeDeclaration.DescendantNodes().OfType<PropertyDeclarationSyntax>()
-                    .Single(p => p.Identifier.ValueText == prop.Name);
+        protected override bool MemberFilter(PropertyDeclarationSyntax member) =>
+            member.IsAutoImplentedProperty() &&
+            member.HasAttributeExtending<PropertyDeclarationSyntax, ContractAttribute>(model);
 
-                var newProperty = ExpandAutoProperty(oldProperty, prop.Type);
-
-                typeDeclaration = typeDeclaration.ReplaceNode(oldProperty, newProperty);
-            }
-
-            return typeDeclaration;
-        }
-
-        private SyntaxList<SyntaxNode> ExpandAutoProperty(PropertyDeclarationSyntax node, TypeInfo propertyType) {
+        protected override SyntaxList<SyntaxNode> ExpandMember(PropertyDeclarationSyntax node, ISymbol symbol) {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
             var getter = node.Getter();
@@ -52,7 +32,7 @@ namespace Traction {
             var fieldName = IdentifierFactory.CreateUnique(UsedIdentifiers, $"_{propertyName}");
             UsedIdentifiers.Add(fieldName);
 
-            var fieldType = propertyType.Type.FullName();
+            var fieldType = (symbol as IPropertySymbol).Type.FullName();
 
             var modifiers = SyntaxFactory.TokenList(
                 SyntaxFactory.ParseToken("private")
