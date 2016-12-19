@@ -75,9 +75,12 @@
     <Compile Include="Exceptions\PostconditionException.cs" />
     <Compile Include="ExtensionMethods\AttributeSyntaxExtensions.cs" />
     <Compile Include="ExtensionMethods\BaseMethodDeclarationSyntaxExtensions.cs" />
+    <Compile Include="ExtensionMethods\EnumerableExtensions.cs" />
+    <Compile Include="ExtensionMethods\OperatorSyntaxExtensions.cs" />
     <Compile Include="ExtensionMethods\ParameterSyntaxExtensions.cs" />
     <Compile Include="ExtensionMethods\MemberSymbolExtensions.cs" />
     <Compile Include="ExtensionMethods\SyntaxNodeExtensions.cs" />
+    <Compile Include="ExtensionMethods\SyntaxTokenExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeSymbolExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -87,6 +90,7 @@
     <Compile Include="Contracts\NonDefaultContract.cs" />
     <Compile Include="Contracts\NonEmptyContract.cs" />
     <Compile Include="Rewriters\AutoPropertyExpander.cs" />
+    <Compile Include="Rewriters\IteratorBlockExpander.cs" />
     <Compile Include="Rewriters\NodeRewriteAttempt.cs" />
     <Compile Include="Rewriters\ExpressionBodiedMemberExpander.cs" />
     <Compile Include="Rewriters\IdentifierFactory.cs" />
@@ -102,6 +106,7 @@
     <Compile Include="Rewriters\NodeRewriter.cs" />
     <Compile Include="Rewriters\NodeRewriteStatus.cs" />
     <Compile Include="Rewriters\RewriterBase.cs" />
+    <Compile Include="Rewriters\ConcreteTypeRewriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

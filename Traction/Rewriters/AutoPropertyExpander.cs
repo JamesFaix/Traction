@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -10,7 +9,7 @@ namespace Traction {
     /// <summary>
     /// Rewrites automatically implemented properties as normal properties with backing fields.
     /// </summary>
-    sealed class AutoPropertyExpander : RewriterBase {
+    sealed class AutoPropertyExpander : ConcreteTypeMemberExpander<PropertyDeclarationSyntax> {
 
         private AutoPropertyExpander(SemanticModel model, ICompileContext context)
             : base(model, context, "Expanded automatically implemented property.") { }
@@ -18,96 +17,63 @@ namespace Traction {
         public static AutoPropertyExpander Create(SemanticModel model, ICompileContext context) =>
             new AutoPropertyExpander(model, context);
 
-        private CSharpSyntaxNode originalTypeDeclarationNode;
+        protected override bool MemberFilter(PropertyDeclarationSyntax member) =>
+            member.IsAutoImplentedProperty() &&
+            member.HasAttributeExtending<PropertyDeclarationSyntax, ContractAttribute>(model);
 
-        //Accumulates used identifiers within type definition as new members are generated
-        private List<string> usedIdentifiers;
-
-        public override SyntaxNode VisitClassDeclaration(ClassDeclarationSyntax node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-
-            node = VisitMembers(node);
-            return base.VisitClassDeclaration(node);
-        }
-
-        public override SyntaxNode VisitStructDeclaration(StructDeclarationSyntax node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-
-            node = VisitMembers(node);
-            return base.VisitStructDeclaration(node);
-        }
-
-        private TNode VisitMembers<TNode>(TNode node)
-            where TNode : CSharpSyntaxNode {
-
-            this.originalTypeDeclarationNode = node;
-            this.usedIdentifiers = IdentifierFactory.GetUsedIdentifiers(node, model).ToList();
-            return nodeRewriter
-                .Try(node, ExpandAutoProperties)
-                .Result;
-        }
-
-        private TNode ExpandAutoProperties<TNode>(TNode typeDeclaration)
-            where TNode : CSharpSyntaxNode {
-
-            var propertiesToExpand = typeDeclaration
-                .DescendantNodes()
-                .OfType<PropertyDeclarationSyntax>()
-                .Where(prop => prop.HasAttributeExtending<PropertyDeclarationSyntax, ContractAttribute>(model)
-                    && prop.IsAutoImplentedProperty())
-                .Select(prop => new {
-                    Name = prop.Identifier.ValueText,
-                    Type = model.GetTypeInfo(prop.Type)
-                });
-
-            foreach (var prop in propertiesToExpand) {
-                var oldProperty = typeDeclaration.DescendantNodes().OfType<PropertyDeclarationSyntax>()
-                    .Single(p => p.Identifier.ValueText == prop.Name);
-
-                var newProperty = ExpandAutoProperty(oldProperty, prop.Type);
-
-                typeDeclaration = typeDeclaration.ReplaceNode(oldProperty, newProperty);
-            }
-
-            return typeDeclaration;
-        }
-
-        private SyntaxList<SyntaxNode> ExpandAutoProperty(PropertyDeclarationSyntax node, TypeInfo propertyType) {
+        protected override SyntaxList<SyntaxNode> ExpandMember(PropertyDeclarationSyntax node, ISymbol symbol) {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
             var getter = node.Getter();
             var setter = node.Setter();
 
+            var fieldName = GetFieldName(node);
+            var fieldType = (symbol as IPropertySymbol).Type.FullName();
+            var fieldModifiers = GetFieldModifiers(node, setter != null);
+            var field = GetField(fieldName, fieldType, fieldModifiers);
+            var accessors = GetAccessors(getter, setter, fieldName);
+
+            return new SyntaxList<CSharpSyntaxNode>()
+                .Add(field)
+                .Add(node.WithAccessorList(accessors));
+        }
+
+        private string GetFieldName(PropertyDeclarationSyntax node) {
             var propertyName = node.Identifier.ToString();
+            var result = IdentifierFactory.CreateUnique(UsedIdentifiers, $"_{propertyName}");
+            UsedIdentifiers.Add(result);
+            return result;
+        }
 
-            var fieldName = IdentifierFactory.CreateUnique(this.usedIdentifiers, $"_{propertyName}");
-            this.usedIdentifiers.Add(fieldName);
+        private SyntaxTokenList GetFieldModifiers(PropertyDeclarationSyntax node, bool hasSetter) {
+            var result = SyntaxFactory.TokenList(
+                SyntaxFactory.ParseToken("private "));
 
-            var fieldType = propertyType.Type.FullName();
-
-            var modifiers = SyntaxFactory.TokenList(
-                SyntaxFactory.ParseToken("private")
-                    .WithTrailingTrivia(SyntaxFactory.Space));
-
-            if (node.Modifiers.Any(m => m.ValueText == "static")) {
-                modifiers = modifiers.Add(
-                    SyntaxFactory.ParseToken("static")
-                    .WithTrailingTrivia(SyntaxFactory.Space));
+            if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword))) {
+                result = result.Add(
+                    SyntaxFactory.ParseToken("static "));
             }
 
-            if (setter == null) {
-                modifiers = modifiers.Add(
-                    SyntaxFactory.ParseToken("readonly")
-                    .WithTrailingTrivia(SyntaxFactory.Space));
+            if (!hasSetter) {
+                result = result.Add(
+                    SyntaxFactory.ParseToken("readonly "));
             }
 
-            var field = SyntaxFactory.FieldDeclaration(
+            return result;
+        }
+
+        private FieldDeclarationSyntax GetField(string name, string typeName, SyntaxTokenList modifiers) {
+            return SyntaxFactory.FieldDeclaration(
                     SyntaxFactory.VariableDeclaration(
-                        SyntaxFactory.ParseTypeName(fieldType)
+                        SyntaxFactory.ParseTypeName(typeName)
                             .WithTrailingTrivia(SyntaxFactory.Space),
                         SyntaxFactory.SeparatedList<VariableDeclaratorSyntax>()
-                            .Add(SyntaxFactory.VariableDeclarator(fieldName))))
+                            .Add(SyntaxFactory.VariableDeclarator(name))))
                 .WithModifiers(modifiers);
+        }
+
+        private AccessorListSyntax GetAccessors(AccessorDeclarationSyntax getter,
+            AccessorDeclarationSyntax setter, string fieldName) {
 
             getter = getter.WithBody(SyntaxFactory.Block(
                 SyntaxFactory.ParseStatement($"return {fieldName};")));
@@ -118,16 +84,11 @@ namespace Traction {
             }
 
             var accessors = new[] { getter, setter }
-                .Where(x => x != null);
+                .Where(x => x != null)
+                .ToArray();
 
-            var result = new SyntaxList<CSharpSyntaxNode>()
-                .Add(field)
-                .Add(node
-                    .WithAccessorList(node.AccessorList
-                        .WithAccessors(new SyntaxList<AccessorDeclarationSyntax>()
-                            .AddRange(accessors))));
-
-            return result;
+            return SyntaxFactory.AccessorList()
+                .AddAccessors(accessors);
         }
     }
 }
