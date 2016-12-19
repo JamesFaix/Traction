@@ -102,6 +102,7 @@
     <Compile Include="Rewriters\NodeRewriter.cs" />
     <Compile Include="Rewriters\NodeRewriteStatus.cs" />
     <Compile Include="Rewriters\RewriterBase.cs" />
+    <Compile Include="Rewriters\TypeRewriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

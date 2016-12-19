@@ -10,46 +10,15 @@ namespace Traction {
     /// <summary>
     /// Rewrites automatically implemented properties as normal properties with backing fields.
     /// </summary>
-    sealed class AutoPropertyExpander : RewriterBase {
+    sealed class AutoPropertyExpander : ConcreteTypeRewriter {
 
         private AutoPropertyExpander(SemanticModel model, ICompileContext context)
             : base(model, context, "Expanded automatically implemented property.") { }
 
         public static AutoPropertyExpander Create(SemanticModel model, ICompileContext context) =>
             new AutoPropertyExpander(model, context);
-
-        private CSharpSyntaxNode originalTypeDeclarationNode;
-
-        //Accumulates used identifiers within type definition as new members are generated
-        private List<string> usedIdentifiers;
-
-        public override SyntaxNode VisitClassDeclaration(ClassDeclarationSyntax node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-
-            node = VisitMembers(node);
-            return base.VisitClassDeclaration(node);
-        }
-
-        public override SyntaxNode VisitStructDeclaration(StructDeclarationSyntax node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-
-            node = VisitMembers(node);
-            return base.VisitStructDeclaration(node);
-        }
-
-        private TNode VisitMembers<TNode>(TNode node)
-            where TNode : CSharpSyntaxNode {
-
-            this.originalTypeDeclarationNode = node;
-            this.usedIdentifiers = IdentifierFactory.GetUsedIdentifiers(node, model).ToList();
-            return nodeRewriter
-                .Try(node, ExpandAutoProperties)
-                .Result;
-        }
-
-        private TNode ExpandAutoProperties<TNode>(TNode typeDeclaration)
-            where TNode : CSharpSyntaxNode {
-
+        
+        protected override TNode ExpandTypeMembers<TNode>(TNode typeDeclaration) {
             var propertiesToExpand = typeDeclaration
                 .DescendantNodes()
                 .OfType<PropertyDeclarationSyntax>()
@@ -80,8 +49,8 @@ namespace Traction {
 
             var propertyName = node.Identifier.ToString();
 
-            var fieldName = IdentifierFactory.CreateUnique(this.usedIdentifiers, $"_{propertyName}");
-            this.usedIdentifiers.Add(fieldName);
+            var fieldName = IdentifierFactory.CreateUnique(UsedIdentifiers, $"_{propertyName}");
+            UsedIdentifiers.Add(fieldName);
 
             var fieldType = propertyType.Type.FullName();
 
