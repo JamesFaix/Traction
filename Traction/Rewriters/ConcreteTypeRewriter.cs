@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Traction {
 
     abstract class ConcreteTypeMemberExpander<TMemberNode> : RewriterBase
-        where TMemberNode : MemberDeclarationSyntax {
+        where TMemberNode : CSharpSyntaxNode {
 
         protected ConcreteTypeMemberExpander(SemanticModel model, ICompileContext context, string confirmationMessage)
             : base(model, context, confirmationMessage) { }

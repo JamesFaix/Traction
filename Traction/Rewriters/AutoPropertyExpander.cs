@@ -27,36 +27,53 @@ namespace Traction {
             var getter = node.Getter();
             var setter = node.Setter();
 
-            var propertyName = node.Identifier.ToString();
-
-            var fieldName = IdentifierFactory.CreateUnique(UsedIdentifiers, $"_{propertyName}");
-            UsedIdentifiers.Add(fieldName);
-
+            var fieldName = GetFieldName(node);
             var fieldType = (symbol as IPropertySymbol).Type.FullName();
+            var fieldModifiers = GetFieldModifiers(node, setter != null);
+            var field = GetField(fieldName, fieldType, fieldModifiers);
+            var accessors = GetAccessors(getter, setter, fieldName);
 
-            var modifiers = SyntaxFactory.TokenList(
-                SyntaxFactory.ParseToken("private")
-                    .WithTrailingTrivia(SyntaxFactory.Space));
+            return new SyntaxList<CSharpSyntaxNode>()
+                .Add(field)
+                .Add(node.WithAccessorList(accessors));
+        }
 
-            if (node.Modifiers.Any(m => m.ValueText == "static")) {
-                modifiers = modifiers.Add(
-                    SyntaxFactory.ParseToken("static")
-                    .WithTrailingTrivia(SyntaxFactory.Space));
+        private string GetFieldName(PropertyDeclarationSyntax node) {
+            var propertyName = node.Identifier.ToString();
+            var result = IdentifierFactory.CreateUnique(UsedIdentifiers, $"_{propertyName}");
+            UsedIdentifiers.Add(result);
+            return result;
+        }
+
+        private SyntaxTokenList GetFieldModifiers(PropertyDeclarationSyntax node, bool hasSetter) {
+            var result = SyntaxFactory.TokenList(
+                SyntaxFactory.ParseToken("private "));
+
+            if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword))) {
+                result = result.Add(
+                    SyntaxFactory.ParseToken("static "));
             }
 
-            if (setter == null) {
-                modifiers = modifiers.Add(
-                    SyntaxFactory.ParseToken("readonly")
-                    .WithTrailingTrivia(SyntaxFactory.Space));
+            if (!hasSetter) {
+                result = result.Add(
+                    SyntaxFactory.ParseToken("readonly "));
             }
 
-            var field = SyntaxFactory.FieldDeclaration(
+            return result;
+        }
+
+        private FieldDeclarationSyntax GetField(string name, string typeName, SyntaxTokenList modifiers) {
+            return SyntaxFactory.FieldDeclaration(
                     SyntaxFactory.VariableDeclaration(
-                        SyntaxFactory.ParseTypeName(fieldType)
+                        SyntaxFactory.ParseTypeName(typeName)
                             .WithTrailingTrivia(SyntaxFactory.Space),
                         SyntaxFactory.SeparatedList<VariableDeclaratorSyntax>()
-                            .Add(SyntaxFactory.VariableDeclarator(fieldName))))
+                            .Add(SyntaxFactory.VariableDeclarator(name))))
                 .WithModifiers(modifiers);
+        }
+
+        private AccessorListSyntax GetAccessors(AccessorDeclarationSyntax getter,
+            AccessorDeclarationSyntax setter, string fieldName) {
 
             getter = getter.WithBody(SyntaxFactory.Block(
                 SyntaxFactory.ParseStatement($"return {fieldName};")));
@@ -67,16 +84,11 @@ namespace Traction {
             }
 
             var accessors = new[] { getter, setter }
-                .Where(x => x != null);
+                .Where(x => x != null)
+                .ToArray();
 
-            var result = new SyntaxList<CSharpSyntaxNode>()
-                .Add(field)
-                .Add(node
-                    .WithAccessorList(node.AccessorList
-                        .WithAccessors(new SyntaxList<AccessorDeclarationSyntax>()
-                            .AddRange(accessors))));
-
-            return result;
+            return SyntaxFactory.AccessorList()
+                .AddAccessors(accessors);
         }
     }
 }
