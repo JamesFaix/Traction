@@ -95,8 +95,10 @@ namespace Traction {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
-            var symbol = typeof(TAttribute).GetTypeSymbol(model);
-            return symbol.Equals(model.GetTypeInfo(@this));            
+            var symbol1 = typeof(TAttribute).GetTypeSymbol(model);
+            var symbol2 = model.GetTypeInfo(@this).Type;
+            var result = symbol2.Ancestors().Contains(symbol1);
+            return result;
         }     
     }
 }

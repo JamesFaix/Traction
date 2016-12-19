@@ -63,6 +63,7 @@ namespace Traction {
                 throw new NotSupportedException($"Unsupported node type. ({node.GetType()})");
             }
 
+            result = result + "_InnerIterator";
             result = IdentifierFactory.CreateUnique(UsedIdentifiers, result);
             UsedIdentifiers.Add(result);
             return result;
