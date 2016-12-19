@@ -1,13 +1,13 @@
 # Traction
 
 ## Contents
- - [Overview](https://github.com/JamesFaix/Traction/edit/master/readme.md#L12)
- - [Abbreviations](https://github.com/JamesFaix/Traction/edit/master/readme.md#L30)
- - [Design by Contract](https://github.com/JamesFaix/Traction/edit/master/readme.md#L36)
- - [Why Traction?](https://github.com/JamesFaix/Traction/edit/master/readme.md#L45)
- - [Compatibility](https://github.com/JamesFaix/Traction/edit/master/readme.md#L106)
- - [Features](https://github.com/JamesFaix/Traction/edit/master/readme.md#L128)
- - [Contracts](https://github.com/JamesFaix/Traction/edit/master/readme.md#L193)
+ - [Overview](https://github.com/JamesFaix/Traction/blob/master/readme.md#L12)
+ - [Abbreviations](https://github.com/JamesFaix/Traction/blob/master/readme.md#L30)
+ - [Design by Contract](https://github.com/JamesFaix/Traction/blob/master/readme.md#L36)
+ - [Why Traction?](https://github.com/JamesFaix/Traction/blob/master/readme.md#L45)
+ - [Compatibility](https://github.com/JamesFaix/Traction/blob/master/readme.md#L106)
+ - [Features](https://github.com/JamesFaix/Traction/blob/master/readme.md#L128)
+ - [Contracts](https://github.com/JamesFaix/Traction/blob/master/readme.md#L193)
 
 ## Overview
 
@@ -220,3 +220,6 @@ Each contract attribute may have restrictions on the types of values or properti
  - These contracts all actually use the `IComparable<T>.CompareTo()` method for comparison, but I will use the `<` and `>` operators here to make the documentation clearer.    
 
 
+# References
+
+	//Fill out later
