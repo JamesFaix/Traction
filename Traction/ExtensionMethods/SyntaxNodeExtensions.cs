@@ -12,10 +12,10 @@ namespace Traction {
     /// </summary>
     static class SyntaxNodeExtensions {
 
-        public static IEnumerable<ReturnStatementSyntax> GetAllReturnStatements(this SyntaxNode node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
+        public static IEnumerable<ReturnStatementSyntax> GetAllReturnStatements(this SyntaxNode @this) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            foreach (var child in node.ChildNodes()) {
+            foreach (var child in @this.ChildNodes()) {
                 if (child is ReturnStatementSyntax) {
                     yield return (ReturnStatementSyntax)child;
                 }
@@ -31,16 +31,16 @@ namespace Traction {
             }
         }
 
-        public static bool IsIteratorBlock(this SyntaxNode node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
+        public static bool IsIteratorBlock(this SyntaxNode @this) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            return node
+            return @this
                 .GetYields()
                 .Any();
         }
 
-        private static IEnumerable<YieldStatementSyntax> GetYields(this SyntaxNode node) {
-            var children = node.ChildNodes();
+        private static IEnumerable<YieldStatementSyntax> GetYields(this SyntaxNode @this) {
+            var children = @this.ChildNodes();
             var yields = children.OfType<YieldStatementSyntax>();
             var nonYields = children.Where(c =>
                 !(c is YieldStatementSyntax) &&
@@ -49,39 +49,39 @@ namespace Traction {
             return yields.Concat(nonYields.SelectMany(c => GetYields(c)));
         }
 
-        public static bool IsNonImplementedMember(this SyntaxNode node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
+        public static bool IsNonImplementedMember(this SyntaxNode @this) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
             
-            return (node is BaseMethodDeclarationSyntax || node is PropertyDeclarationSyntax)
-                && (node.IsInInterface() || node.IsAbstract() || node.IsPartial());
+            return (@this is BaseMethodDeclarationSyntax || @this is PropertyDeclarationSyntax)
+                && (@this.IsInInterface() || @this.IsAbstract() || @this.IsPartial());
         }
 
-        private static bool IsInInterface(this SyntaxNode node) =>
-            node.Ancestors()
+        private static bool IsInInterface(this SyntaxNode @this) =>
+            @this.Ancestors()
                 .OfType<InterfaceDeclarationSyntax>()
                 .Any();
 
-        public static bool IsAbstract(this SyntaxNode node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            return node.ChildTokens()
+        public static bool IsAbstract(this SyntaxNode @this) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+            return @this.ChildTokens()
                 .Any(t => t.IsKind(SyntaxKind.AbstractKeyword));
         }
 
-        public static bool IsPartial(this SyntaxNode node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            return node.ChildTokens()
+        public static bool IsPartial(this SyntaxNode @this) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+            return @this.ChildTokens()
                 .Any(t => t.IsKind(SyntaxKind.PartialKeyword));
         }
 
-        public static bool IsStatic(this SyntaxNode node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            return node.ChildTokens()
+        public static bool IsStatic(this SyntaxNode @this) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+            return @this.ChildTokens()
                 .Any(t => t.IsKind(SyntaxKind.StaticKeyword));
         }
 
-        public static bool IsOverride(this SyntaxNode node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            return node.ChildTokens()
+        public static bool IsOverride(this SyntaxNode @this) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+            return @this.ChildTokens()
                 .Any(t => t.IsKind(SyntaxKind.OverrideKeyword));
         }
     }

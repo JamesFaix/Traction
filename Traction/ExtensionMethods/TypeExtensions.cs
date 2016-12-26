@@ -9,30 +9,30 @@ namespace Traction {
     /// </summary>
     static class TypeExtensions {
         
-        public static INamedTypeSymbol GetTypeSymbol(this Type type, SemanticModel model) {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+        public static INamedTypeSymbol GetTypeSymbol(this Type @this, SemanticModel model) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
-            if (!type.IsConstructedGenericType) {
-                return model.Compilation.GetTypeByMetadataName(type.FullName);
+            if (!@this.IsConstructedGenericType) {
+                return model.Compilation.GetTypeByMetadataName(@this.FullName);
             }
             else {
-                var typeParams = type.GenericTypeArguments
+                var typeParams = @this.GenericTypeArguments
                     .Select(t => GetTypeSymbol(t, model))
                     .ToArray();
 
-                var openType = type.GetGenericTypeDefinition();
+                var openType = @this.GetGenericTypeDefinition();
                 var symbol = model.Compilation.GetTypeByMetadataName(openType.FullName);
                 return symbol.Construct(typeParams);
             }
         }
 
-        public static bool MatchesTypeSymbol(this Type type, ITypeSymbol symbol, SemanticModel model) {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+        public static bool MatchesTypeSymbol(this Type @this, ITypeSymbol symbol, SemanticModel model) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (symbol == null) throw new ArgumentNullException(nameof(symbol));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
-            return type.GetTypeSymbol(model).Equals(symbol);
+            return @this.GetTypeSymbol(model).Equals(symbol);
         }
     }
 }

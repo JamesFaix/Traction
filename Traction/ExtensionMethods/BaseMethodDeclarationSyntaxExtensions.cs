@@ -1,7 +1,8 @@
 ﻿using System;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis;
+using System.Collections.Generic;
 using System.Linq;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Traction {
 
@@ -10,63 +11,70 @@ namespace Traction {
     /// </summary>
     static class BaseMethodDeclarationSyntaxExtensions {
 
-        public static TypeSyntax ReturnType(this BaseMethodDeclarationSyntax node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
+        public static TypeSyntax ReturnType(this BaseMethodDeclarationSyntax @this) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            if (node is MethodDeclarationSyntax)
-                return ((MethodDeclarationSyntax)node).ReturnType;
+            if (@this is MethodDeclarationSyntax)
+                return ((MethodDeclarationSyntax)@this).ReturnType;
 
-            if (node is OperatorDeclarationSyntax)
-                return ((OperatorDeclarationSyntax)node).ReturnType;
+            if (@this is OperatorDeclarationSyntax)
+                return ((OperatorDeclarationSyntax)@this).ReturnType;
 
-            if (node is ConversionOperatorDeclarationSyntax)
-                return ((ConversionOperatorDeclarationSyntax)node).Type;
+            if (@this is ConversionOperatorDeclarationSyntax)
+                return ((ConversionOperatorDeclarationSyntax)@this).Type;
 
-            if (node is ConstructorDeclarationSyntax 
-             || node is DestructorDeclarationSyntax)
+            if (@this is ConstructorDeclarationSyntax
+             || @this is DestructorDeclarationSyntax)
                 return null;
 
             throw new InvalidOperationException("Invalid method declaration type.");
         }
 
-        public static TypeInfo ReturnTypeInfo(this BaseMethodDeclarationSyntax node, SemanticModel model) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
+        public static TypeInfo ReturnTypeInfo(this BaseMethodDeclarationSyntax @this, SemanticModel model) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
-            return model.GetTypeInfo(node.ReturnType());
+            return model.GetTypeInfo(@this.ReturnType());
         }
 
-        public static TNode WithBody<TNode>(this TNode node, BlockSyntax body)
+        public static TNode WithBody<TNode>(this TNode @this, BlockSyntax body)
             where TNode : BaseMethodDeclarationSyntax {
-            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (body == null) throw new ArgumentNullException(nameof(body));
 
-            return (node as dynamic)
+            return (@this as dynamic)
                 .WithBody(body);
-        }       
+        }
 
-        public static bool IsInterfaceImplementation(this BaseMethodDeclarationSyntax node, SemanticModel model) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
+        public static bool IsInterfaceImplementation(this BaseMethodDeclarationSyntax @this, SemanticModel model) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
-            var methodSymbol = model.GetDeclaredSymbol(node) as IMethodSymbol;
+            return @this.InterfaceImplementations(model).Any();
+        }
+
+        public static IEnumerable<IMethodSymbol> InterfaceImplementations(this BaseMethodDeclarationSyntax @this, SemanticModel model) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            var methodSymbol = model.GetDeclaredSymbol(@this) as IMethodSymbol;
 
             var interfaceMethods = methodSymbol.ContainingType
                 .AllInterfaces
                 .SelectMany(i => i.GetMembers().OfType<IMethodSymbol>());
 
             return interfaceMethods
-                .Any(method => methodSymbol.Equals(
+                .Where(method => methodSymbol.Equals(
                                 methodSymbol
                                     .ContainingType
                                     .FindImplementationForInterfaceMember(method)));
         }
 
-        public static bool IsOverrideOrInterface(this BaseMethodDeclarationSyntax node, SemanticModel model) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
+        public static bool IsOverrideOrInterface(this BaseMethodDeclarationSyntax @this, SemanticModel model) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
-            return node.IsOverride() || node.IsInterfaceImplementation(model);
+            return @this.IsOverride() || @this.IsInterfaceImplementation(model);
         }
     }
 }

@@ -10,45 +10,45 @@ namespace Traction {
     /// </summary>
     static class PropertySyntaxExtensions {
 
-        public static AccessorDeclarationSyntax Getter(this PropertyDeclarationSyntax node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
+        public static AccessorDeclarationSyntax Getter(this PropertyDeclarationSyntax @this) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            if (node.ExpressionBody != null) return null;
+            if (@this.ExpressionBody != null) return null;
 
-            return node.AccessorList.Accessors
+            return @this.AccessorList.Accessors
                 .SingleOrDefault(accessor => accessor.Kind().ToString().StartsWith("Get"));
         }
 
-        public static AccessorDeclarationSyntax Setter(this PropertyDeclarationSyntax node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
+        public static AccessorDeclarationSyntax Setter(this PropertyDeclarationSyntax @this) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            if (node.ExpressionBody != null) return null;
+            if (@this.ExpressionBody != null) return null;
 
-            return node.AccessorList.Accessors
+            return @this.AccessorList.Accessors
                 .SingleOrDefault(accessor => accessor.Kind().ToString().StartsWith("Set"));
         }
 
-        public static bool IsAutoImplentedProperty(this PropertyDeclarationSyntax node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
+        public static bool IsAutoImplentedProperty(this PropertyDeclarationSyntax @this) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            if (node.IsAbstract()) return false;
-            var getter = node.Getter();
+            if (@this.IsAbstract()) return false;
+            var getter = @this.Getter();
             return getter != null  //Auto-properties must have getter
                 && getter.Body == null;
         }
         
-        public static TypeInfo TypeInfo(this PropertyDeclarationSyntax node, SemanticModel model) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
+        public static TypeInfo TypeInfo(this PropertyDeclarationSyntax @this, SemanticModel model) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
-            return model.GetTypeInfo(node.Type);
+            return model.GetTypeInfo(@this.Type);
         }
 
-        public static bool IsInterfaceImplementation(this PropertyDeclarationSyntax node, SemanticModel model) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
+        public static bool IsInterfaceImplementation(this PropertyDeclarationSyntax @this, SemanticModel model) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
-            var propertySymbol = model.GetDeclaredSymbol(node) as IPropertySymbol;
+            var propertySymbol = model.GetDeclaredSymbol(@this) as IPropertySymbol;
 
             return propertySymbol.ContainingType
                 .AllInterfaces
@@ -59,11 +59,11 @@ namespace Traction {
                                     .FindImplementationForInterfaceMember(property)));
         }
 
-        public static bool IsOverrideOrInterface(this PropertyDeclarationSyntax node, SemanticModel model) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
+        public static bool IsOverrideOrInterface(this PropertyDeclarationSyntax @this, SemanticModel model) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
-            return node.IsOverride() || node.IsInterfaceImplementation(model);
+            return @this.IsOverride() || @this.IsInterfaceImplementation(model);
         }
     }
 }

@@ -11,10 +11,10 @@ namespace Traction {
     /// </summary>
     static class TypeSymbolExtensions {
 
-        public static IEnumerable<INamedTypeSymbol> Ancestors(this ITypeSymbol symbol) {
-            if (symbol == null) throw new ArgumentNullException(nameof(symbol));
+        public static IEnumerable<INamedTypeSymbol> Ancestors(this ITypeSymbol @this) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            var ancestor = symbol as INamedTypeSymbol;
+            var ancestor = @this as INamedTypeSymbol;
 
             while (ancestor != null) {
                 ancestor = ancestor.BaseType;
@@ -22,10 +22,10 @@ namespace Traction {
             }
         }
 
-        public static string FullName(this ITypeSymbol symbol) {
-            if (symbol == null) throw new ArgumentNullException(nameof(symbol));
+        public static string FullName(this ITypeSymbol @this) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
             
-            return symbol.ToDisplayString(
+            return @this.ToDisplayString(
                 new SymbolDisplayFormat(
                     SymbolDisplayGlobalNamespaceStyle.Included,
                     SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
@@ -34,10 +34,10 @@ namespace Traction {
 //            return result;
         }
 
-        private static string FullNamespace(this ISymbol symbol) {
+        private static string FullNamespace(this ISymbol @this) {
             string result = "";
 
-            var namespaceSymbol = symbol.ContainingNamespace;
+            var namespaceSymbol = @this.ContainingNamespace;
             while (namespaceSymbol != null) {
                 if (namespaceSymbol.Name != "") {
                     result = $"{namespaceSymbol.Name}.{result}";
@@ -48,30 +48,30 @@ namespace Traction {
             return "global::" + result;
         }
 
-        public static bool CanBeNull(this ITypeSymbol type) =>
-            !type.IsValueType || type.IsNullable();
+        public static bool CanBeNull(this ITypeSymbol @this) =>
+            !@this.IsValueType || @this.IsNullable();
 
-        public static bool IsNullable(this ITypeSymbol type) =>
-            type.FullName().EndsWith("?");
+        public static bool IsNullable(this ITypeSymbol @this) =>
+            @this.FullName().EndsWith("?");
 
-        public static bool IsEquatable(this ITypeSymbol type) =>
-            type.AllInterfaces
+        public static bool IsEquatable(this ITypeSymbol @this) =>
+            @this.AllInterfaces
                 .Any(i => i.FullName().StartsWith("global::System.IEquatable<"));
 
-        public static bool IsComparable(this ITypeSymbol type) =>
-            type.AllInterfaces
+        public static bool IsComparable(this ITypeSymbol @this) =>
+            @this.AllInterfaces
                 .Any(i => i.FullName().StartsWith("global::System.IComparable<"));
 
-        public static bool IsEnumerable(this ITypeSymbol type) =>
-            type.AllInterfaces
+        public static bool IsEnumerable(this ITypeSymbol @this) =>
+            @this.AllInterfaces
                 .Any(i => i.FullName().StartsWith("global::System.Collections.Generic.IEnumerable"));
 
-        private static string ToDelimitedString<T>(this IEnumerable<T> sequence, string delimiter) {
+        private static string ToDelimitedString<T>(this IEnumerable<T> @this, string delimiter) {
             var sb = new StringBuilder();
 
             bool skipDelimiter = true;
 
-            foreach (var item in sequence) {
+            foreach (var item in @this) {
                 if (skipDelimiter) {
                     skipDelimiter = false;
                 }

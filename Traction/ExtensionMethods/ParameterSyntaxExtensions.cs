@@ -7,11 +7,11 @@ namespace Traction {
 
     static class ParameterSyntaxExtensions {
 
-        public static TypeInfo GetTypeInfo(this ParameterSyntax node, SemanticModel model) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
+        public static TypeInfo GetTypeInfo(this ParameterSyntax @this, SemanticModel model) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
-            return model.GetTypeInfo(node.Type);
+            return model.GetTypeInfo(@this.Type);
         }
     }
 }
