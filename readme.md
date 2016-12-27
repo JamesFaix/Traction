@@ -11,7 +11,7 @@
 
 ## Overview
 
-Traction is a C# precompiler that implements a lightweight form of the design-by-contract pattern.
+Traction is a C# precompiler that implements a lightweight form of the design-by-contract pattern.  There is still a lot of work to be done, so **please feel free to contribute if you want to help**.
 	
 Traction is a plugin for the StackExchange.Precompilation package (SEP), which must be installed in a project before using Traction.  SEP is a build process tool that uses the .NET Compiler Platform (Roslyn) to allow the injection of custom compilation steps for C# and ASP.NET projects.  Traction adds a compilation step that scans the in-memory syntax trees for custom "contract" attributes, and injects corresponding runtime assertions.  For example, this source code:
 
