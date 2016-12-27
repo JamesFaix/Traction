@@ -16,10 +16,10 @@ namespace Traction.DiagnosticsTests {
 
             //Assert
             if (isValid) {
-                Assert.IsTrue(diagnostics.All(d => d.Id == "TR0000"));
+                Assert.IsTrue(diagnostics.ContainsOnlyCode(DiagnosticCode.RewriteConfirmed));
             }
             else {
-                Assert.IsTrue(diagnostics.Any(d => d.Id == "TR0006"));
+                Assert.IsTrue(diagnostics.ContainsCode(DiagnosticCode.InvalidTypeForContract));
             }
         }
 

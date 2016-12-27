@@ -18,8 +18,8 @@ namespace Traction.DiagnosticsTests {
             //Act
             var diagnostics = TestHelper.GetDiagnostics(compilation);
 
-            Assert.IsTrue(diagnostics.Any(d => d.Message.StartsWith("Expanded")));
-            Assert.IsTrue(diagnostics.All(d => d.Id == "TR0000"));
+            Assert.IsTrue(diagnostics.Any(d => d.GetMessage().StartsWith("Expanded")));
+            Assert.IsTrue(diagnostics.ContainsOnlyCode(DiagnosticCode.RewriteConfirmed));
         }
     }
 }
