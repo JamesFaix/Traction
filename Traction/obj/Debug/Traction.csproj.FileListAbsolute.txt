@@ -11,3 +11,4 @@ C:\Users\James\Documents\GitHub\Traction\Traction\bin\Debug\StackExchange.Precom
 C:\Users\James\Documents\GitHub\Traction\Traction\bin\Debug\System.Collections.Immutable.xml
 C:\Users\James\Documents\GitHub\Traction\Traction\obj\Debug\Traction.dll
 C:\Users\James\Documents\GitHub\Traction\Traction\obj\Debug\Traction.pdb
+C:\Users\James\Documents\GitHub\Traction\Traction\obj\Debug\Traction.csprojResolveAssemblyReference.cache

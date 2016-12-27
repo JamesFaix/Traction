@@ -71,8 +71,10 @@
     <Compile Include="Attributes\NonNullAttribute.cs" />
     <Compile Include="Contracts\Contract.cs" />
     <Compile Include="Exceptions\DiagnosticChecker.cs" />
+    <Compile Include="Exceptions\DiagnosticCodes.cs" />
     <Compile Include="Exceptions\PreconditionException.cs" />
     <Compile Include="Exceptions\PostconditionException.cs" />
+    <Compile Include="ExtensionMethods\AttributeDataExtensions.cs" />
     <Compile Include="ExtensionMethods\AttributeSyntaxExtensions.cs" />
     <Compile Include="ExtensionMethods\BaseMethodDeclarationSyntaxExtensions.cs" />
     <Compile Include="ExtensionMethods\EnumerableExtensions.cs" />

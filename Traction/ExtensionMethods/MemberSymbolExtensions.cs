@@ -133,11 +133,24 @@ namespace Traction {
 
             var parameterAttributeTypes = @this
                 .Parameters
-                .SelectMany(p => 
+                .SelectMany(p =>
                     p.AncestorAttributes()
                      .Select(a => a.AttributeClass));
-            
+
             return parameterAttributeTypes.Contains(contractSymbol);
+        }
+
+        public static bool HasPrecondition<TAttribute>(this IParameterSymbol @this, SemanticModel model)
+            where TAttribute : ContractAttribute {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            var contractSymbol = typeof(TAttribute).GetTypeSymbol(model);
+
+            return @this
+                .AncestorAttributes()
+                .Select(a => a.AttributeClass)
+                .Contains(contractSymbol);
         }
 
         public static bool HasPostcondition<TAttribute>(this IMethodSymbol @this, SemanticModel model)

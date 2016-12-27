@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Linq;
 
 namespace Traction {
 
@@ -30,16 +31,28 @@ namespace Traction {
 
             if (hasPrecondition) {
                 //No preconditions on inherited methods
-                if (node.IsOverrideOrInterface(model)) { 
+                if (node.IsOverrideOrInterface(model)) {
                     result.Add(DiagnosticFactory.PreconditionsCannotBeAppliedToInheritedMembers(node.GetLocation()));
                 }
 
                 //No preconditions on invalid parameter types
-                foreach (var p in node.ParameterList.Parameters) { 
+                foreach (var p in node.ParameterList.Parameters) {
                     if (contract.IsDeclaredOn(p, model)
                     && !contract.IsValidType(p.GetTypeInfo(model))) {
                         result.Add(contract.InvalidTypeDiagnostic(p.GetLocation()));
                     }
+                }
+
+                var implementations = node.InterfaceImplementations(model);
+                var withPres = implementations.Where(m => m.HasPrecondition(model));
+
+                //Methods cannot implement multiple interfaces with contracts
+                if (node
+                    .InterfaceImplementations(model)
+                    .Where(m => m.HasPrecondition(model))
+                    .Count() > 1) {
+
+                    result.Add(DiagnosticFactory.MembersCannotInheritPreconditionsFromMultipleSources(node.GetLocation()));
                 }
             }
 
