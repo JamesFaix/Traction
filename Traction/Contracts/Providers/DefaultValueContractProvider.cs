@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Traction.RoslynExtensions;
-using Microsoft.CodeAnalysis;
 
 namespace Traction.Contracts {
 

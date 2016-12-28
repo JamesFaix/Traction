@@ -1,7 +1,5 @@
-﻿using System;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Traction.Context;
 
 namespace Traction {
 

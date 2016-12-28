@@ -3,8 +3,8 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Traction.RoslynExtensions;
 using Traction.Contracts;
+using Traction.RoslynExtensions;
 
 namespace Traction {
 

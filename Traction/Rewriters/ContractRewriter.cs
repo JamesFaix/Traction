@@ -5,9 +5,9 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Traction.RoslynExtensions;
-using Traction.Diagnostics;
 using Traction.Contracts;
+using Traction.Diagnostics;
+using Traction.RoslynExtensions;
 
 namespace Traction {
 

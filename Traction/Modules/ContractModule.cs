@@ -1,5 +1,5 @@
-﻿using StackExchange.Precompilation;
-using System.Linq;
+﻿using System.Linq;
+using StackExchange.Precompilation;
 using Traction.Contracts;
 
 namespace Traction {
