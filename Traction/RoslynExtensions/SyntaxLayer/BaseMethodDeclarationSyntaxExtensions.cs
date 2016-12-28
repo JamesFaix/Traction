@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Traction {
+namespace Traction.RoslynExtensions {
 
     /// <summary>
     /// Extension methods for <see cref="BaseMethodDeclarationSyntax"/> 
@@ -44,37 +44,6 @@ namespace Traction {
 
             return (@this as dynamic)
                 .WithBody(body);
-        }
-
-        //public static bool IsInterfaceImplementation(this BaseMethodDeclarationSyntax @this, SemanticModel model) {
-        //    if (@this == null) throw new ArgumentNullException(nameof(@this));
-        //    if (model == null) throw new ArgumentNullException(nameof(model));
-
-        //    return @this.InterfaceImplementations(model).Any();
-        //}
-
-        //public static IEnumerable<IMethodSymbol> InterfaceImplementations(this BaseMethodDeclarationSyntax @this, SemanticModel model) {
-        //    if (@this == null) throw new ArgumentNullException(nameof(@this));
-        //    if (model == null) throw new ArgumentNullException(nameof(model));
-
-        //    var methodSymbol = model.GetDeclaredSymbol(@this) as IMethodSymbol;
-
-        //    var interfaceMethods = methodSymbol.ContainingType
-        //        .AllInterfaces
-        //        .SelectMany(i => i.GetMembers().OfType<IMethodSymbol>());
-
-        //    return interfaceMethods
-        //        .Where(method => methodSymbol.Equals(
-        //                        methodSymbol
-        //                            .ContainingType
-        //                            .FindImplementationForInterfaceMember(method)));
-        //}
-
-        //public static bool IsOverrideOrInterface(this BaseMethodDeclarationSyntax @this, SemanticModel model) {
-        //    if (@this == null) throw new ArgumentNullException(nameof(@this));
-        //    if (model == null) throw new ArgumentNullException(nameof(model));
-
-        //    return @this.IsOverride() || @this.IsInterfaceImplementation(model);
-        //}
+        }       
     }
 }

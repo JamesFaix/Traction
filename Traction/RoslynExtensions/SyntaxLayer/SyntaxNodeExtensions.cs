@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace Traction {
+namespace Traction.RoslynExtensions {
 
     /// <summary>
     /// Extension methods for <see cref="SyntaxNode"/> 
