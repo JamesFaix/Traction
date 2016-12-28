@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Traction.Contracts;
 using Traction.RoslynExtensions;
 
-namespace Traction.Diagnostics {
+namespace Traction {
 
     internal class DiagnosticChecker {
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.CodeAnalysis;
 
-namespace Traction.Diagnostics {
+namespace Traction {
 
     /// <summary>
     /// Factory for contract rewriting diagnostics.

@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using StackExchange.Precompilation;
 
-namespace Traction.Context {
+namespace Traction {
 
     /// <summary>
     /// Context data for pre-compilation stage.
