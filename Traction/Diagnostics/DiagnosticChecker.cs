@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Linq;
+using Traction.Contracts;
+using Traction.RoslynExtensions;
 
-namespace Traction {
+namespace Traction.Diagnostics {
 
     internal class DiagnosticChecker {
 
@@ -22,34 +24,38 @@ namespace Traction {
         public List<Diagnostic> GetDiagnostics(BaseMethodDeclarationSyntax node) {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
+            var symbol = model.GetDeclaredSymbol(node) as IMethodSymbol;
+
             //Only check declarations for diagnostics, not inheritance.
             //Assume base class declarations were checked.
-            var hasPrecondition = contract.IsDeclaredOnParameterOf(node, model);
-            var hasPostcondition = contract.IsDeclaredOnReturnValueOf(node, model);
+            var hasPrecondition = symbol.HasPreconditionDeclaration(model, contract);
+            var hasPostcondition = symbol.HasPostconditionDeclaration(model, contract);
 
             var result = new List<Diagnostic>();
 
             if (hasPrecondition) {
                 //No preconditions on inherited methods
-                if (node.IsOverrideOrInterface(model)) {
+                if (symbol.IsOverrideOrInterfaceImplementation()) {
                     result.Add(DiagnosticFactory.PreconditionsCannotBeAppliedToInheritedMembers(node.GetLocation()));
                 }
 
                 //No preconditions on invalid parameter types
                 foreach (var p in node.ParameterList.Parameters) {
-                    if (contract.IsDeclaredOn(p, model)
+                    var paramSymbol = model.GetDeclaredSymbol(p) as IParameterSymbol;
+
+                    if (paramSymbol.HasPreconditionDeclaration(model, contract)
                     && !contract.IsValidType(p.GetTypeInfo(model))) {
-                        result.Add(contract.InvalidTypeDiagnostic(p.GetLocation()));
+                        result.Add(contract.GetInvalidTypeDiagnostic(p.GetLocation()));
                     }
                 }
 
-                var implementations = node.InterfaceImplementations(model);
-                var withPres = implementations.Where(m => m.HasPrecondition(model));
+                //var implementations = symbol.ImplementedInterfaceMembers();
+                //var withPres = implementations.Where(m => m.HasAnyPrecondition(model));
 
                 //Methods cannot implement multiple interfaces with contracts
-                if (node
-                    .InterfaceImplementations(model)
-                    .Where(m => m.HasPrecondition(model))
+                if (symbol
+                    .ImplementedInterfaceMembers()
+                    .Where(m => m.HasAnyPrecondition(model))
                     .Count() > 1) {
 
                     result.Add(DiagnosticFactory.MembersCannotInheritPreconditionsFromMultipleSources(node.GetLocation()));
@@ -64,7 +70,7 @@ namespace Traction {
 
                 //No postconditions on invalid return types
                 if (!contract.IsValidType(node.ReturnTypeInfo(model))) {
-                    result.Add(contract.InvalidTypeDiagnostic(node.GetLocation()));
+                    result.Add(contract.GetInvalidTypeDiagnostic(node.GetLocation()));
                 }
 
                 //No postconditions on iterator blocks
@@ -86,19 +92,21 @@ namespace Traction {
         public List<Diagnostic> GetDiagnostics(PropertyDeclarationSyntax node) {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
+            var symbol = model.GetDeclaredSymbol(node) as IPropertySymbol;
+
             //Only check declarations for diagnostics, not inheritance.
             //Assume base class declarations were checked.
             var hasPrecondition = node.Getter() != null
-                && contract.IsDeclaredOn(node, model);
+                && symbol.HasPreconditionDeclaration(model, contract);
 
             var hasPostcondition = node.Setter() != null
-                && contract.IsDeclaredOn(node, model);
+                && symbol.HasPostconditionDeclaration(model, contract);
 
             var result = new List<Diagnostic>();
 
             if (hasPrecondition) {
                 //No preconditions on inherited members
-                if (node.IsOverrideOrInterface(model)) {
+                if (symbol.IsOverrideOrInterfaceImplementation()) {
                     result.Add(DiagnosticFactory.PreconditionsCannotBeAppliedToInheritedMembers(node.GetLocation()));
                 }
             }
@@ -113,7 +121,7 @@ namespace Traction {
             if (hasPostcondition || hasPrecondition) {
                 //No postconditions on invalid return types
                 if (!contract.IsValidType(node.TypeInfo(model))) {
-                    result.Add(contract.InvalidTypeDiagnostic(node.GetLocation()));
+                    result.Add(contract.GetInvalidTypeDiagnostic(node.GetLocation()));
                 }
             }
 

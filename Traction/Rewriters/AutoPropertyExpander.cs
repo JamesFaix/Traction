@@ -3,6 +3,8 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Traction.RoslynExtensions;
+using Traction.Contracts;
 
 namespace Traction {
 
@@ -19,7 +21,8 @@ namespace Traction {
 
         protected override bool MemberFilter(PropertyDeclarationSyntax member) =>
             member.IsAutoImplentedProperty() &&
-            member.HasAttributeExtending<PropertyDeclarationSyntax, ContractAttribute>(model);
+            model.GetPropertySymbol(member)
+                .HasAnyContract(model);
 
         protected override SyntaxList<SyntaxNode> ExpandMember(PropertyDeclarationSyntax node, ISymbol symbol) {
             if (node == null) throw new ArgumentNullException(nameof(node));

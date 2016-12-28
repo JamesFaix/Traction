@@ -1,5 +1,7 @@
 ﻿using System;
 using Microsoft.CodeAnalysis;
+using Traction.Context;
+using Traction.Diagnostics;
 
 namespace Traction {
 

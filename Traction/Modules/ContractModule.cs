@@ -1,4 +1,6 @@
 ﻿using StackExchange.Precompilation;
+using System.Linq;
+using Traction.Contracts;
 
 namespace Traction {
 
@@ -17,15 +19,12 @@ namespace Traction {
             AddPrecompilationRewriterProviders(new RewriterFactoryMethod[] {
                 AutoPropertyExpander.Create,
                 ExpressionBodiedMemberExpander.Create,
-                IteratorBlockExpander.Create,
-                ContractRewriter.Create(new NonNullContract()),
-                ContractRewriter.Create(new NonDefaultContract()),
-                ContractRewriter.Create(new NonEmptyContract()),
-                ContractRewriter.Create(new PositiveContract()),
-                ContractRewriter.Create(new NegativeContract()),
-                ContractRewriter.Create(new NonPositiveContract()),
-                ContractRewriter.Create(new NonNegativeContract())
+                IteratorBlockExpander.Create
             });
+
+            AddPrecompilationRewriterProviders(
+                MasterContractProvider.Instance.Contracts
+                    .Select(c => ContractRewriter.Create(c)));
         }
     }
 }

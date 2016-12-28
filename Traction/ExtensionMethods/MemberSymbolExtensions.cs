@@ -96,102 +96,102 @@ namespace Traction {
             return result;
         }
 
-        public static bool HasContract(this IMethodSymbol @this, SemanticModel model) =>
-            @this.HasContract<ContractAttribute>(model);
+        //public static bool HasContract(this IMethodSymbol @this, SemanticModel model) =>
+        //    @this.HasContract<ContractAttribute>(model);
 
-        public static bool HasContract(this IPropertySymbol @this, SemanticModel model) =>
-            @this.HasContract<ContractAttribute>(model);
+        //public static bool HasContract(this IPropertySymbol @this, SemanticModel model) =>
+        //    @this.HasContract<ContractAttribute>(model);
 
-        public static bool HasContract<TAttribute>(this IMethodSymbol @this, SemanticModel model)
-            where TAttribute : ContractAttribute =>
-            @this.HasPrecondition<TAttribute>(model) ||
-            @this.HasPostcondition<TAttribute>(model);
+        //public static bool HasContract<TAttribute>(this IMethodSymbol @this, SemanticModel model)
+        //    where TAttribute : ContractAttribute =>
+        //    @this.HasPrecondition<TAttribute>(model) ||
+        //    @this.HasPostcondition<TAttribute>(model);
 
-        public static bool HasContract<TAttribute>(this IPropertySymbol @this, SemanticModel model)
-            where TAttribute : ContractAttribute =>
-            @this.HasPrecondition<TAttribute>(model) ||
-            @this.HasPostcondition<TAttribute>(model);
+        //public static bool HasContract<TAttribute>(this IPropertySymbol @this, SemanticModel model)
+        //    where TAttribute : ContractAttribute =>
+        //    @this.HasPrecondition<TAttribute>(model) ||
+        //    @this.HasPostcondition<TAttribute>(model);
 
-        public static bool HasPrecondition(this IMethodSymbol @this, SemanticModel model) =>
-           @this.HasPrecondition<ContractAttribute>(model);
+        //public static bool HasPrecondition(this IMethodSymbol @this, SemanticModel model) =>
+        //   @this.HasPrecondition<ContractAttribute>(model);
 
-        public static bool HasPrecondition(this IPropertySymbol @this, SemanticModel model) =>
-            @this.HasPrecondition<ContractAttribute>(model);
+        //public static bool HasPrecondition(this IPropertySymbol @this, SemanticModel model) =>
+        //    @this.HasPrecondition<ContractAttribute>(model);
 
-        public static bool HasPostcondition(this IMethodSymbol @this, SemanticModel model) =>
-           @this.HasPostcondition<ContractAttribute>(model);
+        //public static bool HasPostcondition(this IMethodSymbol @this, SemanticModel model) =>
+        //   @this.HasPostcondition<ContractAttribute>(model);
 
-        public static bool HasPostcondition(this IPropertySymbol @this, SemanticModel model) =>
-            @this.HasPostcondition<ContractAttribute>(model);
+        //public static bool HasPostcondition(this IPropertySymbol @this, SemanticModel model) =>
+        //    @this.HasPostcondition<ContractAttribute>(model);
 
-        public static bool HasPrecondition<TAttribute>(this IMethodSymbol @this, SemanticModel model)
-            where TAttribute : ContractAttribute {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (model == null) throw new ArgumentNullException(nameof(model));
+        //public static bool HasPrecondition<TAttribute>(this IMethodSymbol @this, SemanticModel model)
+        //    where TAttribute : ContractAttribute {
+        //    if (@this == null) throw new ArgumentNullException(nameof(@this));
+        //    if (model == null) throw new ArgumentNullException(nameof(model));
 
-            var contractSymbol = typeof(TAttribute).GetTypeSymbol(model);
+        //    var contractSymbol = typeof(TAttribute).GetTypeSymbol(model);
 
-            var parameterAttributeTypes = @this
-                .Parameters
-                .SelectMany(p =>
-                    p.AncestorAttributes()
-                     .Select(a => a.AttributeClass));
+        //    var parameterAttributeTypes = @this
+        //        .Parameters
+        //        .SelectMany(p =>
+        //            p.AncestorAttributes()
+        //             .Select(a => a.AttributeClass));
 
-            return parameterAttributeTypes.Contains(contractSymbol);
-        }
+        //    return parameterAttributeTypes.Contains(contractSymbol);
+        //}
 
-        public static bool HasPrecondition<TAttribute>(this IParameterSymbol @this, SemanticModel model)
-            where TAttribute : ContractAttribute {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (model == null) throw new ArgumentNullException(nameof(model));
+        //public static bool HasPrecondition<TAttribute>(this IParameterSymbol @this, SemanticModel model)
+        //    where TAttribute : ContractAttribute {
+        //    if (@this == null) throw new ArgumentNullException(nameof(@this));
+        //    if (model == null) throw new ArgumentNullException(nameof(model));
 
-            var contractSymbol = typeof(TAttribute).GetTypeSymbol(model);
+        //    var contractSymbol = typeof(TAttribute).GetTypeSymbol(model);
 
-            return @this
-                .AncestorAttributes()
-                .Select(a => a.AttributeClass)
-                .Contains(contractSymbol);
-        }
+        //    return @this
+        //        .AncestorAttributes()
+        //        .Select(a => a.AttributeClass)
+        //        .Contains(contractSymbol);
+        //}
 
-        public static bool HasPostcondition<TAttribute>(this IMethodSymbol @this, SemanticModel model)
-           where TAttribute : ContractAttribute {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (model == null) throw new ArgumentNullException(nameof(model));
+        //public static bool HasPostcondition<TAttribute>(this IMethodSymbol @this, SemanticModel model)
+        //   where TAttribute : ContractAttribute {
+        //    if (@this == null) throw new ArgumentNullException(nameof(@this));
+        //    if (model == null) throw new ArgumentNullException(nameof(model));
 
-            var contractSymbol = typeof(TAttribute).GetTypeSymbol(model);
+        //    var contractSymbol = typeof(TAttribute).GetTypeSymbol(model);
 
-            return @this.AncestorAttributes()
-                        .Any(a => a.AttributeClass
-                                    .AncestorSymbols()
-                                    .Contains(contractSymbol));
-        }
+        //    return @this.AncestorAttributes()
+        //                .Any(a => a.AttributeClass
+        //                            .AncestorSymbols()
+        //                            .Contains(contractSymbol));
+        //}
 
-        public static bool HasPrecondition<TAttribute>(this IPropertySymbol @this, SemanticModel model)
-            where TAttribute : ContractAttribute {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (model == null) throw new ArgumentNullException(nameof(model));
+        //public static bool HasPrecondition<TAttribute>(this IPropertySymbol @this, SemanticModel model)
+        //    where TAttribute : ContractAttribute {
+        //    if (@this == null) throw new ArgumentNullException(nameof(@this));
+        //    if (model == null) throw new ArgumentNullException(nameof(model));
 
-            var contractSymbol = typeof(TAttribute).GetTypeSymbol(model);
+        //    var contractSymbol = typeof(TAttribute).GetTypeSymbol(model);
 
-            return !@this.IsReadOnly
-                && @this.AncestorAttributes()
-                        .Any(a => a.AttributeClass
-                                   .AncestorSymbols()
-                                   .Contains(contractSymbol));
-        }
+        //    return !@this.IsReadOnly
+        //        && @this.AncestorAttributes()
+        //                .Any(a => a.AttributeClass
+        //                           .AncestorSymbols()
+        //                           .Contains(contractSymbol));
+        //}
 
-        public static bool HasPostcondition<TAttribute>(this IPropertySymbol @this, SemanticModel model)
-           where TAttribute : ContractAttribute {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (model == null) throw new ArgumentNullException(nameof(model));
+        //public static bool HasPostcondition<TAttribute>(this IPropertySymbol @this, SemanticModel model)
+        //   where TAttribute : ContractAttribute {
+        //    if (@this == null) throw new ArgumentNullException(nameof(@this));
+        //    if (model == null) throw new ArgumentNullException(nameof(model));
 
-            var contractSymbol = typeof(TAttribute).GetTypeSymbol(model);
+        //    var contractSymbol = typeof(TAttribute).GetTypeSymbol(model);
 
-            return !@this.IsWriteOnly
-                && @this.AncestorAttributes()
-                        .Any(a => a.AttributeClass
-                                   .AncestorSymbols()
-                                   .Contains(contractSymbol));
-        }
+        //    return !@this.IsWriteOnly
+        //        && @this.AncestorAttributes()
+        //                .Any(a => a.AttributeClass
+        //                           .AncestorSymbols()
+        //                           .Contains(contractSymbol));
+        //}
     }
 }

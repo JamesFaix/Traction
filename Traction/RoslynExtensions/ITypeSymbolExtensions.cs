@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.CodeAnalysis;
 using System.Linq;
-using System.Text;
+using Microsoft.CodeAnalysis;
 
-namespace Traction {
+namespace Traction.RoslynExtensions {
 
-    /// <summary>
-    /// Extension methods for <see cref="ITypeSymbol"/> 
-    /// </summary>
-    static class TypeSymbolExtensions {
+    static class ITypeSymbolExtensions {
 
-        public static IEnumerable<INamedTypeSymbol> Ancestors(this ITypeSymbol @this) {
+        public static IEnumerable<INamedTypeSymbol> BaseClasses(this ITypeSymbol @this) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
 
             var ancestor = @this as INamedTypeSymbol;
@@ -22,16 +18,25 @@ namespace Traction {
             }
         }
 
+        public static bool InheritsFrom(this ITypeSymbol @this, ITypeSymbol other) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+            if (other == null) throw new ArgumentNullException(nameof(other));
+
+            return @this
+                .BaseClasses()
+                .Contains(other);
+        }
+
         public static string FullName(this ITypeSymbol @this) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
-            
+
             return @this.ToDisplayString(
                 new SymbolDisplayFormat(
                     SymbolDisplayGlobalNamespaceStyle.Included,
                     SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
                     SymbolDisplayGenericsOptions.IncludeTypeParameters));
 
-//            return result;
+            //            return result;
         }
 
         private static string FullNamespace(this ISymbol @this) {
@@ -46,24 +51,6 @@ namespace Traction {
             }
 
             return "global::" + result;
-        }
-        
-        private static string ToDelimitedString<T>(this IEnumerable<T> @this, string delimiter) {
-            var sb = new StringBuilder();
-
-            bool skipDelimiter = true;
-
-            foreach (var item in @this) {
-                if (skipDelimiter) {
-                    skipDelimiter = false;
-                }
-                else {
-                    sb.Append(delimiter);
-                }
-                sb.Append(item);
-            }
-
-            return sb.ToString();
         }
     }
 }

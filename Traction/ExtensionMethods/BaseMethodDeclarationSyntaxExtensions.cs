@@ -46,35 +46,35 @@ namespace Traction {
                 .WithBody(body);
         }
 
-        public static bool IsInterfaceImplementation(this BaseMethodDeclarationSyntax @this, SemanticModel model) {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (model == null) throw new ArgumentNullException(nameof(model));
+        //public static bool IsInterfaceImplementation(this BaseMethodDeclarationSyntax @this, SemanticModel model) {
+        //    if (@this == null) throw new ArgumentNullException(nameof(@this));
+        //    if (model == null) throw new ArgumentNullException(nameof(model));
 
-            return @this.InterfaceImplementations(model).Any();
-        }
+        //    return @this.InterfaceImplementations(model).Any();
+        //}
 
-        public static IEnumerable<IMethodSymbol> InterfaceImplementations(this BaseMethodDeclarationSyntax @this, SemanticModel model) {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (model == null) throw new ArgumentNullException(nameof(model));
+        //public static IEnumerable<IMethodSymbol> InterfaceImplementations(this BaseMethodDeclarationSyntax @this, SemanticModel model) {
+        //    if (@this == null) throw new ArgumentNullException(nameof(@this));
+        //    if (model == null) throw new ArgumentNullException(nameof(model));
 
-            var methodSymbol = model.GetDeclaredSymbol(@this) as IMethodSymbol;
+        //    var methodSymbol = model.GetDeclaredSymbol(@this) as IMethodSymbol;
 
-            var interfaceMethods = methodSymbol.ContainingType
-                .AllInterfaces
-                .SelectMany(i => i.GetMembers().OfType<IMethodSymbol>());
+        //    var interfaceMethods = methodSymbol.ContainingType
+        //        .AllInterfaces
+        //        .SelectMany(i => i.GetMembers().OfType<IMethodSymbol>());
 
-            return interfaceMethods
-                .Where(method => methodSymbol.Equals(
-                                methodSymbol
-                                    .ContainingType
-                                    .FindImplementationForInterfaceMember(method)));
-        }
+        //    return interfaceMethods
+        //        .Where(method => methodSymbol.Equals(
+        //                        methodSymbol
+        //                            .ContainingType
+        //                            .FindImplementationForInterfaceMember(method)));
+        //}
 
-        public static bool IsOverrideOrInterface(this BaseMethodDeclarationSyntax @this, SemanticModel model) {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (model == null) throw new ArgumentNullException(nameof(model));
+        //public static bool IsOverrideOrInterface(this BaseMethodDeclarationSyntax @this, SemanticModel model) {
+        //    if (@this == null) throw new ArgumentNullException(nameof(@this));
+        //    if (model == null) throw new ArgumentNullException(nameof(model));
 
-            return @this.IsOverride() || @this.IsInterfaceImplementation(model);
-        }
+        //    return @this.IsOverride() || @this.IsInterfaceImplementation(model);
+        //}
     }
 }

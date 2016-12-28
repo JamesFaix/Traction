@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
-namespace Traction {
+namespace Traction.RoslynExtensions {
 
     /// <summary>
     /// Extension methods for <see cref="Type"/> for working with Roslyn API. 
@@ -27,12 +27,12 @@ namespace Traction {
             }
         }
 
-        public static bool MatchesTypeSymbol(this Type @this, ITypeSymbol symbol, SemanticModel model) {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (symbol == null) throw new ArgumentNullException(nameof(symbol));
-            if (model == null) throw new ArgumentNullException(nameof(model));
+        //public static bool MatchesTypeSymbol(this Type @this, ITypeSymbol symbol, SemanticModel model) {
+        //    if (@this == null) throw new ArgumentNullException(nameof(@this));
+        //    if (symbol == null) throw new ArgumentNullException(nameof(symbol));
+        //    if (model == null) throw new ArgumentNullException(nameof(model));
 
-            return @this.GetTypeSymbol(model).Equals(symbol);
-        }
+        //    return @this.GetTypeSymbol(model).Equals(symbol);
+        //}
     }
 }

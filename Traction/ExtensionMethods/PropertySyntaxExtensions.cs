@@ -44,26 +44,26 @@ namespace Traction {
             return model.GetTypeInfo(@this.Type);
         }
 
-        public static bool IsInterfaceImplementation(this PropertyDeclarationSyntax @this, SemanticModel model) {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (model == null) throw new ArgumentNullException(nameof(model));
+        //public static bool IsInterfaceImplementation(this PropertyDeclarationSyntax @this, SemanticModel model) {
+        //    if (@this == null) throw new ArgumentNullException(nameof(@this));
+        //    if (model == null) throw new ArgumentNullException(nameof(model));
 
-            var propertySymbol = model.GetDeclaredSymbol(@this) as IPropertySymbol;
+        //    var propertySymbol = model.GetDeclaredSymbol(@this) as IPropertySymbol;
 
-            return propertySymbol.ContainingType
-                .AllInterfaces
-                .SelectMany(i => i.GetMembers().OfType<IPropertySymbol>())
-                .Any(property => propertySymbol.Equals(
-                                propertySymbol
-                                    .ContainingType
-                                    .FindImplementationForInterfaceMember(property)));
-        }
+        //    return propertySymbol.ContainingType
+        //        .AllInterfaces
+        //        .SelectMany(i => i.GetMembers().OfType<IPropertySymbol>())
+        //        .Any(property => propertySymbol.Equals(
+        //                        propertySymbol
+        //                            .ContainingType
+        //                            .FindImplementationForInterfaceMember(property)));
+        //}
 
-        public static bool IsOverrideOrInterface(this PropertyDeclarationSyntax @this, SemanticModel model) {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (model == null) throw new ArgumentNullException(nameof(model));
+        //public static bool IsOverrideOrInterface(this PropertyDeclarationSyntax @this, SemanticModel model) {
+        //    if (@this == null) throw new ArgumentNullException(nameof(@this));
+        //    if (model == null) throw new ArgumentNullException(nameof(model));
 
-            return @this.IsOverride() || @this.IsInterfaceImplementation(model);
-        }
+        //    return @this.IsOverride() || @this.IsInterfaceImplementation(model);
+        //}
     }
 }

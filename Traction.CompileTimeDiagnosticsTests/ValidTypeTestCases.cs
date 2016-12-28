@@ -30,7 +30,7 @@ namespace Traction.DiagnosticsTests {
                             SourceCodeFactory.PreconditionMethod(typeName, attributeName))),
                     isValid)
                 .SetName($"{attributeName}_CanOnlyBePlacedOnParametersWithValidTypes" +
-                    $"_{typeName}{(isValid ? "Fails" : "Passes")}");
+                    $"_{typeName}{(isValid ? "Passes" : "Fails")}");
         }
 
         private static TestCaseData PostconditionCase(string typeName, string attributeName, bool isValid) {
@@ -40,7 +40,7 @@ namespace Traction.DiagnosticsTests {
                             SourceCodeFactory.PostconditionMethod(typeName, attributeName))),
                     isValid)
                  .SetName($"{attributeName}_CanOnlyBePlacedOnReturnValuesWithValidTypes" +
-                     $"_{typeName}{(isValid ? "Fails" : "Passes")}");
+                     $"_{typeName}{(isValid ? "Passes" : "Fails")}");
         }
 
         private static IEnumerable<TestCaseData> AllCases =>

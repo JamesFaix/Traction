@@ -3,6 +3,9 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Traction.RoslynExtensions;
+using Traction.Contracts;
+
 namespace Traction {
 
     /// <summary>
@@ -19,7 +22,8 @@ namespace Traction {
         protected override bool MemberFilter(BaseMethodDeclarationSyntax member) =>
             member.IsIteratorBlock() &&
             member.ParameterList.Parameters
-                .Any(p => p.HasAttributeExtending<ParameterSyntax, ContractAttribute>(model));
+                .Select(p => model.GetParameterSymbol(p))
+                .Any(p => p.HasAnyPrecondition(model));
 
         protected override SyntaxList<SyntaxNode> ExpandMember(BaseMethodDeclarationSyntax node, ISymbol symbol) {
 
@@ -90,7 +94,7 @@ namespace Traction {
         private ParameterSyntax GetParameter(ParameterSyntax node) {
             //Remove contract attributes
             var attributes = node.AllAttributes()
-                .Where(a => !a.Extends<ContractAttribute>(model))
+                .Where(a => !a.IsContractAttribute(model))
                 .ToArray();
 
             return node.WithAttributeLists(
