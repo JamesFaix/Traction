@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Traction.Contracts;
 using Traction.Contracts.Expansion;
-using Traction.Contracts.Injection;
 using Traction.SEPrecompilation;
 
 namespace Traction {
@@ -18,15 +17,15 @@ namespace Traction {
 #endif
 
             //Add syntax expanders first, so contracts can operate on expanded syntax.
-            AddPrecompilationRewriterProviders(new RewriterFactoryMethod[] {
-                AutoPropertyExpander.Create,
-                ExpressionBodiedMemberExpander.Create,
-                IteratorBlockExpander.Create
-            });
-
             AddPrecompilationRewriterProviders(
-                ContractProvider.Instance.Contracts
-                    .Select(c => ContractRewriter.Create(c)));
+                new IRewriterProvider[] {
+                    new AutoPropertyExpanderProvider(),
+                    new ExpressionBodiedMemberExpanderProvider(),
+                    new IteratorBlockExpanderProvider()
+                }
+                .Concat(ContractProvider.Instance
+                    .Contracts
+                    .Select(c => new ContractRewriterProvider(c))));
         }
     }
 }

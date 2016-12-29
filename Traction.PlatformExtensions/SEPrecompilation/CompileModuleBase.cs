@@ -10,29 +10,29 @@ namespace Traction.SEPrecompilation {
     public abstract class CompileModuleBase : ICompileModule {
 
         protected CompileModuleBase() {
-            precompilationRewriterProviders = new List<RewriterFactoryMethod>();
-            postcompilationRewriterProviders = new List<RewriterFactoryMethod>();
+            precompilationRewriterProviders = new List<IRewriterProvider>();
+            postcompilationRewriterProviders = new List<IRewriterProvider>();
         }
 
-        private readonly List<RewriterFactoryMethod> precompilationRewriterProviders;
-        private readonly List<RewriterFactoryMethod> postcompilationRewriterProviders;
+        private readonly List<IRewriterProvider> precompilationRewriterProviders;
+        private readonly List<IRewriterProvider> postcompilationRewriterProviders;
 
-        protected void AddPrecompilationRewriterProvider(RewriterFactoryMethod provider) {
+        protected void AddPrecompilationRewriterProvider(IRewriterProvider provider) {
             if (provider == null) throw new ArgumentNullException(nameof(provider));
             precompilationRewriterProviders.Add(provider);
         }
 
-        protected void AddPrecompilationRewriterProviders(IEnumerable<RewriterFactoryMethod> providers) {
+        protected void AddPrecompilationRewriterProviders(IEnumerable<IRewriterProvider> providers) {
             if (providers == null) throw new ArgumentNullException(nameof(providers));
             precompilationRewriterProviders.AddRange(providers);
         }
 
-        protected void AddPostcompilationRewriterProvider(RewriterFactoryMethod provider) {
+        protected void AddPostcompilationRewriterProvider(IRewriterProvider provider) {
             if (provider == null) throw new ArgumentNullException(nameof(provider));
             postcompilationRewriterProviders.Add(provider);
         }
 
-        protected void AddPostcompilationRewriterProvider(IEnumerable<RewriterFactoryMethod> providers) {
+        protected void AddPostcompilationRewriterProvider(IEnumerable<IRewriterProvider> providers) {
             if (providers == null) throw new ArgumentNullException(nameof(providers));
             postcompilationRewriterProviders.AddRange(providers);
         }
@@ -47,11 +47,11 @@ namespace Traction.SEPrecompilation {
             Process(new AfterCompileContextWrapper(context), postcompilationRewriterProviders);
         }
 
-        private void Process(ICompileContext context, IEnumerable<RewriterFactoryMethod> rewriterProviders) {
+        private void Process(ICompileContext context, IEnumerable<IRewriterProvider> rewriterProviders) {
             foreach (var provider in rewriterProviders) {
                 foreach (var syntaxTree in context.Compilation.SyntaxTrees) {
                     var model = context.Compilation.GetSemanticModel(syntaxTree);
-                    var rewriter = provider(model, context);
+                    var rewriter = provider.Create(model, context);
                     if (rewriter == null) throw new InvalidOperationException("Rewriter generator cannot return null.");
 
                     var rootNode = syntaxTree.GetRoot();

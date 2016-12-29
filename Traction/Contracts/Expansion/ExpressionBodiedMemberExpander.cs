@@ -11,12 +11,9 @@ namespace Traction.Contracts.Expansion {
     /// </summary>
     internal sealed class ExpressionBodiedMemberExpander : RewriterBase {
 
-        private ExpressionBodiedMemberExpander(SemanticModel model, ICompileContext context)
+        public ExpressionBodiedMemberExpander(SemanticModel model, ICompileContext context)
             : base(model, context, "Expanded expression-bodied member.") { }
-
-        public static ExpressionBodiedMemberExpander Create(SemanticModel model, ICompileContext context) =>
-            new ExpressionBodiedMemberExpander(model, context);
-
+        
         public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node) {
             if (node == null) throw new ArgumentNullException(nameof(node));
             if (node.ExpressionBody == null) return node;

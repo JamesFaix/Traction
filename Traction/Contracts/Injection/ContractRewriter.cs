@@ -18,21 +18,14 @@ namespace Traction.Contracts.Injection {
     /// </summary>
     internal sealed class ContractRewriter : RewriterBase {
 
-        private ContractRewriter(SemanticModel model, ICompileContext context, Contract contract)
+        public ContractRewriter(SemanticModel model, ICompileContext context, Contract contract)
             : base(model, context, $"Applied {contract.GetType()}.") {
 
             if (contract == null) throw new ArgumentNullException(nameof(contract));
             this.contract = contract;
             this.diagnosticChecker = new DiagnosticChecker(model, contract);
         }
-
-        public static ContractRewriter Create(SemanticModel model, ICompileContext context, Contract contract) =>
-            new ContractRewriter(model, context, contract);
-
-        //Allows partial function application on the factory method
-        public static RewriterFactoryMethod Create(Contract contract) =>
-            (model, context) => Create(model, context, contract);
-
+        
         private readonly Contract contract;
         private readonly DiagnosticChecker diagnosticChecker;
 

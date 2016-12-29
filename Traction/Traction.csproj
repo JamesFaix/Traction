@@ -64,6 +64,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\Expansion\AutoPropertyExpanderProvider.cs" />
+    <Compile Include="Contracts\Expansion\ExpressionBodiedMemberExpanderProvider.cs" />
+    <Compile Include="Contracts\Expansion\IteratorBlockExpanderProvider.cs" />
+    <Compile Include="Contracts\Injection\ContractRewriterProvider.cs" />
     <Compile Include="Contracts\Semantics\AttributeDataExtensions.cs" />
     <Compile Include="ClientAPI\ContractAttribute.cs" />
     <Compile Include="ClientAPI\ContractAttributes.cs">

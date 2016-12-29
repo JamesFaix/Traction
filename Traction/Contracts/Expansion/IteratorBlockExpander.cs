@@ -17,12 +17,9 @@ namespace Traction.Contracts.Expansion {
     /// </summary>
     internal sealed class IteratorBlockExpander : ConcreteTypeMemberExpander<BaseMethodDeclarationSyntax> {
 
-        private IteratorBlockExpander(SemanticModel model, ICompileContext context)
+        public IteratorBlockExpander(SemanticModel model, ICompileContext context)
             : base(model, context, "Expanded iterator block.") { }
-
-        public static IteratorBlockExpander Create(SemanticModel model, ICompileContext context) =>
-            new IteratorBlockExpander(model, context);
-
+        
         protected override bool MemberFilter(BaseMethodDeclarationSyntax member) =>
             member.IsIteratorBlock() &&
             member.ParameterList.Parameters
