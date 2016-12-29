@@ -74,13 +74,13 @@
     <Compile Include="RoslynExtensions\Syntax\AttributeSyntaxExtenions.cs" />
     <Compile Include="RoslynExtensions\Semantics\ITypeSymbolExtensions.cs" />
     <Compile Include="RoslynExtensions\Semantics\SymbolExtensionMethodsImpl.cs" />
-    <Compile Include="Contracts\ContractProvider.cs" />
-    <Compile Include="Contracts\Contract.cs" />
+    <Compile Include="ContractProvider.cs" />
+    <Compile Include="Contract.cs" />
     <Compile Include="RoslynExtensions\Semantics\IParameterSymbolExtensions.cs" />
     <Compile Include="RoslynExtensions\Semantics\IPropertySymbolExtensions.cs" />
-    <Compile Include="Contracts\IContractProvider.cs" />
+    <Compile Include="IContractProvider.cs" />
     <Compile Include="RoslynExtensions\Semantics\IMethodSymbolExtensions.cs" />
-    <Compile Include="Diagnostics\DiagnosticChecker.cs" />
+    <Compile Include="Rewriters\DiagnosticChecker.cs" />
     <Compile Include="ClientAPI\DiagnosticCode.cs" />
     <Compile Include="ClientAPI\PreconditionException.cs" />
     <Compile Include="ClientAPI\PostconditionException.cs" />
@@ -89,7 +89,7 @@
     <Compile Include="Rewriters\NodeRewriteAttempt.cs" />
     <Compile Include="Rewriters\SyntaxExpanders\ExpressionBodiedMemberExpander.cs" />
     <Compile Include="Rewriters\IdentifierFactory.cs" />
-    <Compile Include="ContractModule.cs" />
+    <Compile Include="TractionCompileModule.cs" />
     <Compile Include="ClientAPI\DiagnosticFactory.cs" />
     <Compile Include="Rewriters\ContractRewriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
