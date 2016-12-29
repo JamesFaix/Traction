@@ -7,6 +7,6 @@ namespace Traction.Contracts {
 
         IEnumerable<Contract> Contracts { get; }
 
-        Contract this[Type attributeType] { get; }
+        Contract this[string attributeTypeName] { get; }
     }
 }

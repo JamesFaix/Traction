@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Traction.Contracts.Semantics;
 using Traction.Roslyn.Semantics;
 using Traction.Roslyn.Syntax;
+using Traction.Contracts.Syntax;
 
 namespace Traction.Contracts.Analysis {
 
@@ -29,8 +30,8 @@ namespace Traction.Contracts.Analysis {
 
             //Only check declarations for diagnostics, not inheritance.
             //Assume base class declarations were checked.
-            var hasPrecondition = symbol.HasPreconditionDeclaration(model, contract);
-            var hasPostcondition = symbol.HasPostconditionDeclaration(model, contract);
+            var hasPrecondition = node.HasPreconditionAttribute(contract, model);
+            var hasPostcondition = node.HasPostconditionAttribute(contract, model);
 
             var result = new List<Diagnostic>();
 
@@ -44,7 +45,7 @@ namespace Traction.Contracts.Analysis {
                 foreach (var p in node.ParameterList.Parameters) {
                     var paramSymbol = model.GetDeclaredSymbol(p) as IParameterSymbol;
 
-                    if (paramSymbol.HasPreconditionDeclaration(model, contract)
+                    if (p.HasPreconditionAttribute(contract, model)
                     && !contract.IsValidType(p.GetTypeInfo(model))) {
                         result.Add(DiagnosticFactory.InvalidTypeForContract(contract, p.GetLocation()));
                     }
@@ -98,10 +99,10 @@ namespace Traction.Contracts.Analysis {
             //Only check declarations for diagnostics, not inheritance.
             //Assume base class declarations were checked.
             var hasPrecondition = node.Getter() != null
-                && symbol.HasPreconditionDeclaration(model, contract);
+                && node.HasPreconditionAttribute(contract, model);
 
             var hasPostcondition = node.Setter() != null
-                && symbol.HasPostconditionDeclaration(model, contract);
+                && node.HasPostconditionAttribute(contract, model);
 
             var result = new List<Diagnostic>();
 

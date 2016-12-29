@@ -25,14 +25,23 @@ namespace Traction.Contracts {
             this.contracts =
                 new[] { NonNullContract, NonDefaultContract, NonEmptyContract }
                 .Concat(BasicComparisonContracts)
-                .ToDictionary(c => c.AttributeType, c => c);
+                .ToDictionary(c => c.AttributeType.Name, c => c);
         }
 
-        private readonly Dictionary<Type, Contract> contracts;
+        private readonly Dictionary<string, Contract> contracts;
 
         public IEnumerable<Contract> Contracts => contracts.Values;
 
-        public Contract this[Type attributeType] => contracts[attributeType];
+        public Contract this[string attributeTypeName] {
+            get {
+                try {
+                    return contracts[attributeTypeName];
+                }
+                catch (KeyNotFoundException) {
+                    return contracts[attributeTypeName + "Attribute"];
+                }
+            }
+        }
 
         #region Contract factory properties
 
