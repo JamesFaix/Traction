@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Traction.Contracts;
+using Traction.Contracts.Semantics;
 using Traction.Roslyn.Semantics;
 using Traction.Roslyn.Syntax;
 
-namespace Traction {
+namespace Traction.Contracts.Rewriting {
 
     internal class DiagnosticChecker {
 
@@ -46,7 +46,7 @@ namespace Traction {
 
                     if (paramSymbol.HasPreconditionDeclaration(model, contract)
                     && !contract.IsValidType(p.GetTypeInfo(model))) {
-                        result.Add(contract.GetInvalidTypeDiagnostic(p.GetLocation()));
+                        result.Add(DiagnosticFactory.InvalidTypeForContract(contract, p.GetLocation()));
                     }
                 }
 
@@ -71,7 +71,7 @@ namespace Traction {
 
                 //No postconditions on invalid return types
                 if (!contract.IsValidType(node.ReturnTypeInfo(model))) {
-                    result.Add(contract.GetInvalidTypeDiagnostic(node.GetLocation()));
+                    result.Add(DiagnosticFactory.InvalidTypeForContract(contract, node.GetLocation()));
                 }
 
                 //No postconditions on iterator blocks
@@ -122,7 +122,7 @@ namespace Traction {
             if (hasPostcondition || hasPrecondition) {
                 //No postconditions on invalid return types
                 if (!contract.IsValidType(node.TypeInfo(model))) {
-                    result.Add(contract.GetInvalidTypeDiagnostic(node.GetLocation()));
+                    result.Add(DiagnosticFactory.InvalidTypeForContract(contract, node.GetLocation()));
                 }
             }
 

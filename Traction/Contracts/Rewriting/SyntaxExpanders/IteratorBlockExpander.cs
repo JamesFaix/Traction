@@ -7,8 +7,10 @@ using Traction.Roslyn.Syntax;
 using Traction.Roslyn.Semantics;
 using Traction.SEPrecompilation;
 using Traction.Linq;
+using Traction.Contracts.Semantics;
+using Traction.Contracts.Syntax;
 
-namespace Traction {
+namespace Traction.Contracts.Rewriting {
 
     /// <summary>
     /// Rewrites iterator blocks with preconditions so that preconditions are executed immediately.

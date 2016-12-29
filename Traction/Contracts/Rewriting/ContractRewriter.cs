@@ -8,8 +8,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Traction.Roslyn.Semantics;
 using Traction.Roslyn.Syntax;
 using Traction.SEPrecompilation;
+using Traction.Contracts.Semantics;
 
-namespace Traction {
+namespace Traction.Contracts.Rewriting {
 
     /// <summary>
     /// Base class for contract attribute syntax rewriters.

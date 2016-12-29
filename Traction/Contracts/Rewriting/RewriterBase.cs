@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Traction.SEPrecompilation;
 using Traction.Roslyn.Rewriting;
 
-namespace Traction {
+namespace Traction.Contracts.Rewriting {
 
     /// <summary>
     /// Base class for syntax rewriters.

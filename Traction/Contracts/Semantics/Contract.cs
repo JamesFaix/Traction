@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Traction {
+namespace Traction.Contracts.Semantics {
 
     internal class Contract {
 

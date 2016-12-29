@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using StackExchange.Precompilation;
-using Traction.Contracts;
+using Traction.Contracts.Rewriting;
+using Traction.Contracts.Semantics;
 using Traction.SEPrecompilation;
 
 namespace Traction {

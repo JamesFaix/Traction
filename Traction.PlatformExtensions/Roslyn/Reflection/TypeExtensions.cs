@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
-namespace Traction.Roslyn {
+namespace Traction.Roslyn.Reflection {
 
     /// <summary>
     /// Extension methods for <see cref="Type"/> for working with Roslyn API. 

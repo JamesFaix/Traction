@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.CodeAnalysis;
-using Traction.Roslyn;
+using Traction.Roslyn.Semantics;
 
-namespace Traction.Roslyn.Semantics {
+namespace Traction.Contracts.Semantics {
 
     internal static class IMethodSymbolExtensions {
 

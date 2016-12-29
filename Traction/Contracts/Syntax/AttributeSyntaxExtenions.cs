@@ -2,9 +2,10 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Traction.Roslyn.Reflection;
 using Traction.Roslyn.Semantics;
 
-namespace Traction.Roslyn.Syntax {
+namespace Traction.Contracts.Syntax {
 
     internal static class AttributeSyntaxExtenions {
 

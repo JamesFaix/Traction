@@ -9,18 +9,12 @@ namespace Traction.DiagnosticsTests {
     static class DiagnosticExtensions {
 
         static DiagnosticExtensions() {
-            diagnosticCodeRegex = new Regex(@"TR(\d{4})");
-            
-            diagnosticCodeValues =
-                Enum.GetValues(typeof(DiagnosticCode))
-                    .Cast<int>()
-                    .ToArray();
+            diagnosticCodeRegex = new Regex(@"TR(\d{4})");            
         }
 
         private static readonly Regex diagnosticCodeRegex;
-        private static readonly int[] diagnosticCodeValues;
 
-        public static DiagnosticCode GetCode(this Diagnostic @this) {
+        public static int GetCode(this Diagnostic @this) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
 
             Match match = diagnosticCodeRegex.Match(@this.Descriptor.Id);
@@ -30,14 +24,7 @@ namespace Traction.DiagnosticsTests {
             }
 
             string digits = match.Groups[1].Value; //Group 0 will be the entire match
-            int code = int.Parse(digits);
-
-            if (!diagnosticCodeValues.Contains(code)) {
-                throw new InvalidOperationException("Invalid diagnostic code: " + code);
-            }
-            else {
-                return (DiagnosticCode)code;
-            }
+            return int.Parse(digits);
         }
 
         public static string GetTitle(this Diagnostic @this) {
@@ -50,17 +37,17 @@ namespace Traction.DiagnosticsTests {
             return @this.Descriptor.MessageFormat.ToString();
         }
         
-        public static bool ContainsCode(this IEnumerable<Diagnostic> @this, DiagnosticCode code) {
+        public static bool ContainsCode(this IEnumerable<Diagnostic> @this, int code) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             return @this.Any(d => d.GetCode() == code);
         }
 
-        public static bool DoesNotContainCode(this IEnumerable<Diagnostic> @this, DiagnosticCode code) {
+        public static bool DoesNotContainCode(this IEnumerable<Diagnostic> @this, int code) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             return !@this.Any(d => d.GetCode() == code);
         }
 
-        public static bool ContainsOnlyCode(this IEnumerable<Diagnostic> @this, DiagnosticCode code) {
+        public static bool ContainsOnlyCode(this IEnumerable<Diagnostic> @this, int code) {
             return @this.All(d => d.GetCode() == code);
         }
     }

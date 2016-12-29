@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using NUnit.Framework;
+using static Traction.Contracts.Rewriting.DiagnosticCodes;
+using static Traction.Roslyn.Rewriting.DiagnosticCodes;
 
 namespace Traction.DiagnosticsTests {
 
@@ -15,7 +15,7 @@ namespace Traction.DiagnosticsTests {
             var diagnostics = TestHelper.GetDiagnostics(compilation);
 
             //Assert
-            Assert.IsTrue(diagnostics.ContainsOnlyCode(DiagnosticCode.RewriteConfirmed));
+            Assert.IsTrue(diagnostics.ContainsOnlyCode(RewriteConfirmed));
         }
 
         private static IEnumerable<TestCaseData> AbstractMemberCases {
@@ -57,10 +57,10 @@ namespace Traction.DiagnosticsTests {
 
             //Assert
             if (isValid) {
-                Assert.IsTrue(diagnostics.ContainsOnlyCode(DiagnosticCode.RewriteConfirmed));
+                Assert.IsTrue(diagnostics.ContainsOnlyCode(RewriteConfirmed));
             }
             else {
-                Assert.IsTrue(diagnostics.ContainsCode(DiagnosticCode.NoPreconditionsOnInheritedMembers));
+                Assert.IsTrue(diagnostics.ContainsCode(NoPreconditionsOnInheritedMembers));
             }
         }
 
@@ -175,10 +175,10 @@ namespace Traction.DiagnosticsTests {
 
             //Assert
             if (isValid) {
-                Assert.IsTrue(diagnostics.ContainsOnlyCode(DiagnosticCode.RewriteConfirmed));
+                Assert.IsTrue(diagnostics.ContainsOnlyCode(RewriteConfirmed));
             }
             else {
-                Assert.IsTrue(diagnostics.ContainsCode(DiagnosticCode.MembersCannotInheritPreconditionsFromMultipleSources));
+                Assert.IsTrue(diagnostics.ContainsCode(MembersCannotInheritPreconditionsFromMultipleSources));
             }
         }
 
@@ -239,7 +239,7 @@ namespace Traction.DiagnosticsTests {
                         }"
                         ), true)
                     .SetName($"Inheritance_Multiple_MethodCanOverrideBaseMethodWithoutPreconditionAndImplementInterfaceWithPrecondition");
-                
+
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
                         @"interface IFirst { 

@@ -1,8 +1,9 @@
 ﻿using System;
 using Microsoft.CodeAnalysis;
-using Traction.Roslyn;
+using Traction.Roslyn.Semantics;
+using Traction.Roslyn.Reflection;
 
-namespace Traction.Roslyn.Semantics {
+namespace Traction.Contracts.Semantics {
 
     static class IPropertySymbolExtensions {
 
