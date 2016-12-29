@@ -5,8 +5,9 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Traction.Roslyn.Semantics;
+using Traction.Contracts.Semantics;
 
-namespace Traction.Contracts.Semantics {
+namespace Traction.Contracts {
 
     internal class ContractProvider : IContractProvider {
 

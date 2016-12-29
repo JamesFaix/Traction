@@ -1,4 +1,4 @@
-﻿namespace Traction.Contracts.Rewriting {
+﻿namespace Traction.Contracts.Analysis {
 
     /// <summary>
     /// These extend the set of codes in Traction.Roslyn.Rewriting.DiagnosticCodes,

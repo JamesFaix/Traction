@@ -74,26 +74,26 @@
     <Compile Include="Contracts\Syntax\AttributeSyntaxExtenions.cs" />
     <Compile Include="Contracts\Semantics\ITypeSymbolExtensions.cs" />
     <Compile Include="Contracts\Semantics\SymbolExtensionMethodsImpl.cs" />
-    <Compile Include="Contracts\Semantics\ContractProvider.cs" />
-    <Compile Include="Contracts\Semantics\Contract.cs" />
+    <Compile Include="Contracts\ContractProvider.cs" />
+    <Compile Include="Contracts\Contract.cs" />
     <Compile Include="Contracts\Semantics\IParameterSymbolExtensions.cs" />
     <Compile Include="Contracts\Semantics\IPropertySymbolExtensions.cs" />
-    <Compile Include="Contracts\Semantics\IContractProvider.cs" />
+    <Compile Include="Contracts\IContractProvider.cs" />
     <Compile Include="Contracts\Semantics\IMethodSymbolExtensions.cs" />
-    <Compile Include="Contracts\Rewriting\DiagnosticChecker.cs" />
-    <Compile Include="Contracts\Rewriting\DiagnosticCodes.cs" />
+    <Compile Include="Contracts\Analysis\DiagnosticChecker.cs" />
+    <Compile Include="Contracts\Analysis\DiagnosticCodes.cs" />
     <Compile Include="ClientAPI\PreconditionException.cs" />
     <Compile Include="ClientAPI\PostconditionException.cs" />
-    <Compile Include="Contracts\Rewriting\SyntaxExpanders\AutoPropertyExpander.cs" />
-    <Compile Include="Contracts\Rewriting\SyntaxExpanders\IteratorBlockExpander.cs" />
-    <Compile Include="Contracts\Rewriting\SyntaxExpanders\ExpressionBodiedMemberExpander.cs" />
-    <Compile Include="Contracts\Rewriting\IdentifierFactory.cs" />
+    <Compile Include="Contracts\Expansion\AutoPropertyExpander.cs" />
+    <Compile Include="Contracts\Expansion\IteratorBlockExpander.cs" />
+    <Compile Include="Contracts\Expansion\ExpressionBodiedMemberExpander.cs" />
+    <Compile Include="Contracts\IdentifierFactory.cs" />
     <Compile Include="TractionCompileModule.cs" />
-    <Compile Include="Contracts\Rewriting\DiagnosticFactory.cs" />
-    <Compile Include="Contracts\Rewriting\ContractRewriter.cs" />
+    <Compile Include="Contracts\Analysis\DiagnosticFactory.cs" />
+    <Compile Include="Contracts\Injection\ContractRewriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Contracts\Rewriting\RewriterBase.cs" />
-    <Compile Include="Contracts\Rewriting\ConcreteTypeRewriter.cs" />
+    <Compile Include="Contracts\RewriterBase.cs" />
+    <Compile Include="Contracts\Expansion\ConcreteTypeRewriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -118,6 +118,7 @@
       <Name>Traction.PlatformExtensions</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

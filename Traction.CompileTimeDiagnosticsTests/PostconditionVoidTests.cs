@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using NUnit.Framework;
-using static Traction.Contracts.Rewriting.DiagnosticCodes;
+using static Traction.Contracts.Analysis.DiagnosticCodes;
 
 namespace Traction.DiagnosticsTests {
 

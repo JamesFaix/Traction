@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Traction.Contracts.Rewriting {
+namespace Traction.Contracts {
 
     /// <summary>
     /// Produces unique identifiers for specific contexts.

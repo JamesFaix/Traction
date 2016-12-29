@@ -9,8 +9,9 @@ using Traction.Roslyn.Semantics;
 using Traction.Roslyn.Syntax;
 using Traction.SEPrecompilation;
 using Traction.Contracts.Semantics;
+using Traction.Contracts.Analysis;
 
-namespace Traction.Contracts.Rewriting {
+namespace Traction.Contracts.Injection {
 
     /// <summary>
     /// Base class for contract attribute syntax rewriters.

@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Traction.Contracts.Semantics;
 
-namespace Traction.Contracts.Rewriting {
+namespace Traction.Contracts.Analysis {
 
     /// <summary>
     /// Factory for contract rewriting diagnostics.

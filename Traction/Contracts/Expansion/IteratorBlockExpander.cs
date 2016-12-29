@@ -10,7 +10,7 @@ using Traction.Linq;
 using Traction.Contracts.Semantics;
 using Traction.Contracts.Syntax;
 
-namespace Traction.Contracts.Rewriting {
+namespace Traction.Contracts.Expansion {
 
     /// <summary>
     /// Rewrites iterator blocks with preconditions so that preconditions are executed immediately.

@@ -9,11 +9,10 @@ namespace Traction.Roslyn.Rewriting {
         public NodeRewriter(SemanticModel model, ICompileContext context, string confirmationMessage) {
             if (model == null) throw new ArgumentNullException(nameof(model));
             if (context == null) throw new ArgumentNullException(nameof(context));
-            if (confirmationMessage == null) throw new ArgumentNullException(nameof(confirmationMessage));
-
+         
             this.model = model;
             this.context = context;
-            this.confirmationMessage = confirmationMessage;
+            this.confirmationMessage = confirmationMessage ?? "Rewrite confirmed.";
         }
 
         private readonly ICompileContext context;

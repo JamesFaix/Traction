@@ -8,7 +8,7 @@ using Traction.Roslyn.Syntax;
 using Traction.SEPrecompilation;
 using Traction.Contracts.Semantics;
 
-namespace Traction.Contracts.Rewriting {
+namespace Traction.Contracts.Expansion {
 
     /// <summary>
     /// Rewrites automatically implemented properties as normal properties with backing fields.

@@ -5,8 +5,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Traction.SEPrecompilation;
+using Traction.Contracts.Injection;
 
-namespace Traction.Contracts.Rewriting {
+namespace Traction.Contracts.Expansion {
 
     internal abstract class ConcreteTypeMemberExpander<TMemberNode> : RewriterBase
         where TMemberNode : CSharpSyntaxNode {

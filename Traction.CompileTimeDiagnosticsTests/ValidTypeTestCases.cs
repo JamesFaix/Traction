@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using NUnit.Framework;
-using static Traction.Contracts.Rewriting.DiagnosticCodes;
+using static Traction.Contracts.Analysis.DiagnosticCodes;
 using static Traction.Roslyn.Rewriting.DiagnosticCodes;
 
 namespace Traction.DiagnosticsTests {

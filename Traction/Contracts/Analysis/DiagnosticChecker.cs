@@ -7,7 +7,7 @@ using Traction.Contracts.Semantics;
 using Traction.Roslyn.Semantics;
 using Traction.Roslyn.Syntax;
 
-namespace Traction.Contracts.Rewriting {
+namespace Traction.Contracts.Analysis {
 
     internal class DiagnosticChecker {
 

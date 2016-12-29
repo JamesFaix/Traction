@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Traction.SEPrecompilation;
 
-namespace Traction.Contracts.Rewriting {
+namespace Traction.Contracts.Expansion {
 
     /// <summary>
     /// Rewrites expression-bodied members as normal "blocked" members.

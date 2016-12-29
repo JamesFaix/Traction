@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Traction.Contracts.Semantics {
+namespace Traction.Contracts {
 
     internal interface IContractProvider {
 
