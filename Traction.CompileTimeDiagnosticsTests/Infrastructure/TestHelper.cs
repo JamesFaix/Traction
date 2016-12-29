@@ -16,7 +16,7 @@ namespace Traction.DiagnosticsTests {
                 Compilation = compilation,
                 Diagnostics = new List<Diagnostic>()
             };
-            var module = new ContractModule();
+            var module = new TractionCompileModule();
 
             //Act
             module.BeforeCompile(context);

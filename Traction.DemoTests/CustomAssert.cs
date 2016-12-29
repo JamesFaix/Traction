@@ -23,7 +23,7 @@ namespace Traction.DemoTests {
                     Assert.Fail($"Expected exception of type {exceptionType}.");
                 }
                 catch (Exception e) {
-                    Assert.AreEqual(e.GetType(), exceptionType);
+                    Assert.AreEqual(exceptionType, e.GetType());
                 }
             }
         }
