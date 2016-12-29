@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Traction.SEPrecompilation;
+using Traction.Roslyn;
 
 namespace Traction {
 

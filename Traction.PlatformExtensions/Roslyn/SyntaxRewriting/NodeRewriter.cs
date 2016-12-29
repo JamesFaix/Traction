@@ -2,9 +2,9 @@
 using Microsoft.CodeAnalysis;
 using Traction.SEPrecompilation;
 
-namespace Traction {
+namespace Traction.Roslyn {
 
-    internal class NodeRewriter {
+    public class NodeRewriter {
 
         public NodeRewriter(SemanticModel model, ICompileContext context, string confirmationMessage) {
             if (model == null) throw new ArgumentNullException(nameof(model));
@@ -20,20 +20,6 @@ namespace Traction {
         private readonly SemanticModel model;
         private readonly string confirmationMessage;
 
-        #region Factory methods
-        private static NodeRewriteAttempt<TNode> Success<TNode>(TNode oldNode, TNode newNode)
-            where TNode : SyntaxNode =>
-            new NodeRewriteAttempt<TNode>(NodeRewriteStatus.Success, oldNode, newNode);
-
-        private static NodeRewriteAttempt<TNode> Failure<TNode>(TNode oldNode)
-            where TNode : SyntaxNode =>
-            new NodeRewriteAttempt<TNode>(NodeRewriteStatus.Failure, oldNode, null);
-
-        private static NodeRewriteAttempt<TNode> Skip<TNode>(TNode oldNode)
-            where TNode : SyntaxNode =>
-            new NodeRewriteAttempt<TNode>(NodeRewriteStatus.Skip, oldNode, null);
-        #endregion
-
         public NodeRewriteAttempt<TNode> Try<TNode>(TNode oldNode, Func<TNode, TNode> rewrite)
             where TNode : SyntaxNode {
             if (oldNode == null) throw new ArgumentNullException(nameof(oldNode));
@@ -43,26 +29,47 @@ namespace Traction {
                 var newNode = rewrite(oldNode);
 
                 if (ReferenceEquals(oldNode, newNode)) {
-                    return Skip(oldNode);
+                    return NodeRewriteAttempt.Skip(oldNode);
                 }
                 else {
-#if CONFIRM_REWRITES
-                    var diagnostic = DiagnosticFactory.RewriteConfirmation(
+#if DEBUG
+                    var diagnostic = RewriteConfirmed(
                         location: oldNode.GetLocation(),
                         message: this.confirmationMessage);
                     this.context.Diagnostics.Add(diagnostic);
 #endif
-                    return Success(oldNode, newNode);
+                    return NodeRewriteAttempt.Success(oldNode, newNode);
                 }
             }
             catch (Exception e) {
-                var diagnostic = DiagnosticFactory.RewriteFailed(
+                var diagnostic = RewriteFailed(
                     location: oldNode.GetLocation(),
                     exception: e);
                 this.context.Diagnostics.Add(diagnostic);
 
-                return Failure(oldNode);
+                return NodeRewriteAttempt.Failure(oldNode);
             }
         }
+
+        private static Diagnostic RewriteConfirmed(Location location, string message) => Diagnostic.Create(
+            descriptor: new DiagnosticDescriptor(
+                id: $"TR{DiagnosticCodes.RewriteConfirmed:D4}",
+                title: "Rewrite confirmation",
+                messageFormat: message,
+                category: "Traction",
+                defaultSeverity: DiagnosticSeverity.Info,
+                isEnabledByDefault: true),
+            location: location);
+
+        private static Diagnostic RewriteFailed(Location location, Exception exception) => Diagnostic.Create(
+            descriptor: new DiagnosticDescriptor(
+                id: $"TR{DiagnosticCodes.RewriteFailed:D4}",
+                title: "Rewrite failed",
+                messageFormat: "An error occurred while editing the syntax tree. " +
+                    $"{exception.GetType()}; {exception.Message}; {exception.StackTrace}",
+                category: "Traction",
+                defaultSeverity: DiagnosticSeverity.Error,
+                isEnabledByDefault: true),
+            location: location);
     }
 }
