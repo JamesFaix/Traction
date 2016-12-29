@@ -5,6 +5,8 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Traction.Contracts;
+using Traction.RoslynExtensions;
 
 namespace Traction {
 
@@ -38,7 +40,9 @@ namespace Traction {
 
         private TNode VisitMethodImpl<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
-            if (!this.contract.IsDeclaredOrInheritedOn(node, this.model)) {
+
+            var symbol = model.GetMethodSymbol(node);
+            if (!symbol.HasContract(model, contract)) {
                 return node;
             }
 
@@ -59,7 +63,8 @@ namespace Traction {
         }
 
         private PropertyDeclarationSyntax VisitPropertyImpl(PropertyDeclarationSyntax node) {
-            if (!this.contract.IsDeclaredOrInheritedOn(node, this.model)) {
+            var symbol = model.GetPropertySymbol(node);
+            if (!symbol.HasContract(model, contract)) {
                 return node;
             }
 
@@ -111,8 +116,10 @@ namespace Traction {
         private IEnumerable<StatementSyntax> GetMethodPreconditions<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
             var preconditionParameters = node.ParameterList.Parameters
-               .Where(p => this.contract.IsDeclaredOrInheritedOn(p, model))
-               .ToArray();
+                .Where(p => model
+                    .GetParameterSymbol(p)
+                    .HasPrecondition(model, contract))
+                .ToArray();
 
             if (!preconditionParameters.Any()) {
                 return new StatementSyntax[0];
@@ -126,7 +133,9 @@ namespace Traction {
 
         private TNode InsertMethodPostconditions<TNode>(TNode node)
             where TNode : BaseMethodDeclarationSyntax {
-            if (!this.contract.IsDeclaredOrInheritedOnReturnValueOf(node, model)) {
+
+            var symbol = model.GetMethodSymbol(node);
+            if (!symbol.HasPostcondition(model, contract)) {
                 return node;
             }
 
@@ -170,7 +179,7 @@ namespace Traction {
 
         private string GetPreconditionText(string parameterName, TypeInfo parameterType) {
             var sb = new StringBuilder();
-            sb.AppendLine($"if (!({this.contract.Condition(parameterName, parameterType)}))");
+            sb.AppendLine($"if (!({this.contract.GetCondition(parameterName, parameterType)}))");
             sb.AppendLine($"    throw new global::Traction.PreconditionException(\"{this.contract.ExceptionMessage}\", nameof({parameterName}));");
             return sb.ToString();
         }
@@ -179,7 +188,7 @@ namespace Traction {
             var sb = new StringBuilder();
             sb.AppendLine("{");
             sb.AppendLine($"    {returnType.Type.FullName()} {tempVarName} = {returnedExpression};");
-            sb.AppendLine($"    if (!({this.contract.Condition(tempVarName, returnType)}))");
+            sb.AppendLine($"    if (!({this.contract.GetCondition(tempVarName, returnType)}))");
             sb.AppendLine($"        throw new global::Traction.PostconditionException(\"{this.contract.ExceptionMessage}\");");
             sb.AppendLine($"    return {tempVarName};");
             sb.AppendLine("}");

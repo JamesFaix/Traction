@@ -62,9 +62,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\DiagnosticExtensions.cs" />
     <Compile Include="InheritenceTests.cs" />
     <Compile Include="Infrastructure\CompilationFactory.cs" />
-    <Compile Include="Infrastructure\DiagnosticSummary.cs" />
     <Compile Include="Infrastructure\SourceCodeFactory.cs" />
     <Compile Include="Infrastructure\TestHelper.cs" />
     <Compile Include="IteratorBlockPostconditionTests.cs" />

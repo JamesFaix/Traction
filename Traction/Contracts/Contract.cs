@@ -1,83 +1,58 @@
-﻿using System.Linq;
+﻿using System;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Traction {
 
-    public abstract class Contract {
-        /// <summary>
-        /// Gets boolean expression to evaluate.  Should return false if contract is broken.
-        /// </summary>
-        public abstract ExpressionSyntax Condition(string expression, TypeInfo expressionType);
+    public class Contract {
 
-        public abstract string ExceptionMessage { get; }
+        internal Contract(
+            string name,
+            Type attributeType,
+            string exceptionMessage,
+            string invalidTypeDiagnosticMessage,
+            Func<string, TypeInfo, ExpressionSyntax> getCondition,
+            Func<TypeInfo, bool> isValidType) {
 
-        public abstract bool IsValidType(TypeInfo type);
+            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (attributeType == null) throw new ArgumentNullException(nameof(attributeType));
+            if (exceptionMessage == null) throw new ArgumentNullException(nameof(exceptionMessage));
+            if (invalidTypeDiagnosticMessage == null) throw new ArgumentNullException(nameof(invalidTypeDiagnosticMessage));
+            if (getCondition == null) throw new ArgumentNullException(nameof(getCondition));
+            if (isValidType == null) throw new ArgumentNullException(nameof(isValidType));
+            if (!attributeType.IsSubclassOf(typeof(ContractAttribute)))
+                throw new ArgumentException($"Attribute type must inherit from {nameof(ContractAttribute)}", nameof(attributeType));
 
-        public Diagnostic InvalidTypeDiagnostic(Location location) => DiagnosticFactory.Create(
-            id: "TR0006",
-            title: $"Invalid contract attribute usage",
-            message: InvalidTypeDiagnosticMessage,
-            location: location);
+            this.name = name;
+            this.attributeType = attributeType;
+            this.exceptionMessage = exceptionMessage;
+            this.invalidTypeDiagnosticMessage = invalidTypeDiagnosticMessage;
+            this.getCondition = getCondition;
+            this.isValidType = isValidType;
+        }
 
-        protected abstract string InvalidTypeDiagnosticMessage { get; }
+        private readonly string name;
+        private readonly Type attributeType;
+        private readonly string exceptionMessage;
+        private readonly string invalidTypeDiagnosticMessage;
+        private readonly Func<string, TypeInfo, ExpressionSyntax> getCondition;
+        private readonly Func<TypeInfo, bool> isValidType;
 
-        public override string ToString() => this.GetType().ToString();
+        public string Name => name;
+        public string ExceptionMessage => exceptionMessage;
 
-        public abstract bool IsDeclaredOn(BaseMethodDeclarationSyntax node, SemanticModel model);
+        public Type AttributeType => attributeType;
 
-        public abstract bool IsDeclaredOn(PropertyDeclarationSyntax node, SemanticModel model);
+        public bool IsValidType(TypeInfo type) => isValidType(type);
 
-        public abstract bool IsDeclaredOn(ParameterSyntax node, SemanticModel model);
+        public Diagnostic GetInvalidTypeDiagnostic(Location location) =>
+            DiagnosticFactory.Create(
+                code: DiagnosticCode.InvalidTypeForContract,
+                title: $"Invalid contract attribute usage",
+                message: this.invalidTypeDiagnosticMessage,
+                location: location);
 
-        public abstract bool IsDeclaredOnParameterOf(BaseMethodDeclarationSyntax node, SemanticModel model);
-
-        public abstract bool IsDeclaredOnReturnValueOf(BaseMethodDeclarationSyntax node, SemanticModel model);
-
-        public abstract bool IsDeclaredOrInheritedOn(BaseMethodDeclarationSyntax node, SemanticModel model);
-
-        public abstract bool IsDeclaredOrInheritedOn(PropertyDeclarationSyntax node, SemanticModel model);
-
-        public abstract bool IsDeclaredOrInheritedOn(ParameterSyntax node, SemanticModel model);
-
-        public abstract bool IsDeclaredOrInheritedOnParameterOf(BaseMethodDeclarationSyntax node, SemanticModel model);
-
-        public abstract bool IsDeclaredOrInheritedOnReturnValueOf(BaseMethodDeclarationSyntax node, SemanticModel model);
-    }
-
-    public abstract class Contract<TAttribute> : Contract
-        where TAttribute : ContractAttribute {
-
-        public override bool IsDeclaredOn(ParameterSyntax node, SemanticModel model) =>
-            node.HasAttribute<ParameterSyntax, TAttribute>(model);        
-
-        public override bool IsDeclaredOn(PropertyDeclarationSyntax node, SemanticModel model) =>
-            node.HasAttribute<PropertyDeclarationSyntax, TAttribute>(model);
-
-        public override bool IsDeclaredOnParameterOf(BaseMethodDeclarationSyntax node, SemanticModel model) =>
-            node.ParameterList.Parameters.Any(p => IsDeclaredOn(p, model));
-
-        public override bool IsDeclaredOnReturnValueOf(BaseMethodDeclarationSyntax node, SemanticModel model) =>
-            node.HasAttribute<BaseMethodDeclarationSyntax, TAttribute>(model);
-
-        public override bool IsDeclaredOn(BaseMethodDeclarationSyntax node, SemanticModel model) =>
-            IsDeclaredOnReturnValueOf(node, model) || IsDeclaredOnParameterOf(node, model);
-        
-
-        public override bool IsDeclaredOrInheritedOn(ParameterSyntax node, SemanticModel model) =>
-           node.HasOrInheritsAttribute<ParameterSyntax, IParameterSymbol, TAttribute>(model);
-        
-        public override bool IsDeclaredOrInheritedOn(PropertyDeclarationSyntax node, SemanticModel model) =>
-            node.HasOrInheritsAttribute<PropertyDeclarationSyntax, IPropertySymbol, TAttribute>(model);
-
-        public override bool IsDeclaredOrInheritedOnParameterOf(BaseMethodDeclarationSyntax node, SemanticModel model) =>
-            node.ParameterList.Parameters.Any(p => IsDeclaredOrInheritedOn(p, model));
-
-        public override bool IsDeclaredOrInheritedOnReturnValueOf(BaseMethodDeclarationSyntax node, SemanticModel model) =>
-            node.HasOrInheritsAttribute<BaseMethodDeclarationSyntax, IMethodSymbol, TAttribute>(model);
-
-        public override bool IsDeclaredOrInheritedOn(BaseMethodDeclarationSyntax node, SemanticModel model) =>
-            IsDeclaredOrInheritedOnReturnValueOf(node, model) || IsDeclaredOrInheritedOnParameterOf(node, model);
-
+        public ExpressionSyntax GetCondition(string expression, TypeInfo expressionType) => 
+            this.getCondition(expression, expressionType);
     }
 }

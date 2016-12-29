@@ -16,10 +16,10 @@ namespace Traction.DiagnosticsTests {
 
             //Assert
             if (isValid) {
-                Assert.IsTrue(diagnostics.All(d => d.Id == "TR0000"));
+                Assert.IsTrue(diagnostics.ContainsOnlyCode(DiagnosticCode.RewriteConfirmed));
             }
             else {
-                Assert.IsTrue(diagnostics.Any(d => d.Id == "TR0006"));
+                Assert.IsTrue(diagnostics.ContainsCode(DiagnosticCode.InvalidTypeForContract));
             }
         }
 
@@ -30,7 +30,7 @@ namespace Traction.DiagnosticsTests {
                             SourceCodeFactory.PreconditionMethod(typeName, attributeName))),
                     isValid)
                 .SetName($"{attributeName}_CanOnlyBePlacedOnParametersWithValidTypes" +
-                    $"_{typeName}{(isValid ? "Fails" : "Passes")}");
+                    $"_{typeName}{(isValid ? "Passes" : "Fails")}");
         }
 
         private static TestCaseData PostconditionCase(string typeName, string attributeName, bool isValid) {
@@ -40,7 +40,7 @@ namespace Traction.DiagnosticsTests {
                             SourceCodeFactory.PostconditionMethod(typeName, attributeName))),
                     isValid)
                  .SetName($"{attributeName}_CanOnlyBePlacedOnReturnValuesWithValidTypes" +
-                     $"_{typeName}{(isValid ? "Fails" : "Passes")}");
+                     $"_{typeName}{(isValid ? "Passes" : "Fails")}");
         }
 
         private static IEnumerable<TestCaseData> AllCases =>

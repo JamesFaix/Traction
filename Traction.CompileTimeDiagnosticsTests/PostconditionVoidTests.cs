@@ -19,7 +19,7 @@ namespace Traction.DiagnosticsTests {
                 Assert.IsFalse(diagnostics.Any());
             }
             else {
-                Assert.IsTrue(diagnostics.Any(d => d.Id == "TR0002"));
+                Assert.IsTrue(diagnostics.ContainsCode(DiagnosticCode.NoPostconditionsOnVoid));
             }
         }
 

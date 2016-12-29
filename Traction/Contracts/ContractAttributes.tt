@@ -1,0 +1,23 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ output extension=".cs" #>
+
+<#
+    var attributeNames= new []{
+        "NonNull",
+        "NonDefault",
+        "NonEmpty",
+        "Positive",
+        "Negative",
+        "NonPositive",
+        "NonNegative"
+    };
+#>
+
+namespace Traction {
+    <# foreach (var name in attributeNames){#>        
+        public sealed class <#= name #>Attribute : Traction.ContractAttribute {
+            public <#= name #>Attribute() : base() { }
+        }
+    <# } #>
+}
