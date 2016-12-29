@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Traction.Contracts {
+namespace Traction {
 
-    public interface IContractProvider {
+    interface IContractProvider {
         IEnumerable<Contract> Contracts { get; }
     }
 }

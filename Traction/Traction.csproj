@@ -64,35 +64,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contracts\Extensions\AttributeDataExtensions.cs" />
-    <Compile Include="Contracts\ContractAttribute.cs" />
-    <Compile Include="Contracts\ContractAttributes.cs">
+    <Compile Include="RoslynExtensions\Semantics\AttributeDataExtensions.cs" />
+    <Compile Include="ClientAPI\ContractAttribute.cs" />
+    <Compile Include="ClientAPI\ContractAttributes.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ContractAttributes.tt</DependentUpon>
     </Compile>
-    <Compile Include="Contracts\Extensions\AttributeSyntaxExtenions.cs" />
-    <Compile Include="Contracts\Extensions\ITypeSymbolExtensions.cs" />
-    <Compile Include="Contracts\Extensions\SymbolExtensionMethodsImpl.cs" />
-    <Compile Include="Contracts\Providers\BasicComparisonContractProvider.cs" />
-    <Compile Include="Contracts\Providers\DefaultValueContractProvider.cs" />
+    <Compile Include="RoslynExtensions\Syntax\AttributeSyntaxExtenions.cs" />
+    <Compile Include="RoslynExtensions\Semantics\ITypeSymbolExtensions.cs" />
+    <Compile Include="RoslynExtensions\Semantics\SymbolExtensionMethodsImpl.cs" />
+    <Compile Include="Contracts\ContractProvider.cs" />
     <Compile Include="Contracts\Contract.cs" />
-    <Compile Include="Contracts\Extensions\IParameterSymbolExtensions.cs" />
-    <Compile Include="Contracts\Extensions\IPropertySymbolExtensions.cs" />
-    <Compile Include="Contracts\Providers\MasterContractProvider.cs" />
-    <Compile Include="Contracts\Providers\IContractProvider.cs" />
-    <Compile Include="Contracts\Extensions\IMethodSymbolExtensions.cs" />
-    <Compile Include="ErrorHandling\DiagnosticChecker.cs" />
-    <Compile Include="ErrorHandling\DiagnosticCode.cs" />
-    <Compile Include="ErrorHandling\PreconditionException.cs" />
-    <Compile Include="ErrorHandling\PostconditionException.cs" />
+    <Compile Include="RoslynExtensions\Semantics\IParameterSymbolExtensions.cs" />
+    <Compile Include="RoslynExtensions\Semantics\IPropertySymbolExtensions.cs" />
+    <Compile Include="Contracts\IContractProvider.cs" />
+    <Compile Include="RoslynExtensions\Semantics\IMethodSymbolExtensions.cs" />
+    <Compile Include="Diagnostics\DiagnosticChecker.cs" />
+    <Compile Include="ClientAPI\DiagnosticCode.cs" />
+    <Compile Include="ClientAPI\PreconditionException.cs" />
+    <Compile Include="ClientAPI\PostconditionException.cs" />
     <Compile Include="Rewriters\SyntaxExpanders\AutoPropertyExpander.cs" />
     <Compile Include="Rewriters\SyntaxExpanders\IteratorBlockExpander.cs" />
     <Compile Include="Rewriters\NodeRewriteAttempt.cs" />
     <Compile Include="Rewriters\SyntaxExpanders\ExpressionBodiedMemberExpander.cs" />
     <Compile Include="Rewriters\IdentifierFactory.cs" />
     <Compile Include="ContractModule.cs" />
-    <Compile Include="ErrorHandling\DiagnosticFactory.cs" />
+    <Compile Include="ClientAPI\DiagnosticFactory.cs" />
     <Compile Include="Rewriters\ContractRewriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rewriters\NodeRewriter.cs" />
@@ -109,7 +107,7 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Contracts\ContractAttributes.tt">
+    <Content Include="ClientAPI\ContractAttributes.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ContractAttributes.cs</LastGenOutput>
     </Content>

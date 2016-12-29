@@ -1,17 +1,24 @@
-﻿namespace Traction {
+﻿namespace Traction {    
+    //TODO: Make error codes more resemble HTTP codes?
 
     public enum DiagnosticCode {
-        //0-99 Info
-        RewriteConfirmed = 0,
+        //Leave 0 as default for unassigned values
+        Default = 0, 
+
+        //1-99 Info
+        RewriteConfirmed = 1,
+       
         //100-199 General error
         RewriteFailed = 100,
+        
         //200-299 General contract misuse
         NoPostconditionsOnVoid = 200,
         NoPostconditionsOnIteratorBlocks = 201,
         NoPreconditionsOnInheritedMembers = 202,
-        MembersCannotInheritContractsFromMultipleSources = 203,
+        MembersCannotInheritPreconditionsFromMultipleSources = 203,
         NoContractsOnPartialMembers = 204,
         NoContractsOnExternMemebrs = 205,
+        
         //300-399 Specific contract misuse
         InvalidTypeForContract = 300
     }

@@ -36,7 +36,7 @@ namespace Traction {
             if (hasPrecondition) {
                 //No preconditions on inherited methods
                 if (symbol.IsOverrideOrInterfaceImplementation()) {
-                    result.Add(DiagnosticFactory.PreconditionsCannotBeAppliedToInheritedMembers(node.GetLocation()));
+                    result.Add(DiagnosticFactory.NoPreconditiosnOnInheritedMembers(node.GetLocation()));
                 }
 
                 //No preconditions on invalid parameter types
@@ -65,7 +65,7 @@ namespace Traction {
             if (hasPostcondition) {
                 //No postconditions on void methods
                 if (node.ReturnType().GetText().ToString().Trim() == "void") {
-                    result.Add(DiagnosticFactory.PostconditionsCannotBeAppliedToMethodReturningVoid(node.GetLocation()));
+                    result.Add(DiagnosticFactory.NoPostconditionsOnVoid(node.GetLocation()));
                 }
 
                 //No postconditions on invalid return types
@@ -75,14 +75,14 @@ namespace Traction {
 
                 //No postconditions on iterator blocks
                 if (node.IsIteratorBlock()) {
-                    result.Add(DiagnosticFactory.PostconditionsCannotBeAppliedToIteratorBlocks(node.GetLocation()));
+                    result.Add(DiagnosticFactory.NoPostconditionsOnIteratorBlocks(node.GetLocation()));
                 }
             }
 
             if (hasPrecondition || hasPostcondition) {
                 //No contracts on partial members
                 if (node.IsPartial()) {
-                    result.Add(DiagnosticFactory.ContractAttributeCannotBeAppliedToPartialMembers(node.GetLocation()));
+                    result.Add(DiagnosticFactory.NoContractsOnPartialMembers(node.GetLocation()));
                 }
             }
 
@@ -107,14 +107,14 @@ namespace Traction {
             if (hasPrecondition) {
                 //No preconditions on inherited members
                 if (symbol.IsOverrideOrInterfaceImplementation()) {
-                    result.Add(DiagnosticFactory.PreconditionsCannotBeAppliedToInheritedMembers(node.GetLocation()));
+                    result.Add(DiagnosticFactory.NoPreconditiosnOnInheritedMembers(node.GetLocation()));
                 }
             }
 
             if (hasPostcondition) {
                 //No postconditions on iterator blocks
                 if (node.IsIteratorBlock()) {
-                    result.Add(DiagnosticFactory.PostconditionsCannotBeAppliedToIteratorBlocks(node.GetLocation()));
+                    result.Add(DiagnosticFactory.NoPostconditionsOnIteratorBlocks(node.GetLocation()));
                 }
             }
 

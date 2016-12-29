@@ -24,7 +24,7 @@ namespace Traction {
             });
 
             AddPrecompilationRewriterProviders(
-                MasterContractProvider.Instance.Contracts
+                ContractProvider.Instance.Contracts
                     .Select(c => ContractRewriter.Create(c)));
         }
     }

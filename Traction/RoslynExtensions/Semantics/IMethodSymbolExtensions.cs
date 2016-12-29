@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Traction.Roslyn;
 
-namespace Traction.Contracts {
+namespace Traction.Roslyn {
 
     internal static class IMethodSymbolExtensions {
 

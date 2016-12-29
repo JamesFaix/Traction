@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Traction.Roslyn;
 
-namespace Traction.Contracts {
+namespace Traction.Roslyn {
 
     static class AttributeSyntaxExtenions {
 

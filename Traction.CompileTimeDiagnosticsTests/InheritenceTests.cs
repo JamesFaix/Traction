@@ -178,7 +178,7 @@ namespace Traction.DiagnosticsTests {
                 Assert.IsTrue(diagnostics.ContainsOnlyCode(DiagnosticCode.RewriteConfirmed));
             }
             else {
-                Assert.IsTrue(diagnostics.ContainsCode(DiagnosticCode.MembersCannotInheritContractsFromMultipleSources));
+                Assert.IsTrue(diagnostics.ContainsCode(DiagnosticCode.MembersCannotInheritPreconditionsFromMultipleSources));
             }
         }
 
