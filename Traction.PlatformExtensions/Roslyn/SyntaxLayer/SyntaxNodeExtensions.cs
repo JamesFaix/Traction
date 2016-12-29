@@ -12,7 +12,7 @@ namespace Traction.Roslyn {
     /// </summary>
     public static class SyntaxNodeExtensions {
 
-        public static IEnumerable<ReturnStatementSyntax> GetAllReturnStatements(this SyntaxNode @this) {
+        public static IEnumerable<ReturnStatementSyntax> GetReturnStatements(this SyntaxNode @this) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
 
             foreach (var child in @this.ChildNodes()) {
@@ -24,7 +24,7 @@ namespace Traction.Roslyn {
                 }
                 else {
                     //Drill down into other statements
-                    foreach (var ret in child.GetAllReturnStatements()) {
+                    foreach (var ret in child.GetReturnStatements()) {
                         yield return ret;
                     }
                 }
@@ -35,18 +35,18 @@ namespace Traction.Roslyn {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
 
             return @this
-                .GetYields()
+                .GetYieldStatements()
                 .Any();
         }
 
-        private static IEnumerable<YieldStatementSyntax> GetYields(this SyntaxNode @this) {
+        private static IEnumerable<YieldStatementSyntax> GetYieldStatements(this SyntaxNode @this) {
             var children = @this.ChildNodes();
             var yields = children.OfType<YieldStatementSyntax>();
             var nonYields = children.Where(c =>
                 !(c is YieldStatementSyntax) &&
                 !(c is AnonymousFunctionExpressionSyntax)); //Don't drill into anonymous functions
 
-            return yields.Concat(nonYields.SelectMany(c => GetYields(c)));
+            return yields.Concat(nonYields.SelectMany(c => GetYieldStatements(c)));
         }
 
         public static bool IsNonImplementedMember(this SyntaxNode @this) {

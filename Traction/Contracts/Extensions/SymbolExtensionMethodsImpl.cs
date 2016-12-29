@@ -19,7 +19,7 @@ namespace Traction.Contracts {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
-            return @this.Any(a => a.IsType(contract.AttributeType, model));
+            return @this.Any(a => a.IsExactType(contract.AttributeType, model));
         }
     }
 }

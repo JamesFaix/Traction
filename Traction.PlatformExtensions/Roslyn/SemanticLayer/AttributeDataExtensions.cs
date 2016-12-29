@@ -18,7 +18,7 @@ namespace Traction.Roslyn {
                 .Contains(attributeType.GetTypeSymbol(model));
         }
 
-        public static bool IsType(this AttributeData @this, Type attributeType, SemanticModel model) {
+        public static bool IsExactType(this AttributeData @this, Type attributeType, SemanticModel model) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (attributeType == null) throw new ArgumentNullException(nameof(attributeType));
             if (model == null) throw new ArgumentNullException(nameof(model));

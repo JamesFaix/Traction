@@ -144,7 +144,7 @@ namespace Traction {
             var returnType = model.GetTypeInfo(node.ReturnType());
             var location = node.GetLocation();
 
-            var returnStatements = node.GetAllReturnStatements();
+            var returnStatements = node.GetReturnStatements();
 
             return node.ReplaceNodes(returnStatements,
                 (oldNode, newNode) => CreatePostcondition(returnType, newNode, location));
@@ -159,7 +159,7 @@ namespace Traction {
 
         private AccessorDeclarationSyntax InsertPropertyPostcondition(TypeInfo type, AccessorDeclarationSyntax node, Location location) {
             if (node == null) return null;
-            var returnStatements = node.GetAllReturnStatements();
+            var returnStatements = node.GetReturnStatements();
             return node.ReplaceNodes(returnStatements,
                 (oldNode, newNode) => CreatePostcondition(type, newNode, location));
         }
