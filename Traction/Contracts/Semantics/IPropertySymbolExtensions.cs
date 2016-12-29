@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.CodeAnalysis;
-using Traction.Roslyn.Semantics;
 using Traction.Roslyn.Reflection;
+using Traction.Roslyn.Semantics;
 
 namespace Traction.Contracts.Semantics {
 
@@ -17,7 +18,7 @@ namespace Traction.Contracts.Semantics {
 
             return !@this.IsWriteOnly
                 && @this.DeclaredAndInheritedAttributes()
-                        .HasAnyContractImpl(model);
+                        .Any(a => a.IsContractAttribute(model));
         }
 
         public static bool HasAnyPrecondition(this IPropertySymbol @this, SemanticModel model) {
@@ -26,7 +27,7 @@ namespace Traction.Contracts.Semantics {
 
             return !@this.IsReadOnly
                  && @this.DeclaredAndInheritedAttributes()
-                         .HasAnyContractImpl(model);
+                         .Any(a => a.IsContractAttribute(model));
 
         }
 
@@ -43,20 +44,7 @@ namespace Traction.Contracts.Semantics {
 
             return !@this.IsWriteOnly
                 && @this.DeclaredAndInheritedAttributes()
-                        .HasContractImpl(contract, model);
-
-        }
-
-        public static bool HasPostconditionDeclaration(this IPropertySymbol @this, SemanticModel model, Contract contract) {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (model == null) throw new ArgumentNullException(nameof(model));
-            if (contract == null) throw new ArgumentNullException(nameof(contract));
-
-            var attributeSymbol = contract.AttributeType.GetTypeSymbol(model);
-
-            return !@this.IsWriteOnly
-                && @this.GetAttributes()
-                        .HasContractImpl(contract, model);
+                        .Any(a => a.IsExactType(contract.AttributeType, model));
 
         }
 
@@ -67,17 +55,7 @@ namespace Traction.Contracts.Semantics {
 
             return !@this.IsReadOnly
                 && @this.DeclaredAndInheritedAttributes()
-                        .HasContractImpl(contract, model);
-        }
-
-        public static bool HasPreconditionDeclaration(this IPropertySymbol @this, SemanticModel model, Contract contract) {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (model == null) throw new ArgumentNullException(nameof(model));
-            if (contract == null) throw new ArgumentNullException(nameof(contract));
-
-            return !@this.IsReadOnly
-                && @this.GetAttributes()
-                        .HasContractImpl(contract, model);
+                        .Any(a => a.IsExactType(contract.AttributeType, model));
         }
     }
 }

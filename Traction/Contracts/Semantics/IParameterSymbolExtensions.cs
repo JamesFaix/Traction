@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Traction.Roslyn.Semantics;
 
@@ -12,7 +13,7 @@ namespace Traction.Contracts.Semantics {
 
             return @this
                .DeclaredAndInheritedAttributes()
-               .HasAnyContractImpl(model);
+               .Any(a => a.IsContractAttribute(model));
         }
 
         public static bool HasPrecondition(this IParameterSymbol @this, SemanticModel model, Contract contract) {
@@ -22,17 +23,7 @@ namespace Traction.Contracts.Semantics {
 
             return @this
                 .DeclaredAndInheritedAttributes()
-                .HasContractImpl(contract, model);
-        }
-
-        public static bool HasPreconditionDeclaration(this IParameterSymbol @this, SemanticModel model, Contract contract) {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (model == null) throw new ArgumentNullException(nameof(model));
-            if (contract == null) throw new ArgumentNullException(nameof(contract));
-
-            return @this
-                .GetAttributes()
-                .HasContractImpl(contract, model);
+                .Any(a => a.IsExactType(contract.AttributeType, model));
         }
     }
 }

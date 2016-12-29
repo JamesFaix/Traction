@@ -64,6 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\Analysis\Analyzer.cs" />
     <Compile Include="Contracts\Expansion\AutoPropertyExpanderProvider.cs" />
     <Compile Include="Contracts\Expansion\ExpressionBodiedMemberExpanderProvider.cs" />
     <Compile Include="Contracts\Expansion\IteratorBlockExpanderProvider.cs" />
@@ -77,7 +78,6 @@
     </Compile>
     <Compile Include="Contracts\Syntax\AttributeSyntaxExtenions.cs" />
     <Compile Include="Contracts\Semantics\ITypeSymbolExtensions.cs" />
-    <Compile Include="Contracts\Semantics\SymbolExtensionMethodsImpl.cs" />
     <Compile Include="Contracts\ContractProvider.cs" />
     <Compile Include="Contracts\Contract.cs" />
     <Compile Include="Contracts\Semantics\IParameterSymbolExtensions.cs" />
@@ -92,6 +92,9 @@
     <Compile Include="Contracts\Expansion\IteratorBlockExpander.cs" />
     <Compile Include="Contracts\Expansion\ExpressionBodiedMemberExpander.cs" />
     <Compile Include="Contracts\IdentifierFactory.cs" />
+    <Compile Include="Contracts\Syntax\BaseMethodDeclarationExtensions.cs" />
+    <Compile Include="Contracts\Syntax\ParameterDeclarationExtensions.cs" />
+    <Compile Include="Contracts\Syntax\PropertyDeclarationExtensions.cs" />
     <Compile Include="TractionCompileModule.cs" />
     <Compile Include="Contracts\Analysis\DiagnosticFactory.cs" />
     <Compile Include="Contracts\Injection\ContractRewriter.cs" />

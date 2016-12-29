@@ -15,10 +15,11 @@ namespace Traction.Contracts.Semantics {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
-            return @this.DeclaredAndInheritedAttributes()
-                        .HasAnyContractImpl(model);
+            return @this
+                .DeclaredAndInheritedAttributes()
+                .Any(a => a.IsContractAttribute(model));
         }
-        
+
         public static bool HasAnyPrecondition(this IMethodSymbol @this, SemanticModel model) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
@@ -26,9 +27,10 @@ namespace Traction.Contracts.Semantics {
             return @this
                .Parameters
                .SelectMany(p => p.DeclaredAndInheritedAttributes())
-               .HasAnyContractImpl(model);
+               .Any(a => a.IsContractAttribute(model));
         }
-        
+
+
         public static bool HasContract(this IMethodSymbol @this, SemanticModel model, Contract contract) =>
             @this.HasPrecondition(model, contract) ||
             @this.HasPostcondition(model, contract);
@@ -38,17 +40,9 @@ namespace Traction.Contracts.Semantics {
             if (model == null) throw new ArgumentNullException(nameof(model));
             if (contract == null) throw new ArgumentNullException(nameof(contract));
 
-            return @this.DeclaredAndInheritedAttributes()
-                        .HasContractImpl(contract, model);
-        }
-
-        public static bool HasPostconditionDeclaration(this IMethodSymbol @this, SemanticModel model, Contract contract) {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (model == null) throw new ArgumentNullException(nameof(model));
-            if (contract == null) throw new ArgumentNullException(nameof(contract));
-
-            return @this.DeclaredAndInheritedAttributes()
-                        .HasContractImpl(contract, model);
+            return @this
+                .DeclaredAndInheritedAttributes()
+                .Any(a => a.IsExactType(contract.AttributeType, model));
         }
 
         public static bool HasPrecondition(this IMethodSymbol @this, SemanticModel model, Contract contract) {
@@ -59,18 +53,7 @@ namespace Traction.Contracts.Semantics {
             return @this
                 .Parameters
                 .SelectMany(p => p.DeclaredAndInheritedAttributes())
-                .HasContractImpl(contract, model);
-        }
-
-        public static bool HasPreconditionDeclaration(this IMethodSymbol @this, SemanticModel model, Contract contract) {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (model == null) throw new ArgumentNullException(nameof(model));
-            if (contract == null) throw new ArgumentNullException(nameof(contract));
-
-            return @this
-                .Parameters
-                .SelectMany(p => p.GetAttributes())
-                .HasContractImpl(contract, model);
+                .Any(a => a.IsExactType(contract.AttributeType, model));
         }
     }
 }
