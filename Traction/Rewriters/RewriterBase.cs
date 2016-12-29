@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Traction.SEPrecompilation;
-using Traction.Roslyn;
+using Traction.Roslyn.Rewriting;
 
 namespace Traction {
 

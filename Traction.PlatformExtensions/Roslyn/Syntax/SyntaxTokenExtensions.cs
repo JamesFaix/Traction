@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace Traction.Roslyn {
+namespace Traction.Roslyn.Syntax {
 
     public static class SyntaxTokenExtensions {
 

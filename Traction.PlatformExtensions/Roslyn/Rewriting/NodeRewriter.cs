@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Traction.SEPrecompilation;
 
-namespace Traction.Roslyn {
+namespace Traction.Roslyn.Rewriting {
 
     public class NodeRewriter {
 

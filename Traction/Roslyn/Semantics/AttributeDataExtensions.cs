@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace Traction.Roslyn {
+namespace Traction.Roslyn.Semantics {
 
     internal static class AttributeDataExtensions {
         

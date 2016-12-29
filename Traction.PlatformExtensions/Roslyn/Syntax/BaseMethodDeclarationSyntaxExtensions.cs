@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Traction.Roslyn {
+namespace Traction.Roslyn.Syntax {
 
     /// <summary>
     /// Extension methods for <see cref="BaseMethodDeclarationSyntax"/> 

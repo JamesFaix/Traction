@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
-namespace Traction.Roslyn {
+namespace Traction.Roslyn.Semantics {
 
     public static class AttributeDataExtensions {
 

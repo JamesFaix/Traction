@@ -1,4 +1,4 @@
-﻿namespace Traction.Roslyn {
+﻿namespace Traction.Roslyn.Rewriting {
 
     public static class DiagnosticCodes {
 

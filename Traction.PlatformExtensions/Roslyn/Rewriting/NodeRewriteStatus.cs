@@ -1,4 +1,4 @@
-﻿namespace Traction {
+﻿namespace Traction.Roslyn.Rewriting {
 
     public enum NodeRewriteStatus {
         Skip,

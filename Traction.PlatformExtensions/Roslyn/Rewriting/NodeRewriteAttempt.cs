@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.CodeAnalysis;
 
-namespace Traction.Roslyn {
+namespace Traction.Roslyn.Rewriting {
 
     public class NodeRewriteAttempt<TNode> where TNode : SyntaxNode {
 

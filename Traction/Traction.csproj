@@ -64,22 +64,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="RoslynExtensions\Semantics\AttributeDataExtensions.cs" />
+    <Compile Include="Roslyn\Semantics\AttributeDataExtensions.cs" />
     <Compile Include="ClientAPI\ContractAttribute.cs" />
     <Compile Include="ClientAPI\ContractAttributes.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ContractAttributes.tt</DependentUpon>
     </Compile>
-    <Compile Include="RoslynExtensions\Syntax\AttributeSyntaxExtenions.cs" />
-    <Compile Include="RoslynExtensions\Semantics\ITypeSymbolExtensions.cs" />
-    <Compile Include="RoslynExtensions\Semantics\SymbolExtensionMethodsImpl.cs" />
+    <Compile Include="Roslyn\Syntax\AttributeSyntaxExtenions.cs" />
+    <Compile Include="Roslyn\Semantics\ITypeSymbolExtensions.cs" />
+    <Compile Include="Roslyn\Semantics\SymbolExtensionMethodsImpl.cs" />
     <Compile Include="ContractProvider.cs" />
     <Compile Include="Contract.cs" />
-    <Compile Include="RoslynExtensions\Semantics\IParameterSymbolExtensions.cs" />
-    <Compile Include="RoslynExtensions\Semantics\IPropertySymbolExtensions.cs" />
+    <Compile Include="Roslyn\Semantics\IParameterSymbolExtensions.cs" />
+    <Compile Include="Roslyn\Semantics\IPropertySymbolExtensions.cs" />
     <Compile Include="IContractProvider.cs" />
-    <Compile Include="RoslynExtensions\Semantics\IMethodSymbolExtensions.cs" />
+    <Compile Include="Roslyn\Semantics\IMethodSymbolExtensions.cs" />
     <Compile Include="Rewriters\DiagnosticChecker.cs" />
     <Compile Include="ClientAPI\DiagnosticCode.cs" />
     <Compile Include="ClientAPI\PreconditionException.cs" />

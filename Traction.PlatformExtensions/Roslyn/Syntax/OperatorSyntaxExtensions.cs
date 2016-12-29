@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Traction.Roslyn {
+namespace Traction.Roslyn.Syntax {
 
     public static class OperatorSyntaxExtensions {
 

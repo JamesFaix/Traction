@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Traction.Roslyn;
 
-namespace Traction.Roslyn {
+namespace Traction.Roslyn.Semantics {
 
     internal static class IParameterSymbolExtensions {
 
