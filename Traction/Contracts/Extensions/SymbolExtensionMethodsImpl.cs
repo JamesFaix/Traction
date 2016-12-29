@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
-using Traction.RoslynExtensions;
+using Traction.Roslyn;
 
 namespace Traction.Contracts {
 

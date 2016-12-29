@@ -106,6 +106,10 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Traction.PlatformExtensions\Traction.PlatformExtensions.csproj">
+      <Project>{8a516024-19a4-46ba-a456-6218caf3f178}</Project>
+      <Name>Traction.PlatformExtensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Traction\Traction.csproj">
       <Project>{2c61d50d-4411-4643-977a-e0f72d87840b}</Project>
       <Name>Traction</Name>

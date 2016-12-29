@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.CodeAnalysis;
-using Traction.RoslynExtensions;
+using Traction.Roslyn;
 
 namespace Traction.Contracts {
 

@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Traction.Contracts;
-using Traction.RoslynExtensions;
+using Traction.Roslyn;
 
 namespace Traction {
 
