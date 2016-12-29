@@ -6,7 +6,7 @@ using Traction.Roslyn;
 
 namespace Traction.Roslyn {
 
-    static class AttributeSyntaxExtenions {
+    internal static class AttributeSyntaxExtenions {
 
         public static bool IsContractAttribute(this AttributeSyntax @this, SemanticModel model) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));

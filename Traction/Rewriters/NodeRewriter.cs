@@ -4,7 +4,7 @@ using Traction.SEPrecompilation;
 
 namespace Traction {
 
-    class NodeRewriter {
+    internal class NodeRewriter {
 
         public NodeRewriter(SemanticModel model, ICompileContext context, string confirmationMessage) {
             if (model == null) throw new ArgumentNullException(nameof(model));

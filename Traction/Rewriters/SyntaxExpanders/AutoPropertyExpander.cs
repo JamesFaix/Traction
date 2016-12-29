@@ -12,7 +12,7 @@ namespace Traction {
     /// <summary>
     /// Rewrites automatically implemented properties as normal properties with backing fields.
     /// </summary>
-    sealed class AutoPropertyExpander : ConcreteTypeMemberExpander<PropertyDeclarationSyntax> {
+    internal sealed class AutoPropertyExpander : ConcreteTypeMemberExpander<PropertyDeclarationSyntax> {
 
         private AutoPropertyExpander(SemanticModel model, ICompileContext context)
             : base(model, context, "Expanded automatically implemented property.") { }

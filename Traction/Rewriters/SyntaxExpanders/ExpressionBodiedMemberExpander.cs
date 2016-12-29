@@ -9,7 +9,7 @@ namespace Traction {
     /// <summary>
     /// Rewrites expression-bodied members as normal "blocked" members.
     /// </summary>
-    sealed class ExpressionBodiedMemberExpander : RewriterBase {
+    internal sealed class ExpressionBodiedMemberExpander : RewriterBase {
 
         private ExpressionBodiedMemberExpander(SemanticModel model, ICompileContext context)
             : base(model, context, "Expanded expression-bodied member.") { }

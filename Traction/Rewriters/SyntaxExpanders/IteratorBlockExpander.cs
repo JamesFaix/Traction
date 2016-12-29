@@ -13,7 +13,7 @@ namespace Traction {
     /// <summary>
     /// Rewrites iterator blocks with preconditions so that preconditions are executed immediately.
     /// </summary>
-    sealed class IteratorBlockExpander : ConcreteTypeMemberExpander<BaseMethodDeclarationSyntax> {
+    internal sealed class IteratorBlockExpander : ConcreteTypeMemberExpander<BaseMethodDeclarationSyntax> {
 
         private IteratorBlockExpander(SemanticModel model, ICompileContext context)
             : base(model, context, "Expanded iterator block.") { }

@@ -2,7 +2,7 @@
 
 namespace Traction {
 
-    class NodeRewriteAttempt<TNode> where TNode : SyntaxNode {
+    internal class NodeRewriteAttempt<TNode> where TNode : SyntaxNode {
 
         internal NodeRewriteAttempt(NodeRewriteStatus status, TNode oldNode, TNode newNode) {
             Status = status;

@@ -8,7 +8,7 @@ using Traction.Roslyn;
 
 namespace Traction.Contracts {
 
-    public class ContractProvider : IContractProvider {
+    internal class ContractProvider : IContractProvider {
 
         #region Singleton
 

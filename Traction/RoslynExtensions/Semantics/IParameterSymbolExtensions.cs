@@ -4,7 +4,7 @@ using Traction.Roslyn;
 
 namespace Traction.Roslyn {
 
-    static class IParameterSymbolExtensions {
+    internal static class IParameterSymbolExtensions {
 
         public static bool HasAnyPrecondition(this IParameterSymbol @this, SemanticModel model) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));

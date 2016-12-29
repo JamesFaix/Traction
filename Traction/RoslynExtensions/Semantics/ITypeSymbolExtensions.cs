@@ -4,7 +4,7 @@ using Traction.Roslyn;
 
 namespace Traction.Roslyn {
 
-    static class ITypeSymbolExtensions {
+    internal static class ITypeSymbolExtensions {
 
         public static bool CanBeNull(this ITypeSymbol @this) =>
            !@this.IsValueType || @this.IsNullable();

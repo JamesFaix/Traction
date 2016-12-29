@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Traction {
 
-    interface IContractProvider {
+    internal interface IContractProvider {
 
         IEnumerable<Contract> Contracts { get; }
 

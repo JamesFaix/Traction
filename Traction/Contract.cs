@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Traction {
 
-    public class Contract {
+    internal class Contract {
 
         internal Contract(
             string name,

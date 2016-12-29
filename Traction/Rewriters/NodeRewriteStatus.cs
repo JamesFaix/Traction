@@ -1,4 +1,4 @@
 ﻿namespace Traction {
 
-    enum NodeRewriteStatus { Skip, Success, Failure }
+    internal enum NodeRewriteStatus { Skip, Success, Failure }
 }

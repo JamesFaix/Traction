@@ -8,7 +8,7 @@ using Traction.SEPrecompilation;
 
 namespace Traction {
 
-    abstract class ConcreteTypeMemberExpander<TMemberNode> : RewriterBase
+    internal abstract class ConcreteTypeMemberExpander<TMemberNode> : RewriterBase
         where TMemberNode : CSharpSyntaxNode {
 
         protected ConcreteTypeMemberExpander(SemanticModel model, ICompileContext context, string confirmationMessage)

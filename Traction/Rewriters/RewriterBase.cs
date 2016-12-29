@@ -8,7 +8,7 @@ namespace Traction {
     /// <summary>
     /// Base class for syntax rewriters.
     /// </summary>
-    abstract class RewriterBase : CSharpSyntaxRewriter {
+    internal abstract class RewriterBase : CSharpSyntaxRewriter {
 
         protected RewriterBase(SemanticModel model, ICompileContext context, string confirmationMessage) {
             if (model == null) throw new ArgumentNullException(nameof(model));
