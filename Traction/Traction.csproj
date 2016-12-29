@@ -86,7 +86,6 @@
     <Compile Include="ErrorHandling\DiagnosticCode.cs" />
     <Compile Include="ErrorHandling\PreconditionException.cs" />
     <Compile Include="ErrorHandling\PostconditionException.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Rewriters\SyntaxExpanders\AutoPropertyExpander.cs" />
     <Compile Include="Rewriters\SyntaxExpanders\IteratorBlockExpander.cs" />
     <Compile Include="Rewriters\NodeRewriteAttempt.cs" />
