@@ -8,9 +8,9 @@ namespace Traction {
     /// <summary>
     /// <c>ICompileModule</c> for contract rewriting.
     /// </summary>
-    public class ContractModule : CompileModuleBase {
+    public class TractionCompileModule : CompileModuleBase {
 
-        public ContractModule() : base() {
+        public TractionCompileModule() : base() {
 
 #if DEBUG_ON_BUILD
             System.Diagnostics.Debugger.Launch();
