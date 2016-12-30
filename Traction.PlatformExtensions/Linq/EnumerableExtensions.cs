@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace Traction.Linq {
 
@@ -26,5 +27,14 @@ namespace Traction.Linq {
             return sb.ToString();
         }
 
+        public static IEnumerable<T> Concat<T>(this IEnumerable<T> @this, T element) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+            return @this.Concat(Enumerable.Repeat(element, 1));
+        }
+
+        public static IEnumerable<T> Concat<T>(this T @this, IEnumerable<T> sequence) {
+            if (sequence == null) throw new ArgumentNullException(nameof(sequence));
+            return Enumerable.Repeat(@this, 1).Concat(sequence);
+        }
     }
 }

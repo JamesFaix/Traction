@@ -52,7 +52,7 @@ namespace Traction.Roslyn.Rewriting {
 
         private static Diagnostic RewriteConfirmed(Location location, string message) => Diagnostic.Create(
             descriptor: new DiagnosticDescriptor(
-                id: $"TR{DiagnosticCodes.RewriteConfirmed:D4}",
+                id: DiagnosticCodes.RewriteConfirmed,
                 title: "Rewrite confirmation",
                 messageFormat: message,
                 category: "Traction",
@@ -62,7 +62,7 @@ namespace Traction.Roslyn.Rewriting {
 
         private static Diagnostic RewriteFailed(Location location, Exception exception) => Diagnostic.Create(
             descriptor: new DiagnosticDescriptor(
-                id: $"TR{DiagnosticCodes.RewriteFailed:D4}",
+                id: DiagnosticCodes.RewriteFailed,
                 title: "Rewrite failed",
                 messageFormat: "An error occurred while editing the syntax tree. " +
                     $"{exception.GetType()}; {exception.Message}; {exception.StackTrace}",

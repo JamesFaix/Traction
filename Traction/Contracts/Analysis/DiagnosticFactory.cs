@@ -9,10 +9,10 @@ namespace Traction.Contracts.Analysis {
     /// </summary>
     static class DiagnosticFactory {
 
-        public static Diagnostic Create(int code, string title, string message, Location location) =>
+        public static Diagnostic Create(string code, string title, string message, Location location) =>
             Diagnostic.Create(
                 descriptor: new DiagnosticDescriptor(
-                    id: $"TR{code:D4}",
+                    id: code,
                     title: "Traction: " + title,
                     messageFormat: message,
                     category: "Traction",
@@ -30,6 +30,12 @@ namespace Traction.Contracts.Analysis {
             code: DiagnosticCodes.NoContractsOnPartialMembers,
             title: $"Invalid contract attribute usage",
             message: $"Contracts cannot be applied to partial members.",
+            location: location);
+
+        public static Diagnostic NoContractsOnExternMembers(Location location) => Create(
+            code: DiagnosticCodes.NoContractsOnExternMembers,
+            title: $"Invalid contract attribute usage",
+            message: $"Contracts cannot be applied to extern members.",
             location: location);
 
         public static Diagnostic NoPreconditiosnOnInheritedMembers(Location location) => Create(

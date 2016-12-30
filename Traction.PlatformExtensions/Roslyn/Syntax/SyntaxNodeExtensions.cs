@@ -84,5 +84,11 @@ namespace Traction.Roslyn.Syntax {
             return @this.ChildTokens()
                 .Any(t => t.IsKind(SyntaxKind.OverrideKeyword));
         }
+
+        public static bool IsExtern(this SyntaxNode @this) {
+            if (@this == null) throw new ArgumentNullException(nameof(@this));
+            return @this.ChildTokens()
+                .Any(t => t.IsKind(SyntaxKind.ExternKeyword));
+        }
     }
 }

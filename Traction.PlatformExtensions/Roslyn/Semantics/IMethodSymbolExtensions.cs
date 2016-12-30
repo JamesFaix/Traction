@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Traction.Linq;
 
 namespace Traction.Roslyn.Semantics {
 
@@ -12,10 +13,10 @@ namespace Traction.Roslyn.Semantics {
 
             var symbols = @this.OverriddenAndImplementedInterfaceMembers();
 
-            return symbols
-                .SelectMany(s => s.GetAttributes())
-                .Concat(symbols.OfType<IMethodSymbol>()
-                               .SelectMany(s => s.GetReturnTypeAttributes()));
+            return @this
+                .Concat(@this.OverriddenAndImplementedInterfaceMembers())
+                .SelectMany(s => s.GetAttributes()
+                                  .Concat(s.GetReturnTypeAttributes()));
         }
 
         public static IEnumerable<IMethodSymbol> ImplementedInterfaceMembers(this IMethodSymbol @this) {
@@ -37,7 +38,7 @@ namespace Traction.Roslyn.Semantics {
 
         public static bool IsOverrideOrInterfaceImplementation(this IMethodSymbol @this) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
-            return @this.OverriddenAndImplementedInterfaceMembers().Count() > 1; //1 for self
+            return @this.OverriddenAndImplementedInterfaceMembers().Any();// Count() > 1; //1 for self
         }
 
         public static IMethodSymbol OverriddenMember(this IMethodSymbol @this) {
@@ -52,11 +53,12 @@ namespace Traction.Roslyn.Semantics {
 
             var overridden = @this.OverriddenMethod;
             if (overridden != null) {
+                result.Add(overridden);
                 result.AddRange(OverriddenAndImplementedInterfaceMembers(overridden));
             }
 
             result.AddRange(@this.ImplementedInterfaceMembers());
-            result.Add(@this);
+            //result.Add(@this);
             return result;
         }
     }

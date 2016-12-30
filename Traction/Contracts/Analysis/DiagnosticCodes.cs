@@ -7,14 +7,14 @@
     public class DiagnosticCodes {
 
         //200-299 General contract misuse
-        public const int NoPostconditionsOnVoid = 200;
-        public const int NoPostconditionsOnIteratorBlocks = 201;
-        public const int NoPreconditionsOnInheritedMembers = 202;
-        public const int MembersCannotInheritPreconditionsFromMultipleSources = 203;
-        public const int NoContractsOnPartialMembers = 204;
-        public const int NoContractsOnExternMemebrs = 205;
+        public const string NoPostconditionsOnVoid = "TR0200";
+        public const string NoPostconditionsOnIteratorBlocks = "TR0201";
+        public const string NoPreconditionsOnInheritedMembers = "TR0202";
+        public const string MembersCannotInheritPreconditionsFromMultipleSources = "TR0203";
+        public const string NoContractsOnPartialMembers = "TR0204";
+        public const string NoContractsOnExternMembers = "TR0205";
 
         //300-399 Specific contract misuse
-        public const int InvalidTypeForContract = 300;
+        public const string InvalidTypeForContract = "TR0300";
     }
 }

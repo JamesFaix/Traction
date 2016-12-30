@@ -23,7 +23,8 @@ namespace Traction.Contracts.Syntax {
 
             var attributeTypeSymbol = contract.AttributeType.GetTypeSymbol(model);
 
-            return @this.AllAttributes()
+            return !@this.IsReadonly() &&
+                @this.AllAttributes()
                 .Any(a => model.GetTypeInfo(a).Type.Equals(attributeTypeSymbol));
         }
 
@@ -34,8 +35,8 @@ namespace Traction.Contracts.Syntax {
 
             var attributeTypeSymbol = contract.AttributeType.GetTypeSymbol(model);
 
-            return @this
-                .AllAttributes()
+            return !@this.IsWriteonly() &&
+                @this.AllAttributes()
                 .Any(a => model.GetTypeInfo(a).Type.Equals(attributeTypeSymbol));
         }
 
@@ -49,8 +50,9 @@ namespace Traction.Contracts.Syntax {
 
             var attributeTypeSymbol = typeof(ContractAttribute).GetTypeSymbol(model);
 
-            return @this.AllAttributes()
-                .Any(a => model.GetTypeInfo(a).Type.InheritsFrom(attributeTypeSymbol));
+            return !@this.IsWriteonly() &&
+                @this.AllAttributes()
+                     .Any(a => model.GetTypeInfo(a).Type.InheritsFrom(attributeTypeSymbol));
         }
 
         public static bool HasAnyPostconditionAttribute(this PropertyDeclarationSyntax @this, SemanticModel model) {
@@ -59,9 +61,9 @@ namespace Traction.Contracts.Syntax {
 
             var attributeTypeSymbol = typeof(ContractAttribute).GetTypeSymbol(model);
 
-            return @this
-                .AllAttributes()
-                .Any(a => model.GetTypeInfo(a).Type.InheritsFrom(attributeTypeSymbol));
+            return !@this.IsWriteonly() &&
+                @this.AllAttributes()
+                     .Any(a => model.GetTypeInfo(a).Type.InheritsFrom(attributeTypeSymbol));
         }
 
         public static IEnumerable<Contract> GetContracts(this PropertyDeclarationSyntax @this, SemanticModel model, IContractProvider contractProvider) =>
@@ -75,9 +77,11 @@ namespace Traction.Contracts.Syntax {
 
             var attributeTypeSymbol = typeof(ContractAttribute).GetTypeSymbol(model);
 
-            return @this.AllAttributes()
-                .Where(a => model.GetTypeInfo(a).Type.InheritsFrom(attributeTypeSymbol))
-                .Select(a => contractProvider[a.GetText().ToString().Trim()]);
+            return @this.IsReadonly()
+                ? Enumerable.Empty<Contract>()
+                : @this.AllAttributes()
+                       .Where(a => model.GetTypeInfo(a).Type.InheritsFrom(attributeTypeSymbol))
+                       .Select(a => contractProvider[a.GetText().ToString().Trim()]);
         }
 
         public static IEnumerable<Contract> GetPostconditions(this PropertyDeclarationSyntax @this, SemanticModel model, IContractProvider contractProvider) {
@@ -87,11 +91,11 @@ namespace Traction.Contracts.Syntax {
 
             var attributeTypeSymbol = typeof(ContractAttribute).GetTypeSymbol(model);
 
-            return @this
-                .AllAttributes()
-                .Where(a => model.GetTypeInfo(a).Type.InheritsFrom(attributeTypeSymbol))
-                .Select(a => contractProvider[a.GetText().ToString().Trim()]);
+            return @this.IsWriteonly()
+                ? Enumerable.Empty<Contract>()
+                : @this.AllAttributes()
+                       .Where(a => model.GetTypeInfo(a).Type.InheritsFrom(attributeTypeSymbol))
+                       .Select(a => contractProvider[a.GetText().ToString().Trim()]);
         }
-
     }
 }

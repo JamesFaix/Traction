@@ -1,45 +1,102 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Traction.Contracts.Semantics;
+using Traction.Contracts.Syntax;
+using Traction.Roslyn.Semantics;
+using Traction.Roslyn.Syntax;
 using Traction.SEPrecompilation;
 
 namespace Traction.Contracts.Analysis {
 
-    internal class Analyzer : CSharpSyntaxRewriter {
+    internal sealed class Analyzer : SyntaxVisitorBase {
 
-        public Analyzer(SemanticModel model, ICompileContext context, IContractProvider contractProvider) {
-            if (model == null) throw new ArgumentNullException(nameof(model));
-            if (context == null) throw new ArgumentNullException(nameof(context));
-            if (contractProvider == null) throw new ArgumentNullException(nameof(contractProvider));
+        public Analyzer(SemanticModel model, ICompileContext context, IContractProvider contractProvider)
+            : base(model, context, contractProvider) { }
 
-            this.model = model;
-            this.context = context;
-            this.contractProvider = contractProvider;
-        }
-
-        private readonly ICompileContext context;
-        private readonly SemanticModel model;
-        private readonly IContractProvider contractProvider;
-        
         public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node) => VisitBaseMethodDeclaration(node);
         public override SyntaxNode VisitOperatorDeclaration(OperatorDeclarationSyntax node) => VisitBaseMethodDeclaration(node);
         public override SyntaxNode VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node) => VisitBaseMethodDeclaration(node);
+
         private SyntaxNode VisitBaseMethodDeclaration(BaseMethodDeclarationSyntax node) {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
             var symbol = model.GetDeclaredSymbol(node) as IMethodSymbol;
 
+            var hasPrecondDeclaration = node.HasAnyPreconditionAttribute(model);
+            var hasPostcondDeclaration = node.HasAnyPostconditionAttribute(model);
+            var hasContractDeclaration = hasPrecondDeclaration || hasPostcondDeclaration;
 
+            var hasPrecond = symbol.HasAnyPrecondition(model);
+            var hasPostcond = symbol.HasAnyPostcondition(model);
+            var hasContract = hasPrecond || hasPostcond;
 
-            //Check for partial or extern
+            var loc = node.GetLocation();
 
-            //Check for Multiple pre w/inheritance
+            if (hasContractDeclaration) {
+                //No contracts on partial members
+                if (node.IsPartial()) {
+                    context.Diagnostics.Add(DiagnosticFactory.NoContractsOnPartialMembers(loc));
+                }
 
-            //If has postcondition, check:
-            //Post w/ void
-            //Post w/ iterator
-            //Invalid type
+                //No contracts on extern members
+                if (node.IsExtern()) {
+                    context.Diagnostics.Add(DiagnosticFactory.NoContractsOnExternMembers(loc));
+                }
+            }
+
+            if (hasPrecondDeclaration) {
+                //No preconditions on inherited members
+                if (symbol.IsOverrideOrInterfaceImplementation()) {
+                    context.Diagnostics.Add(DiagnosticFactory.NoPreconditiosnOnInheritedMembers(loc));
+                }
+
+                //No preconditions on invalid parameter types
+                foreach (var p in node.ParameterList.Parameters) {
+                    var paramType = model.GetTypeInfo(p.Type).Type;
+
+                    foreach (var c in p.GetPreconditions(model, contractProvider)) {
+                        if (!c.IsValidType(paramType)) {
+                            context.Diagnostics.Add(DiagnosticFactory.InvalidTypeForContract(c, loc));
+                        }
+                    }
+                }
+            }
+
+            if (hasPostcondDeclaration) {
+                //No postconditions on void methods
+                if (symbol.ReturnType.Name == "Void") {
+                    context.Diagnostics.Add(DiagnosticFactory.NoPostconditionsOnVoid(loc));
+                }
+
+                //No postconditions on invalid return types
+                foreach (var c in symbol.GetPostconditions(model, contractProvider)) {
+                    if (!c.IsValidType(symbol.ReturnType)) {
+                        context.Diagnostics.Add(DiagnosticFactory.InvalidTypeForContract(c, loc));
+                    }
+                }
+            }
+
+            if (hasPostcond) {
+                //No postconditions on iterator blocks (must be re-checks on inherited members)
+                if (node.IsIteratorBlock()) {
+                    context.Diagnostics.Add(DiagnosticFactory.NoPostconditionsOnIteratorBlocks(loc));
+                }
+            }
+
+            if (hasPrecond) {
+                //Members cannot have preconditions from multiple sources
+                var precondSourceCount = symbol
+                    .OverriddenAndImplementedInterfaceMembers()
+                    .Count(m => m.GetDeclaredPreconditions(model, contractProvider)
+                                 .Any());
+
+                if (precondSourceCount > 1) {
+                    context.Diagnostics.Add(DiagnosticFactory.MembersCannotInheritPreconditionsFromMultipleSources(loc));
+                }
+            }
 
             return node;
         }
@@ -48,29 +105,70 @@ namespace Traction.Contracts.Analysis {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
             var symbol = model.GetDeclaredSymbol(node) as IPropertySymbol;
-            
-            //Check for partial or extern
-            
-            //Check for getter and setter
 
-            //Check for invalid type
+            var hasPrecondDeclaration = node.HasAnyPreconditionAttribute(model);
+            var hasPostcondDeclaration = node.HasAnyPostconditionAttribute(model);
+            var hasContractDeclaration = hasPrecondDeclaration || hasPostcondDeclaration;
 
-            //Check setter:
-            //Pre w/inheritance
-            //Multiple pre
+            var hasPrecond = symbol.HasAnyPrecondition(model);
+            var hasPostcond = symbol.HasAnyPostcondition(model);
+            var hasContract = hasPrecond || hasPostcond;
 
-            //Check getter:
-            //Post w/ iterator
+            var loc = node.GetLocation();
 
-            return node;
-        }
+            if (hasContractDeclaration) {
+                //No contracts on partial members
+                if (node.IsPartial()) {
+                    context.Diagnostics.Add(DiagnosticFactory.NoContractsOnPartialMembers(loc));
+                }
 
-        public override SyntaxNode VisitParameter(ParameterSyntax node) {
-            //Get member symbol
-            
-            //Check for:
-                //Pre w/ inheritance
-                //Invalid type
+                //No contracts on extern members
+                if (node.IsExtern()) {
+                    context.Diagnostics.Add(DiagnosticFactory.NoContractsOnExternMembers(loc));
+                }
+            }
+
+            if (hasPrecondDeclaration) {
+                //No preconditions on inherited members
+                if (symbol.IsOverrideOrInterfaceImplementation()) {
+                    context.Diagnostics.Add(DiagnosticFactory.NoPreconditiosnOnInheritedMembers(loc));
+                }
+
+                //No preconditions on invalid types
+                foreach (var c in symbol.GetPreconditions(model, contractProvider)) {
+                    if (!c.IsValidType(symbol.Type)) {
+                        context.Diagnostics.Add(DiagnosticFactory.InvalidTypeForContract(c, loc));
+                    }
+                }
+            }
+
+            if (hasPostcondDeclaration) {
+                //No postconditions on invalid return types
+                foreach (var c in symbol.GetPostconditions(model, contractProvider)) {
+                    if (!c.IsValidType(symbol.Type)) {
+                        context.Diagnostics.Add(DiagnosticFactory.InvalidTypeForContract(c, loc));
+                    }
+                }
+            }
+
+            if (hasPostcond) {
+                //No postconditions on iterator blocks (must be re-checks on inherited members)
+                if (node.IsIteratorBlock()) {
+                    context.Diagnostics.Add(DiagnosticFactory.NoPostconditionsOnIteratorBlocks(loc));
+                }
+            }
+
+            if (hasPrecond) {
+                //Members cannot have preconditions from multiple sources
+                var precondSourceCount = symbol
+                    .OverriddenAndImplementedInterfaceMembers()
+                    .Count(m => m.GetDeclaredPreconditions(model, contractProvider)
+                                 .Any());
+
+                if (precondSourceCount > 1) {
+                    context.Diagnostics.Add(DiagnosticFactory.MembersCannotInheritPreconditionsFromMultipleSources(loc));
+                }
+            }
 
             return node;
         }

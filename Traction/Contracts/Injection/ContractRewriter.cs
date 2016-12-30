@@ -23,11 +23,9 @@ namespace Traction.Contracts.Injection {
 
             if (contract == null) throw new ArgumentNullException(nameof(contract));
             this.contract = contract;
-            this.diagnosticChecker = new DiagnosticChecker(model, contract);
         }
         
         private readonly Contract contract;
-        private readonly DiagnosticChecker diagnosticChecker;
 
         public sealed override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node) => VisitPropertyImpl(node);
         public sealed override SyntaxNode VisitOperatorDeclaration(OperatorDeclarationSyntax node) => VisitMethodImpl(node);
@@ -41,14 +39,10 @@ namespace Traction.Contracts.Injection {
             if (!symbol.HasContract(model, contract)) {
                 return node;
             }
-
-            var diagnostics = this.diagnosticChecker.GetDiagnostics(node);
-            foreach (var d in diagnostics) {
-                this.context.Diagnostics.Add(d);
-            }
-
+            
             //If any diagnostics, or if member is non-implemented, do not rewrite
-            if (diagnostics.Any() || node.IsNonImplementedMember()) {
+            if (context.Diagnostics.Any(d => d.Id != Roslyn.Rewriting.DiagnosticCodes.RewriteConfirmed) 
+            || node.IsNonImplementedMember()) {
                 return node;
             }
             else {
@@ -64,13 +58,9 @@ namespace Traction.Contracts.Injection {
                 return node;
             }
 
-            var diagnostics = this.diagnosticChecker.GetDiagnostics(node);
-            foreach (var d in diagnostics) {
-                this.context.Diagnostics.Add(d);
-            }
-
             //If any diagnostics, or if member is non-implemented, do not rewrite
-            if (diagnostics.Any() || node.IsNonImplementedMember()) {
+            if (context.Diagnostics.Any(d => d.Id != Roslyn.Rewriting.DiagnosticCodes.RewriteConfirmed)
+            || node.IsNonImplementedMember()) {
                 return node;
             }
             else {
@@ -95,7 +85,7 @@ namespace Traction.Contracts.Injection {
         }
 
         private PropertyDeclarationSyntax VisitPropertyImplInner(PropertyDeclarationSyntax node) {
-            var propertyType = model.GetTypeInfo(node.Type);
+            var propertyType = model.GetTypeInfo(node.Type).Type;
 
             var location = node.GetLocation();
             var setter = InsertPropertyPrecondition(propertyType, node.Setter(), location);
@@ -124,7 +114,7 @@ namespace Traction.Contracts.Injection {
             var location = node.GetLocation();
 
             return preconditionParameters
-                .Select(p => CreatePrecondition(model.GetTypeInfo(p.Type), p.Identifier.ValueText, location));
+                .Select(p => CreatePrecondition(model.GetTypeInfo(p.Type).Type, p.Identifier.ValueText, location));
         }
 
         private TNode InsertMethodPostconditions<TNode>(TNode node)
@@ -136,7 +126,7 @@ namespace Traction.Contracts.Injection {
             }
 
             var result = node;
-            var returnType = model.GetTypeInfo(node.ReturnType());
+            var returnType = model.GetTypeInfo(node.ReturnType()).Type;
             var location = node.GetLocation();
 
             var returnStatements = node.GetReturnStatements();
@@ -145,27 +135,27 @@ namespace Traction.Contracts.Injection {
                 (oldNode, newNode) => CreatePostcondition(returnType, newNode, location));
         }
 
-        private AccessorDeclarationSyntax InsertPropertyPrecondition(TypeInfo type, AccessorDeclarationSyntax node, Location location) {
+        private AccessorDeclarationSyntax InsertPropertyPrecondition(ITypeSymbol type, AccessorDeclarationSyntax node, Location location) {
             if (node == null) return null;
             return node.WithBody(
                 SyntaxFactory.Block(CreatePrecondition(type, "value", location))
                     .AddStatements(node.Body.Statements.ToArray()));
         }
 
-        private AccessorDeclarationSyntax InsertPropertyPostcondition(TypeInfo type, AccessorDeclarationSyntax node, Location location) {
+        private AccessorDeclarationSyntax InsertPropertyPostcondition(ITypeSymbol type, AccessorDeclarationSyntax node, Location location) {
             if (node == null) return null;
             var returnStatements = node.GetReturnStatements();
             return node.ReplaceNodes(returnStatements,
                 (oldNode, newNode) => CreatePostcondition(type, newNode, location));
         }
 
-        private StatementSyntax CreatePrecondition(TypeInfo parameterType, string parameterName, Location location) {
+        private StatementSyntax CreatePrecondition(ITypeSymbol parameterType, string parameterName, Location location) {
             var text = GetPreconditionText(parameterName, parameterType);
             var statement = SyntaxFactory.ParseStatement(text);
             return SyntaxFactory.Block(statement);
         }
 
-        private StatementSyntax CreatePostcondition(TypeInfo returnType, ReturnStatementSyntax node, Location location) {
+        private StatementSyntax CreatePostcondition(ITypeSymbol returnType, ReturnStatementSyntax node, Location location) {
             var returnedExpression = node.ChildNodes().FirstOrDefault();
             var tempVariableName = IdentifierFactory.CreatePostconditionLocal(node, model);
             var text = GetPostconditionText(returnType, returnedExpression.ToString(), tempVariableName);
@@ -173,17 +163,17 @@ namespace Traction.Contracts.Injection {
             return statement;
         }
 
-        private string GetPreconditionText(string parameterName, TypeInfo parameterType) {
+        private string GetPreconditionText(string parameterName, ITypeSymbol parameterType) {
             var sb = new StringBuilder();
             sb.AppendLine($"if (!({this.contract.GetCondition(parameterName, parameterType)}))");
             sb.AppendLine($"    throw new global::Traction.PreconditionException(\"{this.contract.ExceptionMessage}\", nameof({parameterName}));");
             return sb.ToString();
         }
 
-        private string GetPostconditionText(TypeInfo returnType, string returnedExpression, string tempVarName) {
+        private string GetPostconditionText(ITypeSymbol returnType, string returnedExpression, string tempVarName) {
             var sb = new StringBuilder();
             sb.AppendLine("{");
-            sb.AppendLine($"    {returnType.Type.FullName()} {tempVarName} = {returnedExpression};");
+            sb.AppendLine($"    {returnType.FullName()} {tempVarName} = {returnedExpression};");
             sb.AppendLine($"    if (!({this.contract.GetCondition(tempVarName, returnType)}))");
             sb.AppendLine($"        throw new global::Traction.PostconditionException(\"{this.contract.ExceptionMessage}\");");
             sb.AppendLine($"    return {tempVarName};");

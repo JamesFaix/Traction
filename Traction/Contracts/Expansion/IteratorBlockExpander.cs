@@ -29,13 +29,10 @@ namespace Traction.Contracts.Expansion {
         protected override SyntaxList<SyntaxNode> ExpandMember(BaseMethodDeclarationSyntax node, ISymbol symbol) {
 
             var innerMethodName = GetMethodName(node);
-            var modifiers = GetModifiers(node);
-            var parameters = GetParameters(node);
-            var returnType = node.ReturnType();
-
-            var innerMethod = SyntaxFactory.MethodDeclaration(returnType, innerMethodName)
-                .WithModifiers(modifiers)
-                .WithParameterList(parameters)
+          
+            var innerMethod = SyntaxFactory.MethodDeclaration(node.ReturnType(), innerMethodName)
+                .WithModifiers(GetModifiers(node))
+                .WithParameterList(GetParameters(node))
                 .WithBody(node.Body);
 
             var outerMethod = node.WithBody(SyntaxFactory.Block(

@@ -16,9 +16,12 @@ namespace Traction {
             System.Diagnostics.Debugger.Launch();
 #endif
 
+            var contractProvider = ContractProvider.Instance;
+
             //Add syntax expanders first, so contracts can operate on expanded syntax.
             AddPrecompilationRewriterProviders(
                 new IRewriterProvider[] {
+                    new Contracts.Analysis.AnalyzerProvider(contractProvider),
                     new AutoPropertyExpanderProvider(),
                     new ExpressionBodiedMemberExpanderProvider(),
                     new IteratorBlockExpanderProvider()

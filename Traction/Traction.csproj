@@ -65,10 +65,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\Analysis\Analyzer.cs" />
+    <Compile Include="Contracts\Analysis\AnalyzerProvider.cs" />
     <Compile Include="Contracts\Expansion\AutoPropertyExpanderProvider.cs" />
     <Compile Include="Contracts\Expansion\ExpressionBodiedMemberExpanderProvider.cs" />
     <Compile Include="Contracts\Expansion\IteratorBlockExpanderProvider.cs" />
     <Compile Include="Contracts\Injection\ContractRewriterProvider.cs" />
+    <Compile Include="Contracts\RewriterBase2.cs" />
     <Compile Include="Contracts\Semantics\AttributeDataExtensions.cs" />
     <Compile Include="ClientAPI\ContractAttribute.cs" />
     <Compile Include="ClientAPI\ContractAttributes.cs">
@@ -84,7 +86,6 @@
     <Compile Include="Contracts\Semantics\IPropertySymbolExtensions.cs" />
     <Compile Include="Contracts\IContractProvider.cs" />
     <Compile Include="Contracts\Semantics\IMethodSymbolExtensions.cs" />
-    <Compile Include="Contracts\Analysis\DiagnosticChecker.cs" />
     <Compile Include="Contracts\Analysis\DiagnosticCodes.cs" />
     <Compile Include="ClientAPI\PreconditionException.cs" />
     <Compile Include="ClientAPI\PostconditionException.cs" />

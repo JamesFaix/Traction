@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Traction.Linq;
 
 namespace Traction.Roslyn.Semantics {
 
@@ -11,7 +12,7 @@ namespace Traction.Roslyn.Semantics {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
 
             return @this
-                .OverriddenAndImplementedInterfaceMembers()
+                .Concat(@this.OverriddenAndImplementedInterfaceMembers())
                 .SelectMany(s => s.GetAttributes());
         }
 
@@ -34,7 +35,7 @@ namespace Traction.Roslyn.Semantics {
                 
         public static bool IsOverrideOrInterfaceImplementation(this IPropertySymbol @this) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
-            return @this.OverriddenAndImplementedInterfaceMembers().Count() > 1; //1 for self
+            return @this.OverriddenAndImplementedInterfaceMembers().Any(); //.Count() > 1; //1 for self
         }
 
         public static IPropertySymbol OverriddenMember(this IPropertySymbol @this) {
@@ -49,11 +50,12 @@ namespace Traction.Roslyn.Semantics {
 
             var overridden = @this.OverriddenProperty;
             if (overridden != null) {
+                result.Add(overridden);
                 result.AddRange(OverriddenAndImplementedInterfaceMembers(overridden));
             }
 
             result.AddRange(@this.ImplementedInterfaceMembers());
-            result.Add(@this);
+          //  result.Add(@this);
             return result;
         }
     }

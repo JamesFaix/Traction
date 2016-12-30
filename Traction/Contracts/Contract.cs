@@ -11,8 +11,8 @@ namespace Traction.Contracts {
             Type attributeType,
             string exceptionMessage,
             string invalidTypeDiagnosticMessage,
-            Func<string, TypeInfo, ExpressionSyntax> getCondition,
-            Func<TypeInfo, bool> isValidType) {
+            Func<string, ITypeSymbol, ExpressionSyntax> getCondition,
+            Func<ITypeSymbol, bool> isValidType) {
 
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (attributeType == null) throw new ArgumentNullException(nameof(attributeType));
@@ -31,17 +31,17 @@ namespace Traction.Contracts {
             this.isValidType = isValidType;
         }
         
-        private readonly Func<string, TypeInfo, ExpressionSyntax> getCondition;
-        private readonly Func<TypeInfo, bool> isValidType;
+        private readonly Func<string, ITypeSymbol, ExpressionSyntax> getCondition;
+        private readonly Func<ITypeSymbol, bool> isValidType;
 
         public string Name { get; }
         public Type AttributeType { get; }
         public string ExceptionMessage { get; }
         public string InvalidTypeDiagnosticMessage { get; }
 
-        public bool IsValidType(TypeInfo type) => isValidType(type);
+        public bool IsValidType(ITypeSymbol type) => isValidType(type);
         
-        public ExpressionSyntax GetCondition(string expression, TypeInfo expressionType) => 
+        public ExpressionSyntax GetCondition(string expression, ITypeSymbol expressionType) => 
             this.getCondition(expression, expressionType);
     }
 }
