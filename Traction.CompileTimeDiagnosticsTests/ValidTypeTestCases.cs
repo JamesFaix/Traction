@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using NUnit.Framework;
+using static Traction.Contracts.Analysis.DiagnosticCodes;
+using static Traction.Roslyn.Rewriting.DiagnosticCodes;
 
 namespace Traction.DiagnosticsTests {
 
@@ -16,10 +17,10 @@ namespace Traction.DiagnosticsTests {
 
             //Assert
             if (isValid) {
-                Assert.IsTrue(diagnostics.ContainsOnlyCode(DiagnosticCode.RewriteConfirmed));
+                Assert.IsTrue(diagnostics.ContainsOnlyCode(RewriteConfirmed));
             }
             else {
-                Assert.IsTrue(diagnostics.ContainsCode(DiagnosticCode.InvalidTypeForContract));
+                Assert.IsTrue(diagnostics.ContainsCode(InvalidTypeForContract));
             }
         }
 

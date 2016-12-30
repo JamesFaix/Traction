@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.CodeAnalysis;
 using NUnit.Framework;
+using static Traction.Roslyn.Rewriting.DiagnosticCodes;
 
 namespace Traction.DiagnosticsTests {
 
@@ -19,7 +20,7 @@ namespace Traction.DiagnosticsTests {
             var diagnostics = TestHelper.GetDiagnostics(compilation);
 
             Assert.IsTrue(diagnostics.Any(d => d.GetMessage().StartsWith("Expanded")));
-            Assert.IsTrue(diagnostics.ContainsOnlyCode(DiagnosticCode.RewriteConfirmed));
+            Assert.IsTrue(diagnostics.ContainsOnlyCode(RewriteConfirmed));
         }
     }
 }

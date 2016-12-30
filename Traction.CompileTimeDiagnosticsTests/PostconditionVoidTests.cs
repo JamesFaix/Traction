@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using NUnit.Framework;
+using static Traction.Contracts.Analysis.DiagnosticCodes;
 
 namespace Traction.DiagnosticsTests {
 
@@ -19,7 +20,7 @@ namespace Traction.DiagnosticsTests {
                 Assert.IsFalse(diagnostics.Any());
             }
             else {
-                Assert.IsTrue(diagnostics.ContainsCode(DiagnosticCode.NoPostconditionsOnVoid));
+                Assert.IsTrue(diagnostics.ContainsCode(NoPostconditionsOnVoid));
             }
         }
 

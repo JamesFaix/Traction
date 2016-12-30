@@ -12,3 +12,5 @@ C:\Users\James\Documents\GitHub\Traction\Traction\bin\Debug\System.Collections.I
 C:\Users\James\Documents\GitHub\Traction\Traction\obj\Debug\Traction.dll
 C:\Users\James\Documents\GitHub\Traction\Traction\obj\Debug\Traction.pdb
 C:\Users\James\Documents\GitHub\Traction\Traction\obj\Debug\Traction.csprojResolveAssemblyReference.cache
+C:\Users\James\Documents\GitHub\Traction\Traction\bin\Debug\Traction.PlatformExtensions.dll
+C:\Users\James\Documents\GitHub\Traction\Traction\bin\Debug\Traction.PlatformExtensions.pdb

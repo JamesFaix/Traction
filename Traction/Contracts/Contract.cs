@@ -2,17 +2,17 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Traction {
+namespace Traction.Contracts {
 
-    public class Contract {
+    internal class Contract {
 
         internal Contract(
             string name,
             Type attributeType,
             string exceptionMessage,
             string invalidTypeDiagnosticMessage,
-            Func<string, TypeInfo, ExpressionSyntax> getCondition,
-            Func<TypeInfo, bool> isValidType) {
+            Func<string, ITypeSymbol, ExpressionSyntax> getCondition,
+            Func<ITypeSymbol, bool> isValidType) {
 
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (attributeType == null) throw new ArgumentNullException(nameof(attributeType));
@@ -23,36 +23,25 @@ namespace Traction {
             if (!attributeType.IsSubclassOf(typeof(ContractAttribute)))
                 throw new ArgumentException($"Attribute type must inherit from {nameof(ContractAttribute)}", nameof(attributeType));
 
-            this.name = name;
-            this.attributeType = attributeType;
-            this.exceptionMessage = exceptionMessage;
-            this.invalidTypeDiagnosticMessage = invalidTypeDiagnosticMessage;
+            Name = name;
+            AttributeType = attributeType;
+            ExceptionMessage = exceptionMessage;
+            InvalidTypeDiagnosticMessage = invalidTypeDiagnosticMessage;
             this.getCondition = getCondition;
             this.isValidType = isValidType;
         }
+        
+        private readonly Func<string, ITypeSymbol, ExpressionSyntax> getCondition;
+        private readonly Func<ITypeSymbol, bool> isValidType;
 
-        private readonly string name;
-        private readonly Type attributeType;
-        private readonly string exceptionMessage;
-        private readonly string invalidTypeDiagnosticMessage;
-        private readonly Func<string, TypeInfo, ExpressionSyntax> getCondition;
-        private readonly Func<TypeInfo, bool> isValidType;
+        public string Name { get; }
+        public Type AttributeType { get; }
+        public string ExceptionMessage { get; }
+        public string InvalidTypeDiagnosticMessage { get; }
 
-        public string Name => name;
-        public string ExceptionMessage => exceptionMessage;
-
-        public Type AttributeType => attributeType;
-
-        public bool IsValidType(TypeInfo type) => isValidType(type);
-
-        public Diagnostic GetInvalidTypeDiagnostic(Location location) =>
-            DiagnosticFactory.Create(
-                code: DiagnosticCode.InvalidTypeForContract,
-                title: $"Invalid contract attribute usage",
-                message: this.invalidTypeDiagnosticMessage,
-                location: location);
-
-        public ExpressionSyntax GetCondition(string expression, TypeInfo expressionType) => 
+        public bool IsValidType(ITypeSymbol type) => isValidType(type);
+        
+        public ExpressionSyntax GetCondition(string expression, ITypeSymbol expressionType) => 
             this.getCondition(expression, expressionType);
     }
 }
