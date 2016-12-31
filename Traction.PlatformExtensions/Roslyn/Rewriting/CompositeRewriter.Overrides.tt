@@ -1,0 +1,94 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ assembly name="$(SolutionDir)\Traction.PlatformExtensions\bin\Debug\Traction.PlatformExtensions.dll" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="$(SolutionDir)\Traction.PlatformExtensions\bin\Debug\Microsoft.CodeAnalysis.dll" #>
+<#@ assembly name="$(SolutionDir)\Traction.PlatformExtensions\bin\Debug\Microsoft.CodeAnalysis.CSharp.dll" #> 
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Microsoft.CodeAnalysis" #>
+<#@ import namespace="Microsoft.CodeAnalysis.CSharp" #>
+<#@ import namespace="Traction.Linq" #>
+<#@ output extension=".cs" #>
+
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+namespace Traction.Roslyn.Rewriting {
+
+    partial class CompositeRewriter {
+
+    <# foreach (MethodInfo m in GetMethodsToOverride()) { #>
+    <#= GetDeclaration(m) #> {
+            <# var firstParam = m.GetParameters().First(); 
+                var resultType= GetGenericTypeName(firstParam.ParameterType); #>    
+            <#= resultType #> result = <#= firstParam.Name #>;
+            foreach (var item in items) {
+                result = (<#= resultType #>)<#= m.Name #>(result);
+            }
+            return result;
+        }
+
+<#    } #>
+
+    }
+}
+
+<#+    
+    public IEnumerable<MethodInfo> GetMethodsToOverride() {
+        var objectMethods = new [] { "Equals", "GetHashCode", "GetType", "ToString" };
+
+        return typeof(CSharpSyntaxRewriter)
+            .GetMethods()
+            .Where(m => m.IsVirtual)
+            .Where(m => !m.Name.StartsWith("get_"))
+            .Where(m => !objectMethods.Contains(m.Name));
+    }
+
+    public string GetDeclaration(MethodInfo m) {
+        var methodName = GetGenericMethodName(m);
+        var returnTypeName = GetGenericTypeName(m.ReturnType);        
+
+        var paramList = m
+            .GetParameters()
+            .Select(p => $"{GetGenericTypeName(p.ParameterType)} {p.Name}")
+            .ToDelimitedString(", ");
+
+        return $"public override {returnTypeName} {methodName}({paramList})";
+    }
+
+    public string GetInvocation(MethodInfo m) {
+        var methodName = GetGenericMethodName(m);
+
+        var args = m
+            .GetParameters()
+            .Select(p => p.Name)
+            .ToDelimitedString(", ");
+
+        return $"{methodName}({args})";
+    }
+
+    public string GetGenericMethodName(MethodInfo m) {
+        var name = m.Name;
+
+        if (!m.IsGenericMethod) return name;
+
+        var genericArgs = m.GetGenericArguments()
+            .Select(GetGenericTypeName)
+            .ToDelimitedString(", ");
+        return $"{name}<{genericArgs}>";
+    }
+
+    public string GetGenericTypeName(Type t) {
+        var name = t.Name;
+
+        if (!t.IsGenericType) return name;
+
+        var nameRoot = name.Substring(0, name.IndexOf("`"));
+        var genericArgs = t.GenericTypeArguments
+            .Select(GetGenericTypeName)
+            .ToDelimitedString(", ");
+        return $"{nameRoot}<{genericArgs}>";
+    }
+
+#>
