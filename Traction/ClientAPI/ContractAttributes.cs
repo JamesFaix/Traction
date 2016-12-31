@@ -1,8 +1,8 @@
 ﻿
 
 namespace Traction {
-            
-        public sealed class NonNullAttribute : Traction.ContractAttribute {
+
+    public sealed class NonNullAttribute : Traction.ContractAttribute {
             public NonNullAttribute() : base() { }
         }
             

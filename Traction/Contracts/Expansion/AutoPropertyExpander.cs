@@ -3,10 +3,10 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Traction.Contracts.Semantics;
 using Traction.Roslyn.Semantics;
 using Traction.Roslyn.Syntax;
 using Traction.SEPrecompilation;
-using Traction.Contracts.Semantics;
 
 namespace Traction.Contracts.Expansion {
 

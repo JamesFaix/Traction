@@ -5,7 +5,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Traction.SEPrecompilation;
-using Traction.Contracts.Injection;
 
 namespace Traction.Contracts.Expansion {
 

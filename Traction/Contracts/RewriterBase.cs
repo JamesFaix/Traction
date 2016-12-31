@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Traction.SEPrecompilation;
 using Traction.Roslyn.Rewriting;
+using Traction.SEPrecompilation;
 
 namespace Traction.Contracts {
 
