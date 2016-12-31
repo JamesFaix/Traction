@@ -1,6 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Traction.Contracts.Semantics;
+using Traction.Roslyn.Semantics;
+using Traction.Roslyn.Syntax;
+using Traction.SEPrecompilation;
+using Traction.Roslyn.Rewriting;
 
 namespace Traction.Contracts {
 
@@ -43,5 +52,7 @@ namespace Traction.Contracts {
         
         public ExpressionSyntax GetCondition(string expression, ITypeSymbol expressionType) => 
             this.getCondition(expression, expressionType);
+
+        public override string ToString() => $"Contract: {Name}, {ExceptionMessage}";
     }
 }

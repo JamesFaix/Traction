@@ -15,8 +15,8 @@ namespace Traction.Contracts.Expansion {
     /// </summary>
     internal sealed class AutoPropertyExpander : ConcreteTypeMemberExpander<PropertyDeclarationSyntax> {
 
-        public AutoPropertyExpander(SemanticModel model, ICompileContext context)
-            : base(model, context, "Expanded automatically implemented property.") { }
+        public AutoPropertyExpander(SemanticModel model, ICompileContext context, IContractProvider contractProvider)
+            : base(model, context, contractProvider) { }
         
         protected override bool MemberFilter(PropertyDeclarationSyntax member) =>
             member.IsAutoImplentedProperty() &&

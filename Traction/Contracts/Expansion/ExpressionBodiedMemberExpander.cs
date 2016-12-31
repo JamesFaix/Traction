@@ -9,10 +9,10 @@ namespace Traction.Contracts.Expansion {
     /// <summary>
     /// Rewrites expression-bodied members as normal "blocked" members.
     /// </summary>
-    internal sealed class ExpressionBodiedMemberExpander : RewriterBase {
+    internal sealed class ExpressionBodiedMemberExpander : SyntaxVisitorBase {
 
-        public ExpressionBodiedMemberExpander(SemanticModel model, ICompileContext context)
-            : base(model, context, "Expanded expression-bodied member.") { }
+        public ExpressionBodiedMemberExpander(SemanticModel model, ICompileContext context, IContractProvider contractProvider)
+            : base(model, context, contractProvider) { }
         
         public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node) {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -22,8 +22,10 @@ namespace Traction.Contracts.Expansion {
             var statement = SyntaxFactory.ReturnStatement(expr);
 
             return nodeRewriter
-                .Try(node, n => n.WithExpressionBody(null)
-                                 .WithBody(SyntaxFactory.Block(statement)))
+                .Try(node, 
+                    n => n.WithExpressionBody(null)
+                          .WithBody(SyntaxFactory.Block(statement)),
+                    "Expanded expression-bodied member.")
                 .Result;
         }
 

@@ -2,6 +2,7 @@
 using Traction.Contracts;
 using Traction.Contracts.Expansion;
 using Traction.SEPrecompilation;
+using Traction.Contracts.Analysis;
 
 namespace Traction {
 
@@ -21,14 +22,12 @@ namespace Traction {
             //Add syntax expanders first, so contracts can operate on expanded syntax.
             AddPrecompilationRewriterProviders(
                 new IRewriterProvider[] {
-                    new Contracts.Analysis.AnalyzerProvider(contractProvider),
-                    new AutoPropertyExpanderProvider(),
-                    new ExpressionBodiedMemberExpanderProvider(),
-                    new IteratorBlockExpanderProvider()
-                }
-                .Concat(ContractProvider.Instance
-                    .Contracts
-                    .Select(c => new ContractRewriterProvider(c))));
+                    new AnalyzerProvider(contractProvider),
+                    new AutoPropertyExpanderProvider(contractProvider),
+                    new ExpressionBodiedMemberExpanderProvider(contractProvider),
+                    new IteratorBlockExpanderProvider(contractProvider),
+                    new InjectorProvider(contractProvider)
+                });
         }
     }
 }

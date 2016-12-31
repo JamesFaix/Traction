@@ -8,11 +8,11 @@ using Traction.SEPrecompilation;
 
 namespace Traction.Contracts.Expansion {
 
-    internal abstract class ConcreteTypeMemberExpander<TMemberNode> : RewriterBase
+    internal abstract class ConcreteTypeMemberExpander<TMemberNode> : SyntaxVisitorBase
         where TMemberNode : CSharpSyntaxNode {
 
-        protected ConcreteTypeMemberExpander(SemanticModel model, ICompileContext context, string confirmationMessage)
-            : base(model, context, confirmationMessage) { }
+        protected ConcreteTypeMemberExpander(SemanticModel model, ICompileContext context, IContractProvider contractProvider)
+            : base(model, context, contractProvider) { }
 
         //Accumulates used identifiers within type definition as new members are generated
         protected List<string> UsedIdentifiers { get; private set; }
@@ -36,7 +36,7 @@ namespace Traction.Contracts.Expansion {
 
             UsedIdentifiers = IdentifierFactory.GetUsedIdentifiers(node, model).ToList();
             return nodeRewriter
-                .Try(node, ExpandTypeMembers)
+                .Try(node, ExpandTypeMembers, "Expanded members")
                 .Result;
         }
 
