@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace Traction.DiagnosticsTests {
+namespace Traction.Tests {
 
     static class CompilationFactory {
         

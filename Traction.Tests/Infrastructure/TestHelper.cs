@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using StackExchange.Precompilation;
 
-namespace Traction.DiagnosticsTests {
+namespace Traction.Tests {
 
     internal static class TestHelper {
 

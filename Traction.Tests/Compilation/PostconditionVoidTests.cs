@@ -5,10 +5,12 @@ using Microsoft.CodeAnalysis.CSharp;
 using NUnit.Framework;
 using static Traction.Contracts.Analysis.DiagnosticCodes;
 
-namespace Traction.DiagnosticsTests {
+namespace Traction.Tests.Compilation {
 
     [TestFixture]
     public class PostconditionVoidTests {
+
+        private const string fixture = "Compilation_Void_";
 
         [Test, TestCaseSource(nameof(AllCases))]
         public void Test(CSharpCompilation compilation, bool isValid) {
@@ -38,7 +40,7 @@ namespace Traction.DiagnosticsTests {
                         SourceCodeFactory.ClassWithMembers(
                             SourceCodeFactory.PostconditionMethod("void", attributeName))),
                     isValid)
-                 .SetName($"PostconditionsCannotBePlacedOnMethodsReturningVoid_{attributeName}");
+                 .SetName($"{fixture}NoPostconditions_{attributeName}");
         }
     }
 }

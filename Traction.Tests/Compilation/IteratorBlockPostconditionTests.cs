@@ -5,10 +5,12 @@ using Microsoft.CodeAnalysis.CSharp;
 using NUnit.Framework;
 using static Traction.Contracts.Analysis.DiagnosticCodes;
 
-namespace Traction.DiagnosticsTests {
+namespace Traction.Tests.Compilation {
 
     [TestFixture]
     public class IteratorBlockPostconditionTests {
+
+        private const string fixture = "Compilation_IteratorBlocks_";
 
         [Test, TestCaseSource(nameof(AllCases))]
         public void Test(CSharpCompilation compilation, bool isValid) {
@@ -38,7 +40,7 @@ namespace Traction.DiagnosticsTests {
                         SourceCodeFactory.ClassWithMembers(
                             $"[return: {attributeName}] IEnumerable<int> TestMethod() {{ yield return 1; }}")),
                     isValid)
-                 .SetName($"PostconditionsCannotBePlacedOnIteratorBlocks_{attributeName}");
+                 .SetName($"{fixture}NoPostconditions_{attributeName}");
         }
     }
 }

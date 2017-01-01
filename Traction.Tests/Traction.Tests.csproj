@@ -7,8 +7,8 @@
     <ProjectGuid>{8FBEEBD9-441B-460E-AB90-78C9316265AF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Traction.DiagnosticsTests</RootNamespace>
-    <AssemblyName>Traction.DiagnosticsTests</AssemblyName>
+    <RootNamespace>Traction.Tests</RootNamespace>
+    <AssemblyName>Traction.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -62,17 +62,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExternMemberTests.cs" />
+    <Compile Include="Compilation\ExternMemberTests.cs" />
     <Compile Include="Infrastructure\DiagnosticExtensions.cs" />
-    <Compile Include="InheritenceTests.cs" />
+    <Compile Include="Compilation\InheritenceTests.cs" />
     <Compile Include="Infrastructure\CompilationFactory.cs" />
     <Compile Include="Infrastructure\SourceCodeFactory.cs" />
     <Compile Include="Infrastructure\TestHelper.cs" />
-    <Compile Include="IteratorBlockPostconditionTests.cs" />
-    <Compile Include="IteratorBlockPreconditionTests.cs" />
-    <Compile Include="PartialMemberTests.cs" />
-    <Compile Include="PostconditionVoidTests.cs" />
-    <Compile Include="ValidTypeTestCases.cs" />
+    <Compile Include="Compilation\IteratorBlockPostconditionTests.cs" />
+    <Compile Include="Compilation\IteratorBlockPreconditionTests.cs" />
+    <Compile Include="Compilation\PartialMemberTests.cs" />
+    <Compile Include="Compilation\PostconditionVoidTests.cs" />
+    <Compile Include="Compilation\ValidTypeTestCases.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -95,6 +95,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="RuntimeBehaviors\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

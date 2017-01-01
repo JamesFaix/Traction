@@ -5,10 +5,12 @@ using NUnit.Framework;
 using static Traction.Contracts.Analysis.DiagnosticCodes;
 using static Traction.Roslyn.Rewriting.DiagnosticCodes;
 
-namespace Traction.DiagnosticsTests {
+namespace Traction.Tests.Compilation {
 
     [TestFixture]
     public class ValidTypeTests {
+
+        private const string fixture = "Compilation_ValidTypes_";
 
         [Test, TestCaseSource(nameof(AllCases))]
         public void Test(CSharpCompilation compilation, bool isValid) {
@@ -30,8 +32,7 @@ namespace Traction.DiagnosticsTests {
                         SourceCodeFactory.ClassWithMembers(
                             SourceCodeFactory.PreconditionMethod(typeName, attributeName))),
                     isValid)
-                .SetName($"{attributeName}_CanOnlyBePlacedOnParametersWithValidTypes" +
-                    $"_{typeName}{(isValid ? "Passes" : "Fails")}");
+                .SetName($"{fixture}{attributeName}_Parameters_{typeName}{(isValid ? "Passes" : "Fails")}");
         }
 
         private static TestCaseData PostconditionCase(string typeName, string attributeName, bool isValid) {
@@ -40,8 +41,7 @@ namespace Traction.DiagnosticsTests {
                         SourceCodeFactory.ClassWithMembers(
                             SourceCodeFactory.PostconditionMethod(typeName, attributeName))),
                     isValid)
-                 .SetName($"{attributeName}_CanOnlyBePlacedOnReturnValuesWithValidTypes" +
-                     $"_{typeName}{(isValid ? "Passes" : "Fails")}");
+                 .SetName($"{fixture}{attributeName}_ReturnTypes_{typeName}{(isValid ? "Passes" : "Fails")}");
         }
 
         private static IEnumerable<TestCaseData> AllCases =>
