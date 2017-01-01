@@ -43,5 +43,7 @@ namespace Traction.Contracts {
         
         public ExpressionSyntax GetCondition(string expression, ITypeSymbol expressionType) => 
             this.getCondition(expression, expressionType);
+
+        public override string ToString() => $"Contract: {Name}, {ExceptionMessage}";
     }
 }

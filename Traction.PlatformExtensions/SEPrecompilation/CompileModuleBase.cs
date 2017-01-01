@@ -9,60 +9,28 @@ namespace Traction.SEPrecompilation {
     /// </summary>
     public abstract class CompileModuleBase : ICompileModule {
 
-        protected CompileModuleBase() {
-            precompilationRewriterProviders = new List<IRewriterProvider>();
-            postcompilationRewriterProviders = new List<IRewriterProvider>();
+        protected CompileModuleBase(
+            RewriterChain precompilationChain = null,
+            RewriterChain postcompilationChain = null) {
+
+            this.precompChain = precompilationChain;
+            this.postcompChain = postcompilationChain;
         }
 
-        private readonly List<IRewriterProvider> precompilationRewriterProviders;
-        private readonly List<IRewriterProvider> postcompilationRewriterProviders;
-
-        protected void AddPrecompilationRewriterProvider(IRewriterProvider provider) {
-            if (provider == null) throw new ArgumentNullException(nameof(provider));
-            precompilationRewriterProviders.Add(provider);
-        }
-
-        protected void AddPrecompilationRewriterProviders(IEnumerable<IRewriterProvider> providers) {
-            if (providers == null) throw new ArgumentNullException(nameof(providers));
-            precompilationRewriterProviders.AddRange(providers);
-        }
-
-        protected void AddPostcompilationRewriterProvider(IRewriterProvider provider) {
-            if (provider == null) throw new ArgumentNullException(nameof(provider));
-            postcompilationRewriterProviders.Add(provider);
-        }
-
-        protected void AddPostcompilationRewriterProvider(IEnumerable<IRewriterProvider> providers) {
-            if (providers == null) throw new ArgumentNullException(nameof(providers));
-            postcompilationRewriterProviders.AddRange(providers);
-        }
+        private readonly RewriterChain precompChain;
+        private readonly RewriterChain postcompChain;
 
         public void BeforeCompile(BeforeCompileContext context) {
             if (context == null) throw new ArgumentNullException(nameof(context));
-            Process(new BeforeCompileContextWrapper(context), precompilationRewriterProviders);
+            if (precompChain != null) {
+                precompChain.Process(new BeforeCompileContextWrapper(context));
+            }
         }
 
         public void AfterCompile(AfterCompileContext context) {
             if (context == null) throw new ArgumentNullException(nameof(context));
-            Process(new AfterCompileContextWrapper(context), postcompilationRewriterProviders);
-        }
-
-        private void Process(ICompileContext context, IEnumerable<IRewriterProvider> rewriterProviders) {
-            foreach (var provider in rewriterProviders) {
-                foreach (var syntaxTree in context.Compilation.SyntaxTrees) {
-                    var model = context.Compilation.GetSemanticModel(syntaxTree);
-                    var rewriter = provider.Create(model, context);
-                    if (rewriter == null) throw new InvalidOperationException("Rewriter generator cannot return null.");
-
-                    var rootNode = syntaxTree.GetRoot();
-                    var rewritten = rewriter.Visit(rootNode);
-
-                    if (rootNode != rewritten) {
-                        context.Compilation = context.Compilation.ReplaceSyntaxTree(
-                          syntaxTree,
-                          syntaxTree.WithRootAndOptions(rewritten, syntaxTree.Options));
-                    }
-                }
+            if (postcompChain != null) {
+                postcompChain.Process(new AfterCompileContextWrapper(context));
             }
         }
     }

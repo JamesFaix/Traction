@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.CodeAnalysis;
-using Traction.Contracts.Semantics;
+﻿using Microsoft.CodeAnalysis;
 
 namespace Traction.Contracts.Analysis {
 

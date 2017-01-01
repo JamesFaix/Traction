@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Traction.SEPrecompilation;
+using Traction.Roslyn.Rewriting;
 
 namespace Traction.Contracts {
 
@@ -15,10 +16,12 @@ namespace Traction.Contracts {
             this.model = model;
             this.context = context;
             this.contractProvider = contractProvider;
+            this.nodeRewriter = new NodeRewriter(model, context);
         }
 
         protected readonly SemanticModel model;
         protected readonly ICompileContext context;
         protected readonly IContractProvider contractProvider;
+        protected readonly NodeRewriter nodeRewriter;
     }
 }

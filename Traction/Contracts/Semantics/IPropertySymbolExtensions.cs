@@ -85,10 +85,9 @@ namespace Traction.Contracts.Semantics {
             return @this.IsReadOnly
                 ? Enumerable.Empty<Contract>()
                 : @this
-                   .Parameters
-                   .SelectMany(p => p.DeclaredAndInheritedAttributes())
-                   .Where(a => a.IsContractAttribute(model))
-                   .Select(a => contractProvider[a.AttributeClass.Name.ToString().Trim()]);
+                    .DeclaredAndInheritedAttributes()
+                    .Where(a => a.IsContractAttribute(model))
+                    .Select(a => contractProvider[a.AttributeClass.Name.ToString().Trim()]);
         }
 
         public static IEnumerable<Contract> GetDeclaredContracts(this IPropertySymbol @this, SemanticModel model, IContractProvider contractProvider) =>
@@ -116,10 +115,9 @@ namespace Traction.Contracts.Semantics {
             return @this.IsReadOnly
                 ? Enumerable.Empty<Contract>()
                 : @this
-                   .Parameters
-                   .SelectMany(p => p.GetAttributes())
-                   .Where(a => a.IsContractAttribute(model))
-                   .Select(a => contractProvider[a.AttributeClass.Name.ToString().Trim()]);
+                    .GetAttributes()
+                    .Where(a => a.IsContractAttribute(model))
+                    .Select(a => contractProvider[a.AttributeClass.Name.ToString().Trim()]);
         }
     }
 }

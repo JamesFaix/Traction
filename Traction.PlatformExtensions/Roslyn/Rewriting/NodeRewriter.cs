@@ -6,20 +6,19 @@ namespace Traction.Roslyn.Rewriting {
 
     public class NodeRewriter {
 
-        public NodeRewriter(SemanticModel model, ICompileContext context, string confirmationMessage) {
+        public NodeRewriter(SemanticModel model, ICompileContext context) {
             if (model == null) throw new ArgumentNullException(nameof(model));
             if (context == null) throw new ArgumentNullException(nameof(context));
-         
+
             this.model = model;
             this.context = context;
-            this.confirmationMessage = confirmationMessage ?? "Rewrite confirmed.";
         }
 
         private readonly ICompileContext context;
         private readonly SemanticModel model;
         private readonly string confirmationMessage;
 
-        public NodeRewriteAttempt<TNode> Try<TNode>(TNode oldNode, Func<TNode, TNode> rewrite)
+        public NodeRewriteAttempt<TNode> Try<TNode>(TNode oldNode, Func<TNode, TNode> rewrite, string confirmationMessage = null)
             where TNode : SyntaxNode {
             if (oldNode == null) throw new ArgumentNullException(nameof(oldNode));
             if (rewrite == null) throw new ArgumentNullException(nameof(rewrite));
@@ -34,7 +33,7 @@ namespace Traction.Roslyn.Rewriting {
 #if DEBUG
                     var diagnostic = RewriteConfirmed(
                         location: oldNode.GetLocation(),
-                        message: this.confirmationMessage);
+                        message: confirmationMessage ?? "Rewrite confirmed");
                     this.context.Diagnostics.Add(diagnostic);
 #endif
                     return NodeRewriteAttempt.Success(oldNode, newNode);

@@ -3,10 +3,10 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Traction.Contracts.Semantics;
 using Traction.Roslyn.Semantics;
 using Traction.Roslyn.Syntax;
 using Traction.SEPrecompilation;
-using Traction.Contracts.Semantics;
 
 namespace Traction.Contracts.Expansion {
 
@@ -15,8 +15,8 @@ namespace Traction.Contracts.Expansion {
     /// </summary>
     internal sealed class AutoPropertyExpander : ConcreteTypeMemberExpander<PropertyDeclarationSyntax> {
 
-        public AutoPropertyExpander(SemanticModel model, ICompileContext context)
-            : base(model, context, "Expanded automatically implemented property.") { }
+        public AutoPropertyExpander(SemanticModel model, ICompileContext context, IContractProvider contractProvider)
+            : base(model, context, contractProvider) { }
         
         protected override bool MemberFilter(PropertyDeclarationSyntax member) =>
             member.IsAutoImplentedProperty() &&

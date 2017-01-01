@@ -51,13 +51,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Linq\EnumerableExtensions.cs" />
+    <Compile Include="Roslyn\Reflection\TypeExtensions.cs" />
     <Compile Include="Roslyn\Rewriting\DiagnosticCodes.cs" />
     <Compile Include="Roslyn\Rewriting\NodeRewriteAttempt.cs" />
     <Compile Include="Roslyn\Rewriting\NodeRewriter.cs" />
     <Compile Include="Roslyn\Rewriting\NodeRewriteStatus.cs" />
     <Compile Include="SEPrecompilation\AfterCompileContextWrapper.cs" />
+    <Compile Include="SEPrecompilation\RewriterChain.cs" />
     <Compile Include="SEPrecompilation\BeforeCompileContextWrapper.cs" />
     <Compile Include="SEPrecompilation\CompileModuleBase.cs" />
+    <Compile Include="SEPrecompilation\Delegates.cs" />
     <Compile Include="SEPrecompilation\ICompileContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Roslyn\Semantics\AttributeDataExtensions.cs" />
@@ -73,12 +76,13 @@
     <Compile Include="Roslyn\Syntax\PropertySyntaxExtensions.cs" />
     <Compile Include="Roslyn\Syntax\SyntaxNodeExtensions.cs" />
     <Compile Include="Roslyn\Syntax\SyntaxTokenExtensions.cs" />
-    <Compile Include="Roslyn\Reflection\TypeExtensions.cs" />
-    <Compile Include="SEPrecompilation\IRewriterProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

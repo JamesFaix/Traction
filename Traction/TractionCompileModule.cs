@@ -1,6 +1,7 @@
-﻿using System.Linq;
-using Traction.Contracts;
+﻿using Traction.Contracts;
+using Traction.Contracts.Analysis;
 using Traction.Contracts.Expansion;
+using Traction.Contracts.Injection;
 using Traction.SEPrecompilation;
 
 namespace Traction {
@@ -10,25 +11,25 @@ namespace Traction {
     /// </summary>
     public class TractionCompileModule : CompileModuleBase {
 
-        public TractionCompileModule() : base() {
+        public TractionCompileModule()
+            : base(
+                  precompilationChain: GetPrecompilationChain(),
+                  postcompilationChain: null) {
 
 #if DEBUG_ON_BUILD
             System.Diagnostics.Debugger.Launch();
 #endif
+        }
 
+        private static RewriterChain GetPrecompilationChain() {
             var contractProvider = ContractProvider.Instance;
-
-            //Add syntax expanders first, so contracts can operate on expanded syntax.
-            AddPrecompilationRewriterProviders(
-                new IRewriterProvider[] {
-                    new Contracts.Analysis.AnalyzerProvider(contractProvider),
-                    new AutoPropertyExpanderProvider(),
-                    new ExpressionBodiedMemberExpanderProvider(),
-                    new IteratorBlockExpanderProvider()
-                }
-                .Concat(ContractProvider.Instance
-                    .Contracts
-                    .Select(c => new ContractRewriterProvider(c))));
+            return new RewriterChain(
+                (model, context) => new Analyzer(model, context, contractProvider),
+                (model, context) => new AutoPropertyExpander(model, context, contractProvider),
+                (model, context) => new ExpressionBodiedMemberExpander(model, context, contractProvider),
+                (model, context) => new IteratorBlockExpander(model, context, contractProvider),
+                (model, context) => new Injector(model, context, contractProvider)
+            );
         }
     }
 }

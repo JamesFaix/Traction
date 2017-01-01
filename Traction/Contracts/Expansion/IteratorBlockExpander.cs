@@ -3,12 +3,12 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Traction.Roslyn.Syntax;
-using Traction.Roslyn.Semantics;
-using Traction.SEPrecompilation;
-using Traction.Linq;
 using Traction.Contracts.Semantics;
 using Traction.Contracts.Syntax;
+using Traction.Linq;
+using Traction.Roslyn.Semantics;
+using Traction.Roslyn.Syntax;
+using Traction.SEPrecompilation;
 
 namespace Traction.Contracts.Expansion {
 
@@ -17,8 +17,8 @@ namespace Traction.Contracts.Expansion {
     /// </summary>
     internal sealed class IteratorBlockExpander : ConcreteTypeMemberExpander<BaseMethodDeclarationSyntax> {
 
-        public IteratorBlockExpander(SemanticModel model, ICompileContext context)
-            : base(model, context, "Expanded iterator block.") { }
+        public IteratorBlockExpander(SemanticModel model, ICompileContext context, IContractProvider contractProvider)
+            : base(model, context, contractProvider) { }
         
         protected override bool MemberFilter(BaseMethodDeclarationSyntax member) =>
             member.IsIteratorBlock() &&
