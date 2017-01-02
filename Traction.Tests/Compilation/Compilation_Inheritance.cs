@@ -4,10 +4,12 @@ using NUnit.Framework;
 using static Traction.Contracts.Analysis.DiagnosticCodes;
 using static Traction.Roslyn.Rewriting.DiagnosticCodes;
 
-namespace Traction.DiagnosticsTests {
+namespace Traction.Tests.Compilation {
 
     [TestFixture]
-    public class InheritenceTests {
+    public class Compilation_Inheritance {
+
+        private const string fixture = nameof(Compilation_Inheritance)+"_";
 
         [Test, TestCaseSource(nameof(AbstractMemberCases))]
         public void AbstractMemberTest(CSharpCompilation compilation) {
@@ -20,33 +22,35 @@ namespace Traction.DiagnosticsTests {
 
         private static IEnumerable<TestCaseData> AbstractMemberCases {
             get {
+                const string test = "AbstractMembers_";
+
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
                         @"abstract class TestClass {
                             [return: NonNull] abstract string TestMethod();
                         }"))
-                    .SetName($"Inheritance_AbstractMembers_AbstractMethodsCompileWithoutError");
+                    .SetName($"{fixture}{test}AbstractMethodsCompileWithoutError");
 
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
                         @"abstract class TestClass {
                             [NonNull] abstract string TestProperty { get; }
                         }"))
-                    .SetName($"Inheritance_AbstractMembers_AbstractPropertiesCompileWithoutError");
+                    .SetName($"{fixture}{test}AbstractPropertiesCompileWithoutError");
 
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
                         @"interface ITest {
                             [return: NonNull] string TestMethod();
                         }"))
-                    .SetName($"Inheritance_AbstractMembers_InterfaceMethodsCompileWithoutError");
+                    .SetName($"{fixture}{test}InterfaceMethodsCompileWithoutError");
 
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
                         @"interface ITest {
                             [NonNull] string TestProperty { get; }
                         }"))
-                    .SetName($"Inheritance_AbstractMembers_InterfacePropertiesCompileWithoutError");
+                    .SetName($"{fixture}{test}InterfacePropertiesCompileWithoutError");
             }
         }
 
@@ -66,6 +70,7 @@ namespace Traction.DiagnosticsTests {
 
         private static IEnumerable<TestCaseData> InheritedMemberCases {
             get {
+                const string test = "Single_";
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
                         @"interface ITest { 
@@ -75,7 +80,7 @@ namespace Traction.DiagnosticsTests {
                             public void TestMethod([NonDefault] int x) { }
                         }"
                         ), false)
-                    .SetName($"Inheritance_Single_ImplicitInterfaceMethodImplementationsCannotHavePreconditions");
+                    .SetName($"{fixture}{test}ImplicitInterfaceMethodImplementationsCannotHavePreconditions");
 
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
@@ -86,7 +91,7 @@ namespace Traction.DiagnosticsTests {
                             public void ITest.TestMethod([NonDefault] int x) { }
                         }"
                         ), false)
-                    .SetName($"Inheritance_Single_ExplicitInterfaceMethodImplementationsCannotHavePreconditions");
+                    .SetName($"{fixture}{test}ExplicitInterfaceMethodImplementationsCannotHavePreconditions");
 
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
@@ -97,7 +102,7 @@ namespace Traction.DiagnosticsTests {
                             public override void TestMethod([NonDefault] int x) { }
                         }"
                         ), false)
-                    .SetName($"Inheritance_Single_OverrideMethodsCannotHavePreconditions");
+                    .SetName($"{fixture}{test}OverrideMethodsCannotHavePreconditions");
 
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
@@ -108,7 +113,7 @@ namespace Traction.DiagnosticsTests {
                             [return: NonDefault] public int TestMethod(int x) { return 1; }
                         }"
                         ), true)
-                    .SetName($"Inheritance_Single_ImplicitInterfaceMethodImplementationsCanHavePostconditions");
+                    .SetName($"{fixture}{test}ImplicitInterfaceMethodImplementationsCanHavePostconditions");
 
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
@@ -119,7 +124,7 @@ namespace Traction.DiagnosticsTests {
                             [return: NonDefault] public int ITest.TestMethod(int x) { return 1; }
                         }"
                         ), true)
-                    .SetName($"Inheritance_Single_ExplicitInterfaceMethodImplementationsCanHavePostconditions");
+                    .SetName($"{fixture}{test}ExplicitInterfaceMethodImplementationsCanHavePostconditions");
 
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
@@ -130,7 +135,7 @@ namespace Traction.DiagnosticsTests {
                             [return: NonDefault] public override int TestMethod(int x) { return 1; }
                         }"
                         ), true)
-                    .SetName($"Inheritance_Single_OverrideMethodCanHavePostconditions");
+                    .SetName($"{fixture}{test}OverrideMethodCanHavePostconditions");
 
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
@@ -141,7 +146,7 @@ namespace Traction.DiagnosticsTests {
                             [NonDefault] public int TestProperty { get; set; }
                         }"
                         ), false)
-                    .SetName($"Inheritance_Single_ImplicitInterfacePropertyImplementationsCannotHaveContracts");
+                    .SetName($"{fixture}{test}ImplicitInterfacePropertyImplementationsCannotHaveContracts");
 
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
@@ -152,7 +157,7 @@ namespace Traction.DiagnosticsTests {
                             [NonDefault] public int ITest.TestProperty { get; set; }
                         }"
                         ), false)
-                    .SetName($"Inheritance_Single_ExplicitInterfacePropertyImplementationsCannotHaveContracts");
+                    .SetName($"{fixture}{test}ExplicitInterfacePropertyImplementationsCannotHaveContracts");
 
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
@@ -163,7 +168,7 @@ namespace Traction.DiagnosticsTests {
                             [NonDefault] public override int TestProperty { get; set; }
                         }"
                         ), false)
-                    .SetName($"Inheritance_Single_OverridePropertiesCannotHaveContracts");
+                    .SetName($"{fixture}{test}OverridePropertiesCannotHaveContracts");
 
             }
         }
@@ -184,6 +189,8 @@ namespace Traction.DiagnosticsTests {
 
         public static IEnumerable<TestCaseData> MultipleInterfaceInheritanceCases {
             get {
+                const string test = "Multiple";
+
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
                         @"interface IFirst { 
@@ -196,7 +203,7 @@ namespace Traction.DiagnosticsTests {
                             public void TestMethod(string text) { }
                         }"
                         ), true)
-                    .SetName($"Inheritance_Multiple_MethodCanImplementMultipleInterfacesWithoutPreconditions");
+                    .SetName($"{fixture}{test}MethodCanImplementMultipleInterfacesWithoutPreconditions");
 
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
@@ -210,7 +217,7 @@ namespace Traction.DiagnosticsTests {
                             public void TestMethod(string text) { }
                         }"
                         ), true)
-                    .SetName($"Inheritance_Multiple_MethodCanImplementMultipleInterfacesIfOneHasAPrecondition");
+                    .SetName($"{fixture}{test}MethodCanImplementMultipleInterfacesIfOneHasAPrecondition");
 
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
@@ -224,7 +231,7 @@ namespace Traction.DiagnosticsTests {
                             public override void TestMethod(string text) { }
                         }"
                         ), true)
-                    .SetName($"Inheritance_Multiple_MethodCanOverrideBaseMethodWithPreconditionAndImplementInterfaceWithoutPrecondition");
+                    .SetName($"{fixture}{test}MethodCanOverrideBaseMethodWithPreconditionAndImplementInterfaceWithoutPrecondition");
 
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
@@ -238,7 +245,7 @@ namespace Traction.DiagnosticsTests {
                             public override void TestMethod(string text) { }
                         }"
                         ), true)
-                    .SetName($"Inheritance_Multiple_MethodCanOverrideBaseMethodWithoutPreconditionAndImplementInterfaceWithPrecondition");
+                    .SetName($"{fixture}{test}MethodCanOverrideBaseMethodWithoutPreconditionAndImplementInterfaceWithPrecondition");
 
                 yield return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
@@ -252,7 +259,7 @@ namespace Traction.DiagnosticsTests {
                             public void TestMethod(string text) { }
                         }"
                         ), false)
-                    .SetName($"Inheritance_Multiple_MethodCannotImplementMultipleInterfacesWithPreconditions");
+                    .SetName($"{fixture}{test}MethodCannotImplementMultipleInterfacesWithPreconditions");
 
                 yield return new TestCaseData(
                    CompilationFactory.CompileClassFromText(
@@ -266,7 +273,7 @@ namespace Traction.DiagnosticsTests {
                             public override void TestMethod(string text) { }
                         }"
                        ), false)
-                   .SetName($"Inheritance_Multiple_MethodCannotBothOverrideBaseMethodWithPreconditionAndImplementInterfaceWithPrecondition");
+                   .SetName($"{fixture}{test}MethodCannotBothOverrideBaseMethodWithPreconditionAndImplementInterfaceWithPrecondition");
             }
         }
     }

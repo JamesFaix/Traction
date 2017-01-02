@@ -4,10 +4,12 @@ using NUnit.Framework;
 using static Traction.Contracts.Analysis.DiagnosticCodes;
 using static Traction.Roslyn.Rewriting.DiagnosticCodes;
 
-namespace Traction.DiagnosticsTests {
+namespace Traction.Tests.Compilation {
 
     [TestFixture]
-    public class PartialMemberTests {
+    public class Compilation_ExternMembers {
+
+        private const string fixture = nameof(Compilation_ExternMembers) + "_";
 
         [Test, TestCaseSource(nameof(AllCases))]
         public void Test(CSharpCompilation compilation, bool isValid) {
@@ -19,7 +21,7 @@ namespace Traction.DiagnosticsTests {
                 Assert.IsFalse(diagnostics.ContainsOnlyCode(RewriteConfirmed));
             }
             else {
-                Assert.IsTrue(diagnostics.ContainsCode(NoContractsOnPartialMembers));
+                Assert.IsTrue(diagnostics.ContainsCode(NoContractsOnExternMembers));
             }
         }
 
@@ -37,19 +39,19 @@ namespace Traction.DiagnosticsTests {
         private static TestCaseData PostconditionTestCase(string attributeName, bool isValid) {
             return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
-                        SourceCodeFactory.ClassWithMembers(new[] { "partial" },
-                            $"[return: {attributeName}] partial int TestMethod();")),
+                        SourceCodeFactory.ClassWithMembers(
+                            $"[return: {attributeName}] extern int TestMethod();")),
                     isValid)
-                 .SetName($"ContractCannotBePlacedOnPartialMembers_{attributeName}_Postcondition");
+                 .SetName($"{fixture}NoContracts_{attributeName}_Postcondition");
         }
 
         private static TestCaseData PreconditionTestCase(string attributeName, bool isValid) {
             return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
-                        SourceCodeFactory.ClassWithMembers(new[] { "partial" },
-                            $"partial void TestMethod([{attributeName}] int param1);")),
+                        SourceCodeFactory.ClassWithMembers(
+                            $"extern void TestMethod([{attributeName}] int param1);")),
                     isValid)
-                 .SetName($"ContractCannotBePlacedOnPartialMembers_{attributeName}_Precondition");
+                 .SetName($"{fixture}NoContracts_{attributeName}_Precondition");
         }
     }
 }

@@ -5,10 +5,12 @@ using Microsoft.CodeAnalysis.CSharp;
 using NUnit.Framework;
 using static Traction.Contracts.Analysis.DiagnosticCodes;
 
-namespace Traction.DiagnosticsTests {
+namespace Traction.Tests.Compilation {
 
     [TestFixture]
-    public class IteratorBlockPostconditionTests {
+    public class Compilation_Void {
+
+        private const string fixture = nameof(Compilation_Void) + "_";
 
         [Test, TestCaseSource(nameof(AllCases))]
         public void Test(CSharpCompilation compilation, bool isValid) {
@@ -20,25 +22,25 @@ namespace Traction.DiagnosticsTests {
                 Assert.IsFalse(diagnostics.Any());
             }
             else {
-                Assert.IsTrue(diagnostics.ContainsCode(NoPostconditionsOnIteratorBlocks));
+                Assert.IsTrue(diagnostics.ContainsCode(NoPostconditionsOnVoid));
             }
         }
 
         private static IEnumerable<TestCaseData> AllCases {
             get {
-                yield return IteratorBlockCase("NonNull", false);
-                yield return IteratorBlockCase("Positive", false);
-                yield return IteratorBlockCase("NonDefault", false);
+                yield return VoidPostconditionTestCase("NonNull", false);
+                yield return VoidPostconditionTestCase("Positive", false);
+                yield return VoidPostconditionTestCase("NonDefault", false);
             }
         }
 
-        private static TestCaseData IteratorBlockCase(string attributeName, bool isValid) {
+        private static TestCaseData VoidPostconditionTestCase(string attributeName, bool isValid) {
             return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
                         SourceCodeFactory.ClassWithMembers(
-                            $"[return: {attributeName}] IEnumerable<int> TestMethod() {{ yield return 1; }}")),
+                            SourceCodeFactory.PostconditionMethod("void", attributeName))),
                     isValid)
-                 .SetName($"PostconditionsCannotBePlacedOnIteratorBlocks_{attributeName}");
+                 .SetName($"{fixture}NoPostconditions_{attributeName}");
         }
     }
 }

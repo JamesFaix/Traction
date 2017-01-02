@@ -1,15 +1,20 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace Traction.DiagnosticsTests {
+namespace Traction.Tests {
 
     static class CompilationFactory {
-        
+
         public static CSharpCompilation CompileClassFromText(string classText) {
-            return CSharpCompilation.Create("TestAssembly")
-               .AddReferences(References)
-               .AddSyntaxTrees(CSharpSyntaxTree.ParseText(
-                   SourceCodeFactory.BasicUsingDirectives + classText));
+            if (classText == null) throw new ArgumentNullException(nameof(classText));
+
+            return CSharpCompilation.Create(
+                assemblyName: "TestAssembly",
+                references: References,
+                syntaxTrees: new[] { CSharpSyntaxTree.ParseText(
+                   SourceCodeFactory.BasicUsingDirectives + classText)},
+                options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
         }
 
         private static string runtimePath =

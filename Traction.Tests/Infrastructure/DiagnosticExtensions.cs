@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
-namespace Traction.DiagnosticsTests {
+namespace Traction.Tests {
 
     static class DiagnosticExtensions {
         
