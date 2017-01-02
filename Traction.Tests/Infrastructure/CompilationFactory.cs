@@ -1,9 +1,6 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using System.Reflection;
-using System;
-using System.IO;
-using Microsoft.CodeAnalysis.Emit;
 
 namespace Traction.Tests {
 

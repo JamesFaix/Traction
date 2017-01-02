@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 using System.Text;
+using NUnit.Framework;
 using static Traction.Tests.Constants;
 
 namespace Traction.Tests.Runtime {
