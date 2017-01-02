@@ -16,7 +16,6 @@ namespace Traction.Roslyn.Rewriting {
 
         private readonly ICompileContext context;
         private readonly SemanticModel model;
-        private readonly string confirmationMessage;
 
         public NodeRewriteAttempt<TNode> Try<TNode>(TNode oldNode, Func<TNode, TNode> rewrite, string confirmationMessage = null)
             where TNode : SyntaxNode {
