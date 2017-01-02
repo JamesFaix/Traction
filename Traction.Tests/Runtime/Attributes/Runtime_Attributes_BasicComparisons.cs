@@ -135,16 +135,17 @@ namespace Traction.Tests.Runtime {
 
                     }
 
+                    //Null should pass for all comparison contracts on nullable types
                     yield return new TestCaseData(
                         AttributeTestHelper.GetSnippet(a.AttributeName, "Int32?", ContractTypes.Pre),
                         new object[] { null },
-                        a.NegativePasses ? null : typeof(PostconditionException))
-                    .SetName($"{FIXTURE}{a.AttributeName}_Int32?PostconditionMethod_Null{PASSES}");
+                        null)
+                    .SetName($"{FIXTURE}{a.AttributeName}_Int32?PeeconditionMethod_Null{PASSES}");
 
                     yield return new TestCaseData(
-                        AttributeTestHelper.GetSnippet(a.AttributeName, "Int32?", ContractTypes.Pre),
+                        AttributeTestHelper.GetSnippet(a.AttributeName, "Int32?", ContractTypes.Post),
                         new object[] { null },
-                        a.NegativePasses ? null : typeof(PostconditionException))
+                        null)
                     .SetName($"{FIXTURE}{a.AttributeName}_Int32?PostconditionMethod_Null{PASSES}");
                 }
             }
