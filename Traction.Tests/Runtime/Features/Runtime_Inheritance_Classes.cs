@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
+using static Traction.Tests.Constants;
 
 namespace Traction.Tests.Runtime {
 
     [TestFixture]
     public class Runtime_Inheritance_Classes {
 
-        private const string fixture = nameof(Runtime_Inheritance_Classes) + "_";
+        private const string FIXTURE = nameof(Runtime_Inheritance_Classes) + "_";
 
         [Test, TestCaseSource(nameof(Cases))]
         public void Test(string sourceCode, string methodName, object[] arguments, Type exceptionType) {
@@ -65,77 +66,77 @@ namespace Traction.Tests.Runtime {
                     "TestMethod",
                     new object[] { null },
                     null)
-                .SetName($"{fixture}NormalMethod_{Constants.Normal}");
+                .SetName($"{FIXTURE}NormalMethod_{PASSES}");
 
                 yield return new TestCaseData(
                     GetMethodSnippet(ContractTypes.Pre),
                     "TestMethod",
                     new object[] { "test" },
                     null)
-                .SetName($"{fixture}PreconditionMethod_{Constants.Passes}");
+                .SetName($"{FIXTURE}PreconditionMethod_{PASSES_IF}");
 
                 yield return new TestCaseData(
                     GetMethodSnippet(ContractTypes.Pre),
                     "TestMethod",
                     new object[] { null },
                     typeof(PreconditionException))
-                .SetName($"{fixture}PreconditionMethod_{Constants.Fails}");
+                .SetName($"{FIXTURE}PreconditionMethod_{FAILS_IF}");
 
                 yield return new TestCaseData(
                     GetMethodSnippet(ContractTypes.Post),
                     "TestMethod",
                     new object[] { "test" },
                     null)
-                .SetName($"{fixture}PostconditionMethod_{Constants.Passes}");
+                .SetName($"{FIXTURE}PostconditionMethod_{PASSES_IF}");
 
                 yield return new TestCaseData(
                     GetMethodSnippet(ContractTypes.Post),
                     "TestMethod",
                     new object[] { null },
                     typeof(PostconditionException))
-                .SetName($"{fixture}PostconditionMethod_{Constants.Fails}");
+                .SetName($"{FIXTURE}PostconditionMethod_{FAILS_IF}");
 
                 yield return new TestCaseData(
                     GetPropertySnippet(false),
                     "get_TestProperty",
-                    Constants.EmptyArgs,
+                    NO_ARGS,
                     null)
-                .SetName($"{fixture}NormalProperty_Get{Constants.Normal}");
+                .SetName($"{FIXTURE}NormalProperty_Get{PASSES}");
 
                 yield return new TestCaseData(
                     GetPropertySnippet(false),
                     "set_TestProperty",
                     new object[] { null },
                     null)
-                .SetName($"{fixture}NormalProperty_Set{Constants.Normal}");
+                .SetName($"{FIXTURE}NormalProperty_Set{PASSES}");
 
                 yield return new TestCaseData(
                     GetPropertySnippet(true),
                     "set_TestProperty",
                     new object[] { "test" },
                     null)
-                .SetName($"{fixture}PreconditionProperty_Set{Constants.Passes}");
+                .SetName($"{FIXTURE}PreconditionProperty_Set{PASSES_IF}");
 
                 yield return new TestCaseData(
                      GetPropertySnippet(true),
                      "set_TestProperty",
                      new object[] { null },
                      typeof(PreconditionException))
-                 .SetName($"{fixture}PreconditionProperty_Set{Constants.Fails}");
+                 .SetName($"{FIXTURE}PreconditionProperty_Set{FAILS_IF}");
 
                 yield return new TestCaseData(
                      GetPropertySnippet(true, "test"),
                      "get_TestProperty",
-                     Constants.EmptyArgs,
+                     NO_ARGS,
                      null)
-                 .SetName($"{fixture}PostconditionProperty_Get{Constants.Passes}");
+                 .SetName($"{FIXTURE}PostconditionProperty_Get{PASSES_IF}");
 
                 yield return new TestCaseData(
                      GetPropertySnippet(true),
                      "get_TestProperty",
-                     Constants.EmptyArgs,
+                     NO_ARGS,
                      typeof(PostconditionException))
-                 .SetName($"{fixture}PostconditionProperty_Get{Constants.Fails}");
+                 .SetName($"{FIXTURE}PostconditionProperty_Get{FAILS_IF}");
             }
         }
     }

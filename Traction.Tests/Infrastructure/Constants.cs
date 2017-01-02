@@ -2,10 +2,11 @@
 
     internal static class Constants {
 
-        public const string Normal = "DoesNotThrow";
-        public const string Passes = "DoesNotThrowIfContractMet";
-        public const string Fails = "ThrowsIfContractBroken";
+        public const string PASSES = "Passes";
+        public const string FAILS = "Fails";
+        public const string PASSES_IF = "PassesIfContractMet";
+        public const string FAILS_IF = "FailsIfContractBroken";
 
-        public static readonly object[] EmptyArgs = new object[0];
+        public static readonly object[] NO_ARGS = new object[0];
     }
 }

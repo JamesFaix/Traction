@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
+using static Traction.Tests.Constants;
 
 namespace Traction.Tests.Runtime {
 
     [TestFixture]
     public class Runtime_AnonymousMethods {
 
-        private const string fixture = nameof(Runtime_AnonymousMethods) + "_";
+        private const string FIXTURE = nameof(Runtime_AnonymousMethods) + "_";
 
         [Test, TestCaseSource(nameof(Cases))]
         public void BasicTests(string sourceCode, Type exceptionType) {
@@ -18,7 +19,7 @@ namespace Traction.Tests.Runtime {
             var instance = Activator.CreateInstance(type);
             var method = type.GetMethod("TestMethod");
 
-            CustomAssert.Throws(exceptionType, method, instance, Constants.EmptyArgs);
+            CustomAssert.Throws(exceptionType, method, instance, NO_ARGS);
         }
 
         private static string GetSnippet(ContractTypes contractTypes) {
@@ -44,12 +45,12 @@ namespace Traction.Tests.Runtime {
                 yield return new TestCaseData(
                     GetSnippet(ContractTypes.None),
                     null)
-                .SetName($"{fixture}NormalMethod_AnonMethod{Constants.Normal}");
+                .SetName($"{FIXTURE}NormalMethod_AnonMethod{PASSES}");
 
                 yield return new TestCaseData(
                     GetSnippet(ContractTypes.Post),
                     null)
-                .SetName($"{fixture}PostconditionMethod_AnonMethod{Constants.Normal}");
+                .SetName($"{FIXTURE}PostconditionMethod_AnonMethod{PASSES}");
             }
         }
     }

@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
+using static Traction.Tests.Constants;
 
 namespace Traction.Tests.Runtime {
 
     [TestFixture]
     public class Runtime_MultipleReturnStatements {
 
-        private const string fixture = nameof(Runtime_MultipleReturnStatements) + "_";
+        private const string FIXTURE = nameof(Runtime_MultipleReturnStatements) + "_";
 
         [Test, TestCaseSource(nameof(Cases))]
         public void Tests(string sourceCode, object[] arguments, Type exceptionType) {
@@ -42,37 +43,37 @@ namespace Traction.Tests.Runtime {
                     GetSnippet(false),
                     new object[] { null, null, true },
                     null)
-                .SetName($"{fixture}Normal_1stReturn{Constants.Normal}");
+                .SetName($"{FIXTURE}Normal_1stReturn{PASSES}");
 
                 yield return new TestCaseData(
                     GetSnippet(false),
                     new object[] { null, null, false },
                     null)
-                .SetName($"{fixture}Normal_2ndReturn{Constants.Normal}");
+                .SetName($"{FIXTURE}Normal_2ndReturn{PASSES}");
 
                 yield return new TestCaseData(
                     GetSnippet(true),
                     new object[] { "test", null, true },
                     null)
-                .SetName($"{fixture}Postcondition_1stReturn{Constants.Passes}");
+                .SetName($"{FIXTURE}Postcondition_1stReturn{PASSES_IF}");
 
                 yield return new TestCaseData(
                     GetSnippet(true),
                     new object[] { null, "test", false },
                     null)
-                .SetName($"{fixture}Postcondition_2ndReturn{Constants.Passes}");
+                .SetName($"{FIXTURE}Postcondition_2ndReturn{PASSES_IF}");
 
                 yield return new TestCaseData(
                     GetSnippet(true),
                     new object[] { null, "test", true },
                     typeof(PostconditionException))
-                .SetName($"{fixture}Postcondition_1stReturn{Constants.Fails}");
+                .SetName($"{FIXTURE}Postcondition_1stReturn{FAILS_IF}");
 
                 yield return new TestCaseData(
                     GetSnippet(true),
                     new object[] { "test", null, false },
                     typeof(PostconditionException))
-                .SetName($"{fixture}Postcondition_2ndReturn{Constants.Fails}");
+                .SetName($"{FIXTURE}Postcondition_2ndReturn{FAILS_IF}");
             }
         }
     }

@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using System.Text;
+using static Traction.Tests.Constants;
 
 namespace Traction.Tests.Runtime {
 
     [TestFixture]
     public class Runtime_Properties {
 
-        private const string fixture = nameof(Runtime_Properties) + "_";
+        private const string FIXTURE = nameof(Runtime_Properties) + "_";
 
         [Test, TestCaseSource(nameof(Cases))]
         public void Test(string sourceCode, string methodName, object[] arguments, Type exceptionType) {
@@ -46,86 +47,86 @@ namespace Traction.Tests.Runtime {
                 yield return new TestCaseData(
                     GetSnippet(true, false, false),
                     getter,
-                    Constants.EmptyArgs,
+                    NO_ARGS,
                     null)
-                .SetName($"{fixture}NormalReadonly_Get{Constants.Normal}");
+                .SetName($"{FIXTURE}NormalReadonly_Get{PASSES}");
 
                 yield return new TestCaseData(
                     GetSnippet(true, false, true, "test"),
                     getter,
-                    Constants.EmptyArgs,
+                    NO_ARGS,
                     null)
-                .SetName($"{fixture}ContractReadonly_Get{Constants.Passes}");
+                .SetName($"{FIXTURE}ContractReadonly_Get{PASSES_IF}");
 
                 yield return new TestCaseData(
                     GetSnippet(true, false, true),
                     getter,
-                    Constants.EmptyArgs,
+                    NO_ARGS,
                     typeof(PostconditionException))
-                .SetName($"{fixture}ContractReadonly_Get{Constants.Fails}");
+                .SetName($"{FIXTURE}ContractReadonly_Get{FAILS_IF}");
 
                 yield return new TestCaseData(
                     GetSnippet(false, true, false),
                     setter,
                     new object[] { null },
                     null)
-                .SetName($"{fixture}NormalWriteonly_Set{Constants.Normal}");
+                .SetName($"{FIXTURE}NormalWriteonly_Set{PASSES}");
 
                 yield return new TestCaseData(
                     GetSnippet(false, true, true),
                     setter,
                     new object[] { "test" },
                     null)
-                .SetName($"{fixture}ContractWriteonly_Set{Constants.Passes}");
+                .SetName($"{FIXTURE}ContractWriteonly_Set{PASSES_IF}");
 
                 yield return new TestCaseData(
                     GetSnippet(false, true, true),
                     setter,
                     new object[] { null },
                     typeof(PreconditionException))
-                .SetName($"{fixture}ContractWriteonly_Set{Constants.Fails}");
+                .SetName($"{FIXTURE}ContractWriteonly_Set{FAILS_IF}");
 
                 yield return new TestCaseData(
                     GetSnippet(true, true, false),
                     getter,
-                    Constants.EmptyArgs,
+                    NO_ARGS,
                     null)
-                .SetName($"{fixture}NormalReadWrite_Get{Constants.Normal}");
+                .SetName($"{FIXTURE}NormalReadWrite_Get{PASSES}");
 
                 yield return new TestCaseData(
                     GetSnippet(true, true, false),
                     setter,
                     new object[] { null },
                     null)
-                .SetName($"{fixture}NormalReadWrite_Set{Constants.Normal}");
+                .SetName($"{FIXTURE}NormalReadWrite_Set{PASSES}");
 
                 yield return new TestCaseData(
                     GetSnippet(true, true, true, "test"),
                     getter,
-                    Constants.EmptyArgs,
+                    NO_ARGS,
                     null)
-                .SetName($"{fixture}ContractReadWrite_Get{Constants.Passes}");
+                .SetName($"{FIXTURE}ContractReadWrite_Get{PASSES_IF}");
 
                 yield return new TestCaseData(
                     GetSnippet(true, true, true),
                     getter,
-                    Constants.EmptyArgs,
+                    NO_ARGS,
                     typeof(PostconditionException))
-                .SetName($"{fixture}ContractReadWrite_Get{Constants.Fails}");
+                .SetName($"{FIXTURE}ContractReadWrite_Get{FAILS_IF}");
 
                 yield return new TestCaseData(
                     GetSnippet(true, true, true),
                     setter,
                     new object[] { "test" },
                     null)
-                .SetName($"{fixture}ContractReadWrite_Set{Constants.Passes}");
+                .SetName($"{FIXTURE}ContractReadWrite_Set{PASSES_IF}");
 
                 yield return new TestCaseData(
                     GetSnippet(true, true, true),
                     setter,
                     new object[] { null },
                     typeof(PreconditionException))
-                .SetName($"{fixture}ContractReadWrite_Set{Constants.Fails}");
+                .SetName($"{FIXTURE}ContractReadWrite_Set{FAILS_IF}");
             }
         }
     }

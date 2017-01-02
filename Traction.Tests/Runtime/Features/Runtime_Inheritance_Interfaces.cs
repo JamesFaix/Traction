@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using static Traction.Tests.Constants;
 
 namespace Traction.Tests.Runtime {
 
     [TestFixture]
     public class Runtime_Inheritance_Interfaces {
 
-        private const string fixture = nameof(Runtime_Inheritance_Interfaces) + "_";
+        private const string FIXTURE = nameof(Runtime_Inheritance_Interfaces) + "_";
 
         [Test, TestCaseSource(nameof(ImplicitCases))]
         public void ImplicitImplementationTests(string sourceCode, string methodName, object[] arguments, Type exceptionType) {
@@ -80,10 +81,10 @@ namespace Traction.Tests.Runtime {
         }
         
         private static IEnumerable<TestCaseData> ImplicitCases =>
-            GetCases($"{fixture}_ImplicitImplementation_", false);
+            GetCases($"{FIXTURE}_ImplicitImplementation_", false);
 
         private static IEnumerable<TestCaseData> ExplicitCases =>
-           GetCases($"{fixture}_ExplicitImplementation_", true);
+           GetCases($"{FIXTURE}_ExplicitImplementation_", true);
 
         private static IEnumerable<TestCaseData> GetCases(string head, bool isExplicit) {
 
@@ -92,78 +93,78 @@ namespace Traction.Tests.Runtime {
                 "TestMethod",
                 new object[] { null },
                 null)
-            .SetName($"{head}NormalMethod_{Constants.Normal}");
+            .SetName($"{head}NormalMethod_{PASSES}");
 
             yield return new TestCaseData(
                 GetMethodSnippet(ContractTypes.Pre, isExplicit),
                 "TestMethod",
                 new object[] { "test" },
                 null)
-            .SetName($"{head}PreconditionMethod_{Constants.Passes}");
+            .SetName($"{head}PreconditionMethod_{PASSES_IF}");
 
             yield return new TestCaseData(
                 GetMethodSnippet(ContractTypes.Pre, isExplicit),
                 "TestMethod",
                 new object[] { null },
                 typeof(PreconditionException))
-            .SetName($"{head}PreconditionMethod_{Constants.Fails}");
+            .SetName($"{head}PreconditionMethod_{FAILS_IF}");
 
             yield return new TestCaseData(
                 GetMethodSnippet(ContractTypes.Post, isExplicit),
                 "TestMethod",
                 new object[] { "test" },
                 null)
-            .SetName($"{head}PostconditionMethod_{Constants.Passes}");
+            .SetName($"{head}PostconditionMethod_{PASSES_IF}");
 
             yield return new TestCaseData(
                 GetMethodSnippet(ContractTypes.Post, isExplicit),
                 "TestMethod",
                 new object[] { null },
                 typeof(PostconditionException))
-            .SetName($"{head}PostconditionMethod_{Constants.Fails}");
+            .SetName($"{head}PostconditionMethod_{FAILS_IF}");
 
 
             yield return new TestCaseData(
                 GetPropertySnippet(false, isExplicit),
                 "get_TestProperty",
-                Constants.EmptyArgs,
+                NO_ARGS,
                 null)
-            .SetName($"{head}NormalProperty_Get{Constants.Normal}");
+            .SetName($"{head}NormalProperty_Get{PASSES}");
 
             yield return new TestCaseData(
                 GetPropertySnippet(false, isExplicit),
                 "set_TestProperty",
                 new object[] { null },
                 null)
-            .SetName($"{head}NormalProperty_Set{Constants.Normal}");
+            .SetName($"{head}NormalProperty_Set{PASSES}");
 
             yield return new TestCaseData(
                 GetPropertySnippet(true, isExplicit, "test"),
                 "get_TestProperty",
-                Constants.EmptyArgs,
+                NO_ARGS,
                 null)
-            .SetName($"{head}ContractProperty_Get{Constants.Passes}");
+            .SetName($"{head}ContractProperty_Get{PASSES_IF}");
 
             yield return new TestCaseData(
                 GetPropertySnippet(true, isExplicit),
                 "get_TestProperty",
-                Constants.EmptyArgs,
+                NO_ARGS,
                 typeof(PostconditionException))
-            .SetName($"{head}ContractProperty_Get{Constants.Fails}");
+            .SetName($"{head}ContractProperty_Get{FAILS_IF}");
 
             yield return new TestCaseData(
                 GetPropertySnippet(true, isExplicit),
                 "set_TestProperty",
                 new object[] { "test" },
                 null)
-            .SetName($"{head}ContractProperty_Set{Constants.Passes}");
+            .SetName($"{head}ContractProperty_Set{PASSES_IF}");
 
             yield return new TestCaseData(
                 GetPropertySnippet(true, isExplicit),
                 "set_TestProperty",
                 new object[] { null },
                 typeof(PreconditionException))
-            .SetName($"{head}ContractProperty_Set{Constants.Fails}");
+            .SetName($"{head}ContractProperty_Set{FAILS_IF}");
         }
     }
 }

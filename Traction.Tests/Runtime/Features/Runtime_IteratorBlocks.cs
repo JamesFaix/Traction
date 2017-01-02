@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
+using static Traction.Tests.Constants;
 
 namespace Traction.Tests.Runtime {
 
     [TestFixture]
     public class Runtime_IteratorBlocks {
 
-        private const string fixture = nameof(Runtime_IteratorBlocks) + "_";
+        private const string FIXTURE = nameof(Runtime_IteratorBlocks) + "_";
 
         [Test, TestCaseSource(nameof(Cases))]
         public void Test(string sourceCode, object[] arguments, Type exceptionType) {
@@ -39,25 +40,25 @@ namespace Traction.Tests.Runtime {
                     GetSnippet(false, false),
                     new object[] { null },
                     null)
-                .SetName($"{fixture}NormalMethod_{Constants.Normal}");
+                .SetName($"{FIXTURE}NormalMethod_{PASSES}");
 
                 yield return new TestCaseData(
                     GetSnippet(true, false),
                     new object[] { "test" },
                     null)
-                .SetName($"{fixture}PreconditionMethod_{Constants.Passes}");
+                .SetName($"{FIXTURE}PreconditionMethod_{PASSES_IF}");
 
                 yield return new TestCaseData(
                     GetSnippet(true, false),
                     new object[] { null },
                     typeof(PreconditionException))
-                .SetName($"{fixture}PreconditionMethod_{Constants.Fails}Immediately");
+                .SetName($"{FIXTURE}PreconditionMethod_{FAILS_IF}Immediately");
 
                 yield return new TestCaseData(
                     GetSnippet(false, true),
                     new object[] { null },
                     null)
-                .SetName($"{fixture}LegacyPreconditionMethod_DoesNotImmediatelyFailIfContractBroken");
+                .SetName($"{FIXTURE}LegacyPreconditionMethod_DoesNotImmediatelyFailIfContractBroken");
             }
         }
     }
