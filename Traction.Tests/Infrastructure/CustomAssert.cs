@@ -1,6 +1,6 @@
 ﻿using System;
-using NUnit.Framework;
 using System.Reflection;
+using NUnit.Framework;
 
 namespace Traction.Tests {
 
@@ -29,10 +29,17 @@ namespace Traction.Tests {
             }
         }
 
+        /// <summary>
+        /// If <paramref name="exceptionType"/> is non-null, asserts that invoking the given method with the given arguments
+        /// throws the given exception type; otherwise asserts that the given invocation does not throw.
+        /// </summary>
+        /// <param name="exceptionType">Type of the exception.</param>
+        /// <param name="method">The method to invoke.</param>
+        /// <param name="source">The instance for the method to be called on.</param>
+        /// <param name="arguments">The arguments to the method.</param>
         public static void Throws(Type exceptionType, MethodInfo method, object source, object[] arguments = null) {
             if (method == null) throw new ArgumentNullException(nameof(method));
-            if (source == null) throw new ArgumentNullException(nameof(source));
-
+         
             arguments = arguments ?? new object[0];
 
             if (exceptionType == null) {

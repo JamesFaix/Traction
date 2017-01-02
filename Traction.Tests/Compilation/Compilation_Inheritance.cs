@@ -7,9 +7,9 @@ using static Traction.Roslyn.Rewriting.DiagnosticCodes;
 namespace Traction.Tests.Compilation {
 
     [TestFixture]
-    public class InheritenceTests {
+    public class Compilation_Inheritance {
 
-        private const string fixture = "Compilation_Inheritance_";
+        private const string fixture = nameof(Compilation_Inheritance)+"_";
 
         [Test, TestCaseSource(nameof(AbstractMemberCases))]
         public void AbstractMemberTest(CSharpCompilation compilation) {

@@ -8,9 +8,9 @@ using static Traction.Roslyn.Rewriting.DiagnosticCodes;
 namespace Traction.Tests.Compilation {
 
     [TestFixture]
-    public class ValidTypeTests {
+    public class Compilation_ValidTypes {
 
-        private const string fixture = "Compilation_ValidTypes_";
+        private const string fixture = nameof(Compilation_ValidTypes) + "_";
 
         [Test, TestCaseSource(nameof(AllCases))]
         public void Test(CSharpCompilation compilation, bool isValid) {

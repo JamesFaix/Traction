@@ -8,9 +8,9 @@ using static Traction.Contracts.Analysis.DiagnosticCodes;
 namespace Traction.Tests.Compilation {
 
     [TestFixture]
-    public class PostconditionVoidTests {
+    public class Compilation_Void {
 
-        private const string fixture = "Compilation_Void_";
+        private const string fixture = nameof(Compilation_Void) + "_";
 
         [Test, TestCaseSource(nameof(AllCases))]
         public void Test(CSharpCompilation compilation, bool isValid) {

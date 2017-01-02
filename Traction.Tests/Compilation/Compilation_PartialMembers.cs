@@ -7,9 +7,9 @@ using static Traction.Roslyn.Rewriting.DiagnosticCodes;
 namespace Traction.Tests.Compilation {
 
     [TestFixture]
-    public class ExternMemberTests {
+    public class Compilation_PartialMembers {
 
-        private const string fixture = "Compilation_ExternMembers_";
+        private const string fixture = nameof(Compilation_PartialMembers)+"_";
 
         [Test, TestCaseSource(nameof(AllCases))]
         public void Test(CSharpCompilation compilation, bool isValid) {
@@ -21,7 +21,7 @@ namespace Traction.Tests.Compilation {
                 Assert.IsFalse(diagnostics.ContainsOnlyCode(RewriteConfirmed));
             }
             else {
-                Assert.IsTrue(diagnostics.ContainsCode(NoContractsOnExternMembers));
+                Assert.IsTrue(diagnostics.ContainsCode(NoContractsOnPartialMembers));
             }
         }
 
@@ -39,8 +39,8 @@ namespace Traction.Tests.Compilation {
         private static TestCaseData PostconditionTestCase(string attributeName, bool isValid) {
             return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
-                        SourceCodeFactory.ClassWithMembers(
-                            $"[return: {attributeName}] extern int TestMethod();")),
+                        SourceCodeFactory.ClassWithMembers(new[] { "partial" },
+                            $"[return: {attributeName}] partial int TestMethod();")),
                     isValid)
                  .SetName($"{fixture}NoContracts_{attributeName}_Postcondition");
         }
@@ -48,8 +48,8 @@ namespace Traction.Tests.Compilation {
         private static TestCaseData PreconditionTestCase(string attributeName, bool isValid) {
             return new TestCaseData(
                     CompilationFactory.CompileClassFromText(
-                        SourceCodeFactory.ClassWithMembers(
-                            $"extern void TestMethod([{attributeName}] int param1);")),
+                        SourceCodeFactory.ClassWithMembers(new[] { "partial" },
+                            $"partial void TestMethod([{attributeName}] int param1);")),
                     isValid)
                  .SetName($"{fixture}NoContracts_{attributeName}_Precondition");
         }

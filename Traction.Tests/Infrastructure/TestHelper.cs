@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using StackExchange.Precompilation;
-using System.Reflection;
-using System.IO;
 
 namespace Traction.Tests {
 
