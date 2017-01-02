@@ -21,13 +21,13 @@ namespace Traction.Tests.Runtime {
             CustomAssert.Throws(exceptionType, method, instance, arguments);
         }
 
-        private static string GetMethodSnippet(bool hasPre, bool hasPost, string result = null) {
+        private static string GetMethodSnippet(ContractTypes contractTypes, string result = null) {
             var sb = new StringBuilder();
             sb.AppendLine("class TestClass {");
 
-            sb.AppendLineIf(hasPost, "[return: NonNull]");
+            sb.AppendLineIf(contractTypes.HasFlag(ContractTypes.Post), "[return: NonNull]");
             sb.Append("public string TestMethod(");
-            sb.AppendIf(hasPre, "[NonNull]");
+            sb.AppendIf(contractTypes.HasFlag(ContractTypes.Pre), "[NonNull]");
             sb.AppendLine("string text) =>");
             sb.Append($"{(result == null ? "null" : $"\"{result}\"")};");
             sb.AppendLine("}");
@@ -48,35 +48,35 @@ namespace Traction.Tests.Runtime {
         private static IEnumerable<TestCaseData> Cases {
             get {
                 yield return new TestCaseData(
-                    GetMethodSnippet(false, false),
+                    GetMethodSnippet(ContractTypes.None),
                     "TestMethod",
                     new object[] { null },
                     null)
                 .SetName($"{fixture}NormalMethod_{Constants.Normal}");
 
                 yield return new TestCaseData(
-                    GetMethodSnippet(true, false),
+                    GetMethodSnippet(ContractTypes.Pre),
                     "TestMethod",
                     new object[] { "test" },
                     null)
                 .SetName($"{fixture}PreconditionMethod_{Constants.Passes}");
 
                 yield return new TestCaseData(
-                    GetMethodSnippet(true, false),
+                    GetMethodSnippet(ContractTypes.Pre),
                     "TestMethod",
                     new object[] { null },
                     typeof(PreconditionException))
                 .SetName($"{fixture}PreconditionMethod_{Constants.Fails}");
 
                 yield return new TestCaseData(
-                    GetMethodSnippet(false, true, "test"),
+                    GetMethodSnippet(ContractTypes.Post, "test"),
                     "TestMethod",
                     new object[] { null },
                     null)
                 .SetName($"{fixture}PostconditionMethod_{Constants.Passes}");
 
                 yield return new TestCaseData(
-                    GetMethodSnippet(false, true),
+                    GetMethodSnippet(ContractTypes.Post),
                     "TestMethod",
                     new object[] { null },
                     typeof(PostconditionException))

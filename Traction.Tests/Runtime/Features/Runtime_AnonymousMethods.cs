@@ -21,11 +21,11 @@ namespace Traction.Tests.Runtime {
             CustomAssert.Throws(exceptionType, method, instance, Constants.EmptyArgs);
         }
 
-        private static string GetSnippet(bool hasPost) {
+        private static string GetSnippet(ContractTypes contractTypes) {
             var sb = new StringBuilder();
             sb.AppendLine("class TestClass {");
 
-                sb.AppendLineIf(hasPost, "[return: NonNull]");
+                sb.AppendLineIf(contractTypes.HasFlag(ContractTypes.Post), "[return: NonNull]");
                 sb.AppendLine("public string TestMethod() {");
 
                     //This lambda's return statement should not be affected.
@@ -42,12 +42,12 @@ namespace Traction.Tests.Runtime {
         private static IEnumerable<TestCaseData> Cases {
             get {
                 yield return new TestCaseData(
-                    GetSnippet(false),
+                    GetSnippet(ContractTypes.None),
                     null)
                 .SetName($"{fixture}NormalMethod_AnonMethod{Constants.Normal}");
 
                 yield return new TestCaseData(
-                    GetSnippet(true),
+                    GetSnippet(ContractTypes.Post),
                     null)
                 .SetName($"{fixture}PostconditionMethod_AnonMethod{Constants.Normal}");
             }

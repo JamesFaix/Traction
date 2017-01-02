@@ -36,12 +36,12 @@ namespace Traction.Tests.Runtime {
             CustomAssert.Throws(exceptionType, method, instance, arguments);
         }
 
-        private static string GetMethodSnippet(bool hasPre, bool hasPost, bool explicitImplementation) {
+        private static string GetMethodSnippet(ContractTypes contractTypes, bool explicitImplementation) {
             var sb = new StringBuilder();
             sb.AppendLine("interface ITest {");
-            sb.AppendLineIf(hasPost, "[return: NonNull]");
+            sb.AppendLineIf(contractTypes.HasFlag(ContractTypes.Post), "[return: NonNull]");
             sb.Append("string TestMethod(");
-            sb.AppendIf(hasPre, "[NonNull]");
+            sb.AppendIf(contractTypes.HasFlag(ContractTypes.Pre), "[NonNull]");
             sb.AppendLine("string text);");
             sb.AppendLine("}");
 
@@ -92,35 +92,35 @@ namespace Traction.Tests.Runtime {
         private static IEnumerable<TestCaseData> GetCases(string head, bool isExplicit) {
 
             yield return new TestCaseData(
-                GetMethodSnippet(false, false, isExplicit),
+                GetMethodSnippet(ContractTypes.None, isExplicit),
                 "TestMethod",
                 new object[] { null },
                 null)
             .SetName($"{head}NormalMethod_{Constants.Normal}");
 
             yield return new TestCaseData(
-                GetMethodSnippet(true, false, isExplicit),
+                GetMethodSnippet(ContractTypes.Pre, isExplicit),
                 "TestMethod",
                 new object[] { "test" },
                 null)
             .SetName($"{head}PreconditionMethod_{Constants.Passes}");
 
             yield return new TestCaseData(
-                GetMethodSnippet(true, false, isExplicit),
+                GetMethodSnippet(ContractTypes.Pre, isExplicit),
                 "TestMethod",
                 new object[] { null },
                 typeof(PreconditionException))
             .SetName($"{head}PreconditionMethod_{Constants.Fails}");
 
             yield return new TestCaseData(
-                GetMethodSnippet(false, true, isExplicit),
+                GetMethodSnippet(ContractTypes.Post, isExplicit),
                 "TestMethod",
                 new object[] { "test" },
                 null)
             .SetName($"{head}PostconditionMethod_{Constants.Passes}");
 
             yield return new TestCaseData(
-                GetMethodSnippet(false, true, isExplicit),
+                GetMethodSnippet(ContractTypes.Post, isExplicit),
                 "TestMethod",
                 new object[] { null },
                 typeof(PostconditionException))

@@ -22,13 +22,13 @@ namespace Traction.Tests.Runtime {
                 new object[] { nullArg ? null : instance });
         }
 
-        private static string GetSnippet(bool hasPre, bool hasPost, string result = null) {
+        private static string GetSnippet(ContractTypes contractTypes, string result = null) {
             var sb = new StringBuilder();
             sb.AppendLine("class TestClass {");
 
-            sb.AppendLineIf(hasPost, "[return: NonNull]");
+            sb.AppendLineIf(contractTypes.HasFlag(ContractTypes.Post), "[return: NonNull]");
             sb.Append("public static explicit operator string(");
-            sb.AppendIf(hasPre, "[NonNull]");
+            sb.AppendIf(contractTypes.HasFlag(ContractTypes.Pre), "[NonNull]");
             sb.AppendLine("TestClass obj) {");
             sb.AppendLine($"return {(result == null ? "null" : $"\"{result}\"")};");
             sb.AppendLine("} }");
@@ -38,55 +38,55 @@ namespace Traction.Tests.Runtime {
         private static IEnumerable<TestCaseData> Cases {
             get {
                 yield return new TestCaseData(
-                    GetSnippet(false, false),
+                    GetSnippet(ContractTypes.None),
                     true,
                     null)
                 .SetName($"{fixture}Normal_{Constants.Normal}");
 
                 yield return new TestCaseData(
-                    GetSnippet(true, false),
+                    GetSnippet(ContractTypes.Pre),
                     false,
                     null)
                 .SetName($"{fixture}Precondition_{Constants.Passes}");
 
                 yield return new TestCaseData(
-                    GetSnippet(true, false),
+                    GetSnippet(ContractTypes.Pre),
                     true,
                     typeof(PreconditionException))
                 .SetName($"{fixture}Precondition_{Constants.Fails}");
 
                 yield return new TestCaseData(
-                    GetSnippet(false, true, "test"),
+                    GetSnippet(ContractTypes.Post, "test"),
                     true,
                     null)
                 .SetName($"{fixture}Postcondition_{Constants.Passes}");
 
                 yield return new TestCaseData(
-                   GetSnippet(false, true),
+                   GetSnippet(ContractTypes.Post),
                    true,
                    typeof(PostconditionException))
                .SetName($"{fixture}Postcondition_{Constants.Fails}");
 
                 yield return new TestCaseData(
-                    GetSnippet(true, true, "test"),
+                    GetSnippet(ContractTypes.PreAndPost, "test"),
                     false,
                     null)
                 .SetName($"{fixture}PreAndPost_Pre{Constants.Passes}");
 
                 yield return new TestCaseData(
-                    GetSnippet(true, true, "test"),
+                    GetSnippet(ContractTypes.PreAndPost, "test"),
                     true,
                     typeof(PreconditionException))
                 .SetName($"{fixture}PreAndPost_Pre{Constants.Fails}");
 
                 yield return new TestCaseData(
-                    GetSnippet(true, true, "test"),
+                    GetSnippet(ContractTypes.PreAndPost, "test"),
                     false,
                     null)
                 .SetName($"{fixture}PreAndPost_Post{Constants.Passes}");
 
                 yield return new TestCaseData(
-                   GetSnippet(true, true),
+                   GetSnippet(ContractTypes.PreAndPost),
                    false,
                    typeof(PostconditionException))
                .SetName($"{fixture}PreAndPost_Post{Constants.Fails}");
