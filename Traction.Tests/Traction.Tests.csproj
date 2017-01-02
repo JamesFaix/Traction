@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Compilation\Compilation_ExternMembers.cs" />
     <Compile Include="Infrastructure\Constants.cs" />
+    <Compile Include="Infrastructure\ContractTypes.cs" />
     <Compile Include="Infrastructure\CustomAssert.cs" />
     <Compile Include="Infrastructure\DiagnosticExtensions.cs" />
     <Compile Include="Compilation\Compilation_Inheritance.cs" />
@@ -76,6 +77,10 @@
     <Compile Include="Compilation\Compilation_Void.cs" />
     <Compile Include="Compilation\Compilation_ValidTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Runtime\Attributes\AttributeTestHelper.cs" />
+    <Compile Include="Runtime\Attributes\Runtime_Attributes_BasicComparisons.cs" />
+    <Compile Include="Runtime\Attributes\Runtime_Attributes_NonDefault.cs" />
+    <Compile Include="Runtime\Attributes\Runtime_Attributes_NonEmpty.cs" />
     <Compile Include="Runtime\Features\Runtime_AnonymousMethods.cs" />
     <Compile Include="Runtime\Features\Runtime_AutoProperties.cs" />
     <Compile Include="Runtime\Features\Runtime_Conversions.cs" />
@@ -85,7 +90,7 @@
     <Compile Include="Runtime\Features\Runtime_Inheritance_Interfaces.cs" />
     <Compile Include="Runtime\Features\Runtime_IteratorBlocks.cs" />
     <Compile Include="Runtime\Features\Runtime_Methods.cs" />
-    <Compile Include="Runtime\Attributes\NonNullTest.cs" />
+    <Compile Include="Runtime\Attributes\Runtime_Attributes_NonNull.cs" />
     <Compile Include="Runtime\Features\Runtime_Inheritance_ClassesMultiLayer.cs" />
     <Compile Include="Runtime\Features\Runtime_MultipleReturnStatements.cs" />
     <Compile Include="Runtime\Features\Runtime_Operators.cs" />

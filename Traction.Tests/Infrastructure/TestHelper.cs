@@ -31,12 +31,12 @@ namespace Traction.Tests {
             if (sourceCode == null) throw new ArgumentNullException(nameof(sourceCode));
 
             var compilation = CompilationFactory.CompileClassFromText(sourceCode);
-            
+
             var context = new BeforeCompileContext {
                 Compilation = compilation,
                 Diagnostics = new List<Diagnostic>()
             };
-            
+
             var module = new TractionCompileModule();
 
             module.BeforeCompile(context);
