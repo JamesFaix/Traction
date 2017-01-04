@@ -91,7 +91,7 @@
     <Compile Include="Contracts\IdentifierFactory.cs" />
     <Compile Include="Contracts\Syntax\BaseMethodDeclarationExtensions.cs" />
     <Compile Include="Contracts\Syntax\ParameterDeclarationExtensions.cs" />
-    <Compile Include="Contracts\Syntax\PropertyDeclarationExtensions.cs" />
+    <Compile Include="Contracts\Syntax\BasePropertyDeclarationExtensions.cs" />
     <Compile Include="TractionCompileModule.cs" />
     <Compile Include="Contracts\Analysis\DiagnosticFactory.cs" />
     <Compile Include="Contracts\Injection\Injector.cs" />
