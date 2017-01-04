@@ -21,7 +21,10 @@ namespace Traction.Tests {
             else {
                 try {
                     action();
-                    Assert.Fail($"Expected exception of type {exceptionType}.");
+                    Assert.Fail($"Expected exception of type {exceptionType}, but none was thrown.");
+                }
+                catch (AssertionException) {
+                    throw;
                 }
                 catch (Exception e) {
                     Assert.AreEqual(exceptionType, e.GetType());
@@ -48,13 +51,16 @@ namespace Traction.Tests {
             else {
                 try {
                     method.Invoke(source, arguments);
-                    Assert.Fail($"Expected exception of type {exceptionType}.");
+                    Assert.Fail($"Expected exception of type {exceptionType}, but none was thrown.");
                 }
                 catch (TargetInvocationException e) {
                     Assert.AreEqual(exceptionType, e.InnerException.GetType());
                 }
-                catch {
-                    Assert.Fail($"Expected exception of type {exceptionType}.");
+                catch (AssertionException) {
+                    throw;
+                }
+                catch (Exception e) {
+                    Assert.AreEqual(exceptionType, e.GetType());
                 }
             }
         }
