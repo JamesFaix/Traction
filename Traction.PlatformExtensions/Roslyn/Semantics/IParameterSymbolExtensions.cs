@@ -19,14 +19,16 @@ namespace Traction.Roslyn.Semantics {
         public static IEnumerable<IParameterSymbol> ImplementedInterfaceMembers(this IParameterSymbol @this) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            if (@this is IMethodSymbol) {
-                return (@this.ContainingSymbol as IMethodSymbol)
+            var method = @this.ContainingSymbol as IMethodSymbol;
+            if (method != null) {
+                return method
                     .ImplementedInterfaceMembers()
                     .Select(m => m.Parameters
                                   .Single(p => p.Name == @this.Name));
             }
             else {
-                return (@this.ContainingSymbol as IPropertySymbol)
+                var prop = @this.ContainingSymbol as IPropertySymbol;
+                return prop
                     .ImplementedInterfaceMembers()
                     .Select(m => m.Parameters
                                   .Single(p => p.Name == @this.Name));
