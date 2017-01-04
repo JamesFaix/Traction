@@ -15,11 +15,20 @@ namespace Traction.Contracts.Injection {
 
     internal static class InjectionExtensionMethods {
 
-        public static TMethodSyntax WithContracts<TMethodSyntax>(this TMethodSyntax @this, SemanticModel model, IContractProvider contractProvider)
-            where TMethodSyntax : BaseMethodDeclarationSyntax {
+        public static TNode WithContracts<TNode>(this TNode @this, SemanticModel model, IContractProvider contractProvider)
+            where TNode : MemberDeclarationSyntax {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
             if (contractProvider == null) throw new ArgumentNullException(nameof(contractProvider));
+
+            //HACK: Must use dynamic because of limitation with generic constraints.
+            return typeof(TNode).IsSubclassOf(typeof(BaseMethodDeclarationSyntax))
+                ? MethodWithContracts((dynamic)@this, model, contractProvider)
+                : PropertyWithContracts((dynamic)@this, model, contractProvider);
+        }
+
+        private static TMethodSyntax MethodWithContracts<TMethodSyntax>(this TMethodSyntax @this, SemanticModel model, IContractProvider contractProvider)
+            where TMethodSyntax : BaseMethodDeclarationSyntax {
 
             var symbol = model.GetMethodSymbol(@this);
 
@@ -45,11 +54,8 @@ namespace Traction.Contracts.Injection {
                         .AddRange(result.Body.Statements)));
         }
 
-        public static PropertyDeclarationSyntax WithContracts(this PropertyDeclarationSyntax @this, SemanticModel model, IContractProvider contractProvider) {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (model == null) throw new ArgumentNullException(nameof(model));
-            if (contractProvider == null) throw new ArgumentNullException(nameof(contractProvider));
-
+        private static TPropertySyntax PropertyWithContracts<TPropertySyntax>(this TPropertySyntax @this, SemanticModel model, IContractProvider contractProvider)
+            where TPropertySyntax : BasePropertyDeclarationSyntax {
             var symbol = model.GetPropertySymbol(@this);
 
             var setter = @this.Setter();
@@ -82,7 +88,8 @@ namespace Traction.Contracts.Injection {
                 }
                 .Where(a => a != null)));
 
-            return @this.WithAccessorList(accessors);
+            //HACK: Must cast to dynamic because WithAccessorList is only defined on subclasses
+            return ((dynamic)@this).WithAccessorList(accessors);
         }
 
         private static StatementSyntax PreconditionStatement(Contract contract, ITypeSymbol type, string parameterName) {
