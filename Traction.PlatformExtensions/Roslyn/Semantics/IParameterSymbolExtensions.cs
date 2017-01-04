@@ -19,10 +19,18 @@ namespace Traction.Roslyn.Semantics {
         public static IEnumerable<IParameterSymbol> ImplementedInterfaceMembers(this IParameterSymbol @this) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            return (@this.ContainingSymbol as IMethodSymbol)
-                .ImplementedInterfaceMembers()
-                .Select(m => m.Parameters
-                              .Single(p => p.Name == @this.Name));
+            if (@this is IMethodSymbol) {
+                return (@this.ContainingSymbol as IMethodSymbol)
+                    .ImplementedInterfaceMembers()
+                    .Select(m => m.Parameters
+                                  .Single(p => p.Name == @this.Name));
+            }
+            else {
+                return (@this.ContainingSymbol as IPropertySymbol)
+                    .ImplementedInterfaceMembers()
+                    .Select(m => m.Parameters
+                                  .Single(p => p.Name == @this.Name));
+            }
         }
 
         public static bool IsInterfaceImplementation(this IParameterSymbol @this) {
@@ -38,12 +46,14 @@ namespace Traction.Roslyn.Semantics {
         public static IParameterSymbol OverriddenMember(this IParameterSymbol @this) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
 
-            var method = @this.ContainingSymbol as IMethodSymbol;
-            if (!method.IsOverride) return null;
+            var member = @this.ContainingSymbol;
+            if (!member.IsOverride) return null;
 
-            var ancestorMethod = method.OverriddenMethod;
-            return ancestorMethod
-                .Parameters
+            var parameters = member is IMethodSymbol
+                ? (member as IMethodSymbol).OverriddenMethod.Parameters
+                : (member as IPropertySymbol).OverriddenProperty.Parameters;
+
+            return parameters
                 .Single(p => p.Name == @this.Name) as IParameterSymbol;
         }
 
@@ -58,13 +68,7 @@ namespace Traction.Roslyn.Semantics {
                 result.AddRange(OverriddenAndImplementedInterfaceMembers(overridden));
             }
 
-            var method = @this.ContainingSymbol as IMethodSymbol;
-
-            result.AddRange(method
-                            .ImplementedInterfaceMembers()
-                            .Select(m => m.Parameters
-                                          .Single(p => p.Name == @this.Name)));
-            //  result.Add(@this);
+            result.AddRange(@this.ImplementedInterfaceMembers());
             return result;
         }
     }
