@@ -18,6 +18,7 @@ namespace Traction.Contracts.Injection {
             : base(model, context, contractProvider) { }
 
         public sealed override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node) => VisitPropertyImpl(node);
+        public sealed override SyntaxNode VisitIndexerDeclaration(IndexerDeclarationSyntax node) => VisitPropertyImpl(node);
         public sealed override SyntaxNode VisitOperatorDeclaration(OperatorDeclarationSyntax node) => VisitMethodImpl(node);
         public sealed override SyntaxNode VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node) => VisitMethodImpl(node);
         public sealed override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node) => VisitMethodImpl(node);
@@ -38,7 +39,9 @@ namespace Traction.Contracts.Injection {
                 .Result;
         }
 
-        private PropertyDeclarationSyntax VisitPropertyImpl(PropertyDeclarationSyntax node) {
+        private TNode VisitPropertyImpl<TNode>(TNode node)
+            where TNode: BasePropertyDeclarationSyntax {
+
             var symbol = model.GetPropertySymbol(node);
 
             if (!symbol.HasAnyContract(model)

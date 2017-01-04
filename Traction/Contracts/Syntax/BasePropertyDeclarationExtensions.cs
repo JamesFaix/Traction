@@ -10,13 +10,13 @@ using Traction.Roslyn.Syntax;
 
 namespace Traction.Contracts.Syntax {
 
-    internal static class PropertyDeclarationExtensions {
+    internal static class BasePropertyDeclarationExtensions {
 
-        public static bool HasContractAttribute(this PropertyDeclarationSyntax @this, Contract contract, SemanticModel model) =>
+        public static bool HasContractAttribute(this BasePropertyDeclarationSyntax @this, Contract contract, SemanticModel model) =>
             @this.HasPreconditionAttribute(contract, model) ||
             @this.HasPostconditionAttribute(contract, model);
 
-        public static bool HasPreconditionAttribute(this PropertyDeclarationSyntax @this, Contract contract, SemanticModel model) {
+        public static bool HasPreconditionAttribute(this BasePropertyDeclarationSyntax @this, Contract contract, SemanticModel model) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (contract == null) throw new ArgumentNullException(nameof(contract));
             if (model == null) throw new ArgumentNullException(nameof(model));
@@ -28,7 +28,7 @@ namespace Traction.Contracts.Syntax {
                 .Any(a => model.GetTypeInfo(a).Type.Equals(attributeTypeSymbol));
         }
 
-        public static bool HasPostconditionAttribute(this PropertyDeclarationSyntax @this, Contract contract, SemanticModel model) {
+        public static bool HasPostconditionAttribute(this BasePropertyDeclarationSyntax @this, Contract contract, SemanticModel model) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (contract == null) throw new ArgumentNullException(nameof(contract));
             if (model == null) throw new ArgumentNullException(nameof(model));
@@ -40,11 +40,11 @@ namespace Traction.Contracts.Syntax {
                 .Any(a => model.GetTypeInfo(a).Type.Equals(attributeTypeSymbol));
         }
 
-        public static bool HasAnyContractAttribute(this PropertyDeclarationSyntax @this, SemanticModel model) =>
+        public static bool HasAnyContractAttribute(this BasePropertyDeclarationSyntax @this, SemanticModel model) =>
             @this.HasAnyPreconditionAttribute(model) ||
             @this.HasAnyPostconditionAttribute(model);
 
-        public static bool HasAnyPreconditionAttribute(this PropertyDeclarationSyntax @this, SemanticModel model) {
+        public static bool HasAnyPreconditionAttribute(this BasePropertyDeclarationSyntax @this, SemanticModel model) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
@@ -55,7 +55,7 @@ namespace Traction.Contracts.Syntax {
                      .Any(a => model.GetTypeInfo(a).Type.InheritsFrom(attributeTypeSymbol));
         }
 
-        public static bool HasAnyPostconditionAttribute(this PropertyDeclarationSyntax @this, SemanticModel model) {
+        public static bool HasAnyPostconditionAttribute(this BasePropertyDeclarationSyntax @this, SemanticModel model) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
@@ -66,11 +66,11 @@ namespace Traction.Contracts.Syntax {
                      .Any(a => model.GetTypeInfo(a).Type.InheritsFrom(attributeTypeSymbol));
         }
 
-        public static IEnumerable<Contract> GetContracts(this PropertyDeclarationSyntax @this, SemanticModel model, IContractProvider contractProvider) =>
+        public static IEnumerable<Contract> GetContracts(this BasePropertyDeclarationSyntax @this, SemanticModel model, IContractProvider contractProvider) =>
             @this.GetPreconditions(model, contractProvider).Concat(
             @this.GetPostconditions(model, contractProvider));
 
-        public static IEnumerable<Contract> GetPreconditions(this PropertyDeclarationSyntax @this, SemanticModel model, IContractProvider contractProvider) {
+        public static IEnumerable<Contract> GetPreconditions(this BasePropertyDeclarationSyntax @this, SemanticModel model, IContractProvider contractProvider) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
             if (contractProvider == null) throw new ArgumentNullException(nameof(contractProvider));
@@ -84,7 +84,7 @@ namespace Traction.Contracts.Syntax {
                        .Select(a => contractProvider[a.GetText().ToString().Trim()]);
         }
 
-        public static IEnumerable<Contract> GetPostconditions(this PropertyDeclarationSyntax @this, SemanticModel model, IContractProvider contractProvider) {
+        public static IEnumerable<Contract> GetPostconditions(this BasePropertyDeclarationSyntax @this, SemanticModel model, IContractProvider contractProvider) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
             if (contractProvider == null) throw new ArgumentNullException(nameof(contractProvider));

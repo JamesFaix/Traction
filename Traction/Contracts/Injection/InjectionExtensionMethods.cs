@@ -15,11 +15,20 @@ namespace Traction.Contracts.Injection {
 
     internal static class InjectionExtensionMethods {
 
-        public static TMethodSyntax WithContracts<TMethodSyntax>(this TMethodSyntax @this, SemanticModel model, IContractProvider contractProvider)
-            where TMethodSyntax : BaseMethodDeclarationSyntax {
+        public static TNode WithContracts<TNode>(this TNode @this, SemanticModel model, IContractProvider contractProvider)
+            where TNode : MemberDeclarationSyntax {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (model == null) throw new ArgumentNullException(nameof(model));
             if (contractProvider == null) throw new ArgumentNullException(nameof(contractProvider));
+
+            //HACK: Must use dynamic because of limitation with generic constraints.
+            return typeof(TNode).IsSubclassOf(typeof(BaseMethodDeclarationSyntax))
+                ? MethodWithContracts((dynamic)@this, model, contractProvider)
+                : PropertyWithContracts((dynamic)@this, model, contractProvider);
+        }
+
+        private static TMethodSyntax MethodWithContracts<TMethodSyntax>(this TMethodSyntax @this, SemanticModel model, IContractProvider contractProvider)
+            where TMethodSyntax : BaseMethodDeclarationSyntax {
 
             var symbol = model.GetMethodSymbol(@this);
 
@@ -27,8 +36,8 @@ namespace Traction.Contracts.Injection {
                 .Parameters
                 .SelectMany(parameter => parameter
                     .GetPreconditions(model, contractProvider)
-                    .Select(contract => new { P = parameter, C = contract }))
-                .Select(x => PreconditionStatement(x.C, x.P.Type, x.P.Name));
+                    .Select(contract => new _PreconditionParameters(contract, parameter)))
+                .Select(x => PreconditionStatement(x.Contract, x.ParameterType, x.ParameterName));
 
             var returnType = model.GetTypeInfo(@this.ReturnType()).Type;
             var returnStatements = @this.GetReturnStatements();
@@ -45,20 +54,27 @@ namespace Traction.Contracts.Injection {
                         .AddRange(result.Body.Statements)));
         }
 
-        public static PropertyDeclarationSyntax WithContracts(this PropertyDeclarationSyntax @this, SemanticModel model, IContractProvider contractProvider) {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (model == null) throw new ArgumentNullException(nameof(model));
-            if (contractProvider == null) throw new ArgumentNullException(nameof(contractProvider));
-
+        private static TPropertySyntax PropertyWithContracts<TPropertySyntax>(this TPropertySyntax @this, SemanticModel model, IContractProvider contractProvider)
+            where TPropertySyntax : BasePropertyDeclarationSyntax {
             var symbol = model.GetPropertySymbol(@this);
+
+            var indexer = @this as IndexerDeclarationSyntax;
+            var paramPreconditions = (indexer == null)
+                ? Enumerable.Empty<_PreconditionParameters>()
+                : model.GetPropertySymbol(indexer)
+                       .Parameters
+                       .SelectMany(p => p.GetPreconditions(model, contractProvider)
+                                         .Select(contract => new _PreconditionParameters(contract, p)));
 
             var setter = @this.Setter();
             if (setter != null) {
                 var preconditions = symbol
-                    .GetPreconditions(model, contractProvider);
+                    .GetPreconditions(model, contractProvider)
+                    .Select(contract => new _PreconditionParameters(contract, symbol.Type, "value"))
+                    .Concat(paramPreconditions);
 
                 var statements = preconditions
-                    .Select(c => PreconditionStatement(c, symbol.Type, "value"))
+                    .Select(x => PreconditionStatement(x.Contract, x.ParameterType, x.ParameterName))
                     .Concat(setter.Body.Statements)
                     .ToArray();
 
@@ -73,6 +89,13 @@ namespace Traction.Contracts.Injection {
 
                 getter = getter.ReplaceNodes(returnStatements,
                     (oldNode, newNode) => PostconditionStatement(postconditions, symbol.Type, oldNode, model));
+
+                var statements = paramPreconditions
+                    .Select(x => PreconditionStatement(x.Contract, x.ParameterType, x.ParameterName))
+                    .Concat(getter.Body.Statements)
+                    .ToArray();
+
+                getter = getter.WithBody(Block(statements));
             }
 
             var accessors = AccessorList(List(
@@ -82,7 +105,26 @@ namespace Traction.Contracts.Injection {
                 }
                 .Where(a => a != null)));
 
-            return @this.WithAccessorList(accessors);
+            //HACK: Must cast to dynamic because WithAccessorList is only defined on subclasses
+            return ((dynamic)@this).WithAccessorList(accessors);
+        }
+
+        private class _PreconditionParameters {
+            public readonly Contract Contract;
+            public readonly ITypeSymbol ParameterType;
+            public readonly string ParameterName;
+
+            public _PreconditionParameters(Contract contract, IParameterSymbol parameter) {
+                Contract = contract;
+                ParameterType = parameter.Type;
+                ParameterName = parameter.Name;
+            }
+
+            public _PreconditionParameters(Contract contract, ITypeSymbol parameterType, string parameterName) {
+                Contract = contract;
+                ParameterType = parameterType;
+                ParameterName = parameterName;
+            }
         }
 
         private static StatementSyntax PreconditionStatement(Contract contract, ITypeSymbol type, string parameterName) {

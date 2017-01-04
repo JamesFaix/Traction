@@ -19,6 +19,8 @@ namespace Traction.Contracts.Analysis {
         public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node) => VisitBaseMethodDeclaration(node);
         public override SyntaxNode VisitOperatorDeclaration(OperatorDeclarationSyntax node) => VisitBaseMethodDeclaration(node);
         public override SyntaxNode VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node) => VisitBaseMethodDeclaration(node);
+        public override SyntaxNode VisitIndexerDeclaration(IndexerDeclarationSyntax node) => VisitBasePropertyDeclaration(node);
+        public override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node) => VisitBasePropertyDeclaration(node);
 
         private SyntaxNode VisitBaseMethodDeclaration(BaseMethodDeclarationSyntax node) {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -100,8 +102,8 @@ namespace Traction.Contracts.Analysis {
 
             return node;
         }
-
-        public override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node) {
+        
+        private SyntaxNode VisitBasePropertyDeclaration(BasePropertyDeclarationSyntax node) {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
             var symbol = model.GetDeclaredSymbol(node) as IPropertySymbol;

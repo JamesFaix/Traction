@@ -13,7 +13,7 @@ namespace Traction.Roslyn.Semantics {
             return @this.GetDeclaredSymbol(node) as IMethodSymbol;
         }
 
-        public static IPropertySymbol GetPropertySymbol(this SemanticModel @this, PropertyDeclarationSyntax node) {
+        public static IPropertySymbol GetPropertySymbol(this SemanticModel @this, BasePropertyDeclarationSyntax node) {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
             if (node == null) throw new ArgumentNullException(nameof(node));
 
