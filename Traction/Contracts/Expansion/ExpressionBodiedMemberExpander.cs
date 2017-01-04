@@ -13,53 +13,33 @@ namespace Traction.Contracts.Expansion {
 
         public ExpressionBodiedMemberExpander(SemanticModel model, ICompileContext context, IContractProvider contractProvider)
             : base(model, context, contractProvider) { }
-        
-        public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (node.ExpressionBody == null) return node;
 
-            var expr = node.ExpressionBody.Expression;
+        public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node) => VisitBaseMethodDeclaration(node);
+        public override SyntaxNode VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node) => VisitBaseMethodDeclaration(node);
+        public override SyntaxNode VisitOperatorDeclaration(OperatorDeclarationSyntax node) => VisitBaseMethodDeclaration(node);
+        public override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node) => VisitBasePropertyDeclaration(node);
+        public override SyntaxNode VisitIndexerDeclaration(IndexerDeclarationSyntax node) => VisitBasePropertyDeclaration(node);
+
+        private SyntaxNode VisitBaseMethodDeclaration(BaseMethodDeclarationSyntax node) {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            //HACK: Must cast to dynamic because expression body is only defined on subclasses
+            if (((dynamic)node).ExpressionBody == null) return node;
+
+            var expr = ((dynamic)node).ExpressionBody.Expression;
             var statement = SyntaxFactory.ReturnStatement(expr);
 
             return nodeRewriter
-                .Try(node, 
-                    n => n.WithExpressionBody(null)
-                          .WithBody(SyntaxFactory.Block(statement)),
-                    "Expanded expression-bodied member.")
-                .Result;
-        }
-
-        public override SyntaxNode VisitOperatorDeclaration(OperatorDeclarationSyntax node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (node.ExpressionBody == null) return node;
-
-            var expr = node.ExpressionBody.Expression;
-            var statement = SyntaxFactory.ReturnStatement(expr);
-
-            return nodeRewriter
-                .Try(node, n => n.WithExpressionBody(null)
+                .Try(node, n => ((dynamic)n).WithExpressionBody(null)
                                  .WithBody(SyntaxFactory.Block(statement)))
                 .Result;
         }
 
-        public override SyntaxNode VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node) {
+        private SyntaxNode VisitBasePropertyDeclaration(BasePropertyDeclarationSyntax node) {
             if (node == null) throw new ArgumentNullException(nameof(node));
-            if (node.ExpressionBody == null) return node;
+            //HACK: Must cast to dynamic because expression body is only defined on subclasses
+            if (((dynamic)node).ExpressionBody == null) return node;
 
-            var expr = node.ExpressionBody.Expression;
-            var statement = SyntaxFactory.ReturnStatement(expr);
-
-            return nodeRewriter
-                .Try(node, n => n.WithExpressionBody(null)
-                                 .WithBody(SyntaxFactory.Block(statement)))
-                .Result;
-        }
-
-        public override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node) {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            if (node.ExpressionBody == null) return node;
-
-            var expr = node.ExpressionBody.Expression;
+            var expr = ((dynamic)node).ExpressionBody.Expression;
             var statement = SyntaxFactory.ReturnStatement(expr);
 
             var getter = SyntaxFactory.AccessorDeclaration(
@@ -71,7 +51,7 @@ namespace Traction.Contracts.Expansion {
                 .Add(getter));
 
             return nodeRewriter
-                .Try(node, n => n.WithExpressionBody(null)
+                .Try(node, n => ((dynamic)n).WithExpressionBody(null)
                                  .WithAccessorList(accessors))
                 .Result;
         }
