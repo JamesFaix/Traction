@@ -72,7 +72,6 @@
     <Compile Include="Roslyn\Syntax\AttributeSyntaxExtensions.cs" />
     <Compile Include="Roslyn\Syntax\BaseMethodDeclarationSyntaxExtensions.cs" />
     <Compile Include="Roslyn\Syntax\OperatorSyntaxExtensions.cs" />
-    <Compile Include="Roslyn\Syntax\ParameterSyntaxExtensions.cs" />
     <Compile Include="Roslyn\Syntax\PropertySyntaxExtensions.cs" />
     <Compile Include="Roslyn\Syntax\SyntaxNodeExtensions.cs" />
     <Compile Include="Roslyn\Syntax\SyntaxTokenExtensions.cs" />

@@ -28,13 +28,6 @@ namespace Traction.Roslyn.Syntax {
             throw new InvalidOperationException("Invalid method declaration type.");
         }
 
-        public static TypeInfo ReturnTypeInfo(this BaseMethodDeclarationSyntax @this, SemanticModel model) {
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
-            if (model == null) throw new ArgumentNullException(nameof(model));
-
-            return model.GetTypeInfo(@this.ReturnType());
-        }
-
         public static TNode WithBody<TNode>(this TNode @this, BlockSyntax body)
             where TNode : BaseMethodDeclarationSyntax {
             if (@this == null) throw new ArgumentNullException(nameof(@this));
