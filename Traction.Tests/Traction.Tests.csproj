@@ -94,6 +94,7 @@
     <Compile Include="Runtime\Features\Runtime_Inheritance_ClassesMultiLayer.cs" />
     <Compile Include="Runtime\Features\Runtime_MultipleReturnStatements.cs" />
     <Compile Include="Runtime\Features\Runtime_Operators.cs" />
+    <Compile Include="Runtime\Features\Runtime_Indexers.cs" />
     <Compile Include="Runtime\Features\Runtime_Properties.cs" />
   </ItemGroup>
   <ItemGroup>
